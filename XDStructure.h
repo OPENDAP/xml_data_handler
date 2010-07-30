@@ -40,6 +40,11 @@
 #include "XDOutput.h"
 
 class XDStructure: public Structure, public XDOutput {
+
+private:
+    void m_start_structure_element(XMLWriter *writer);
+    void m_end_structure_element(XMLWriter *writer);
+
 public:
     XDStructure(const string &n);
     XDStructure( Structure *bt ) ;
@@ -47,9 +52,8 @@ public:
 
     virtual BaseType *ptr_duplicate();
 
-    virtual void print_header(ostream &strm);
-    virtual void print_ascii(ostream &strm, bool print_name = true)
-	throw(InternalErr);
+    virtual void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
+
 };
 
 #endif

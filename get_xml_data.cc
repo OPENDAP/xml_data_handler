@@ -66,6 +66,7 @@ namespace xml_data {
 void
 get_data_values_as_ascii(DataDDS *dds, ostream &strm)
 {
+#if 0
     BESDEBUG("ascii", "In get_data_values_as_ascii; dataset name = " << dds->get_dataset_name() << endl );
     strm << "Dataset: " << dds->get_dataset_name() << "\n" ;
 
@@ -79,6 +80,7 @@ get_data_values_as_ascii(DataDDS *dds, ostream &strm)
     }
 
     BESDEBUG("ascii", "Out get_data_values_as_ascii" << endl );
+#endif
 }
 
 DataDDS *datadds_to_ascii_datadds(DataDDS * dds)

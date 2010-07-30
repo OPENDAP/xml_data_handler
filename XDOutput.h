@@ -51,11 +51,11 @@ class XDOutput {
     friend class XDOutputTest;
 
 protected:
-    BaseType *_redirect;
+    BaseType *d_redirect;
 
 public:
-    XDOutput( BaseType *bt ) : _redirect( bt ) { }
-    XDOutput() : _redirect( 0 ) { }
+    XDOutput( BaseType *bt ) : d_redirect( bt ) { }
+    XDOutput() : d_redirect( 0 ) { }
     virtual ~XDOutput() {}
 
     /** Get the fully qualified name of this object. Names of nested
@@ -64,21 +64,7 @@ public:
 	@return The fully qualified name of this object. */
     string get_full_name();
 
-    /** Print an ASCII representation for an instance of BaseType's children.
-	This version prints the suggested output only for simple types.
-	Complex types should overload this with their own definition.
-
-	The caller of this method is responsible for adding a trialing comma
-	where appropriate.
-
-	@param strm Write to this stream.
-	@param print_name If True, write the name of the variable, a comma
-	and then the value. If False, simply write the value. */
-    virtual void print_ascii(ostream &strm, bool print_name = true)
-	throw(InternalErr);
-
-    virtual void print_xml_data(XMLWriter *writer, bool print_name = true)
-	throw(InternalErr);
+    virtual void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 
     /** Increment #state# to the next value given #shape#. This method
 	uses simple modulo arithmetic to provide a way to iterate over all

@@ -45,14 +45,19 @@ using namespace libdap ;
 
 class XDArray: public Array, public XDOutput {
 private:
+    // void print_complex_array(ostream &strm, bool print_name);
 
-    void print_vector(ostream &strm, bool print_name);
-    void print_array(ostream &strm, bool print_name);
-    void print_complex_array(ostream &strm, bool print_name);
+    int m_get_index(vector<int> indices) throw(InternalErr);
 
-    void XDArray::print_xml_vector(XMLWriter *writer, bool print_name);
-    void print_xml_array(XMLWriter *writer, bool print_name);
-    int print_xml_row(XMLWriter *writer, int index, int number);
+    void m_print_xml_vector(XMLWriter *writer, string element);
+    void m_print_xml_array(XMLWriter *writer, string element);
+
+    int m_print_xml_row(XMLWriter *writer, int index, int number);
+
+    void m_start_array_element(XMLWriter *writer, string element);
+    void m_end_array_element(XMLWriter *writer);
+
+    friend class XDArrayTest;
 
 public:
     XDArray(const string &n, BaseType *v);
@@ -60,9 +65,6 @@ public:
     virtual ~XDArray();
 
     virtual BaseType *ptr_duplicate();
-    int print_row(ostream &strm, int index, int number);
-
-    int get_index(vector<int> indices) throw(InternalErr);
 
     /** Get the size of dimension #n#.
 	@param n Return the size of the n^{th} dimension.
@@ -76,12 +78,15 @@ public:
 	contains the highest index value. To get the size, add one. */
     vector<int> get_shape_vector(size_t n) throw(InternalErr);
 
-    void XDArray::print_xml_data(XMLWriter *writer, bool print_name) throw(InternalErr);
+    /**
+     * Print an array as a Map.
+     * @note For use with XDGrid
+     * @param writer
+     */
+    void print_xml_map_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 
-    virtual void print_ascii(ostream &strm, bool print_name = true)
-	throw(InternalErr);
+    void XDArray::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
+
 };
 
 #endif
-
-

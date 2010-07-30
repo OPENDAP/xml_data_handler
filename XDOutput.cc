@@ -47,10 +47,12 @@
 
 using namespace xml_data;
 
+// Is this ever used
+#if 0
 string XDOutput::get_full_name()
 {
     BaseType *this_btp = dynamic_cast < BaseType * >(this);
-    BaseType *btp = _redirect;
+    BaseType *btp = d_redirect;
     // TODO How can _redirect ever be null? Throw here
     if (!btp)
         btp = this_btp;
@@ -65,7 +67,8 @@ string XDOutput::get_full_name()
         return dynamic_cast < XDOutput * >(btp2)->get_full_name()
             + "." + btp->name();
 }
-
+#endif
+#if 0
 /** @brief Print values as ASCII
     Prints the values of \e this in ASCII suitable for import into a
     spreadsheet. This version prints only the values of simple types; other
@@ -75,7 +78,7 @@ string XDOutput::get_full_name()
 void XDOutput::print_ascii(ostream &strm,
                               bool print_name) throw(InternalErr)
 {
-    BaseType *btp = _redirect;
+    BaseType *btp = d_redirect;
     if (!btp) {
         btp = dynamic_cast < BaseType * >(this);
     }
@@ -89,10 +92,11 @@ void XDOutput::print_ascii(ostream &strm,
 
     btp->print_val(strm, "", false);
 }
+#endif
 
-void XDOutput::print_xml_data(XMLWriter *writer, bool print_name) throw(InternalErr)
+void XDOutput::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
 {
-    BaseType *btp = _redirect;
+    BaseType *btp = d_redirect;
     if (!btp) {
         btp = dynamic_cast < BaseType * >(this);
     }
@@ -101,13 +105,11 @@ void XDOutput::print_xml_data(XMLWriter *writer, bool print_name) throw(Internal
         throw InternalErr(__FILE__, __LINE__,
                           "An instance of XDOutput failed to cast to BaseType.");
 
-    if (print_name) {
-	// Write the element for the name
-	if (xmlTextWriterStartElement(writer->get_writer(),  get_xc(btp->type_name())) < 0)
-	    throw InternalErr(__FILE__, __LINE__, "Could not write element for " + btp->name());
-	if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*)"name", get_xc(btp->name())))
-	    throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + btp->name());
-    }
+    // Write the element for the name
+    if (xmlTextWriterStartElement(writer->get_writer(),  get_xc(btp->type_name())) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not write element for " + btp->name());
+    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*)"name", get_xc(btp->name())))
+	throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + btp->name());
 
     // Write the element for the value, then the value
     ostringstream oss;
@@ -116,11 +118,10 @@ void XDOutput::print_xml_data(XMLWriter *writer, bool print_name) throw(Internal
 	throw InternalErr(__FILE__, __LINE__,
 		"Could not write value element for " + btp->name());
 
-    if (print_name) {
-	//close the element for the name
-	if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-	    throw InternalErr(__FILE__, __LINE__, "Could not end element for " + btp->name());
-    }
+    //close the element for the name
+    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not end element for " + btp->name());
+
 }
 
 // This code implements simple modulo arithmetic. The vector shape contains

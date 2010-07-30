@@ -89,141 +89,73 @@ XDGrid::~XDGrid()
 {
 }
 
-void XDGrid::print_ascii(ostream &strm, bool print_name)
-        throw(InternalErr)
+void XDGrid::m_start_structure_element(XMLWriter *writer)
 {
-    BESDEBUG("ascii", "In XDGrid::print_ascii" << endl);
+    // Start the Array element (includes the name)
+    if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*)"Structure") < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not write Structure element for " + /*btp->*/name());
+    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", get_xc(/*btp->*/name())) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not write name attribute for " + /*btp->*/name());
+}
 
-    Grid *g = dynamic_cast<Grid *> (_redirect);
-    if (!g)
-        g = this;
+void XDGrid::m_start_grid_element(XMLWriter *writer)
+{
+    // Start the Array element (includes the name)
+    if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*)"Grid") < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not write Structure element for " + /*btp->*/name());
+    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", get_xc(/*btp->*/name())) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not write name attribute for " + /*btp->*/name());
+}
 
-    // If the 'array' part of the Grid is not projected, then only maps are
-    // to be printed and those should be printed like arrays in a structure.
-    // Similarly, if any of the maps are not projected, then the maps and
-    // array in the grid should be printed like arrays in a structure. The
-    // general rule is that if everything in the Grid (all maps plus the array)
-    // are projected, then print as a Grid, else print as if the Gird is a
+void XDGrid::m_end_type_element(XMLWriter *writer)
+{
+    // End the element for the Array/name
+    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not end type element for " + /*btp->*/name());
+}
+
+
+void XDGrid::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
+{
+    // General rule: If everything in the Grid (all maps plus the array)
+    // is projected, then print as a Grid, else print as if the Gird is a
     // Structure.
     if (projection_yields_grid()) {
-        if (dynamic_cast<Array &> (*g->array_var()).dimensions(true) > 1)
-            print_grid(strm, print_name);
-        else
-            print_vector(strm, print_name);
-    }
-    else {
+	// Start grid element
+	m_start_grid_element(writer);
+
+	// Print the Array part of the grid; since projection_yeilds_grid() is
+	// true, assume the array is in the current projection
+	dynamic_cast<XDArray&>(*array_var()).print_xml_data(writer, show_type);
+
+	// Print the maps, which are vectors but use <Map> and not <Array>
         Map_iter m = map_begin();
         while (m != map_end()) {
             if ((*m)->send_p()) {
-                dynamic_cast<XDArray&>(**m).print_ascii(strm, print_name);
-                strm << "\n";
+                dynamic_cast<XDArray&>(**m++).print_xml_map_data(writer, show_type);
             }
-            ++m;
         }
 
+	// End the grid element
+	m_end_type_element(writer);
+    }
+    else {
+	// Start structure element
+	m_start_structure_element(writer);
+
+	// Print the array and the maps, but use <Array> and not <Map>
         if (array_var()->send_p()) {
-            dynamic_cast<XDArray&>(*array_var()).print_ascii(strm, print_name);
-            strm << "\n";
+            dynamic_cast<XDArray&>(*array_var()).print_xml_data(writer, show_type);
         }
-    }
-}
 
-// Similar to XDArray's print_vector. Print a Grid that has only one
-// dimension. To fit the spec we can call print_ascii() on the map vector and
-// then the array (which has only one dimension). This is a special case; if
-// a grid has two or more dimensions then we can't use the XDArray code.
-//
-// Note that for the variable to be considered a Grid, it has to have all its
-// parts projected so there's no need to test send_p(). If anything is not part
-// of the current projection, then the variable is sent as a Structure.
-void XDGrid::print_vector(ostream &strm, bool print_name)
-{
-    BESDEBUG("ascii", "In XDGrid::print_vector" << endl);
-
-    dynamic_cast<XDArray&> (**map_begin()).print_ascii(strm, print_name);
-
-    strm << "\n";
-
-    dynamic_cast<XDArray&> (*array_var()).print_ascii(strm, print_name);
-}
-
-void XDGrid::print_grid(ostream &strm, bool print_name)
-{
-    BESDEBUG("ascii", "In XDGrid::print_grid" << endl);
-
-    Grid *g = dynamic_cast<Grid *> (_redirect);
-    if (!g) {
-        g = this;
-    }
-    // Grab the Grid's array
-    Array *grid_array = dynamic_cast<Array *> (g->array_var());
-    XDArray *a_grid_array = dynamic_cast<XDArray *> (array_var());
-    XDOutput *ao_grid_array = dynamic_cast<XDOutput *> (a_grid_array);
-
-    // Set up the shape and state vectors. Shape holds the shape of this
-    // array, state holds the index of the current vector to print.
-    int dims = grid_array->dimensions(true);
-    if (dims <= 1)
-        throw InternalErr(__FILE__, __LINE__,
-                "Dimension count is <= 1 while printing multidimensional array.");
-
-    // shape holds the maximum index value of each dimension of the array
-    // (not the size; each value is one less that the size).
-    vector<int> shape = a_grid_array->get_shape_vector(dims - 1);
-    int rightmost_dim_size = a_grid_array->get_nth_dim_size(dims - 1);
-
-    // state holds the indexes of the current row being printed. For an N-dim
-    // array, there are N-1 dims that are iterated over when printing (the
-    // Nth dim is not printed explicitly. Instead it's the number of values
-    // on the row.
-    vector<int> state(dims - 1, 0);
-
-    // Now that we have the number of dims, get and print the rightmost map.
-    // This is cumbersome; if we used the STL it would be much less so.
-    // We are now using STL, so it isn't so cumbersome. pcw
-    // By definition, a map is a vector. Print the rightmost map.
-    dynamic_cast<XDArray &> (**(map_begin() + dims - 1)) .print_ascii(
-            strm, print_name);
-    strm << "\n";
-
-    bool more_indices;
-    int index = 0;
-    do {
-        // Print indices for all dimensions except the last one. Include the
-        // name of the corresponding map vector and the *value* of this
-        // index. Note that the successive elements of state give the indices
-        // of each of the N-1 dimensions for the current row.
-        string n = ao_grid_array->get_full_name();
-
-        strm << n;
-
-        vector<int>::iterator state_iter = state.begin();
-        Grid::Map_iter p = g->map_begin();
-        Grid::Map_iter ap = map_begin();
-        while (state_iter != state.end()) {
-            Array *map = dynamic_cast<Array *> (*p);
-            XDArray *amap = dynamic_cast<XDArray *> (*ap);
-            XDOutput *aomap = dynamic_cast<XDOutput *> (amap);
-
-            strm << "[" << aomap->get_full_name() << "=";
-            BaseType *avar = basetype_to_asciitype(map->var(*state_iter));
-            XDOutput *aovar = dynamic_cast<XDOutput *> (avar);
-            aovar->print_ascii(strm, false);
-            // we aren't saving a var for future reference so need to delete
-            delete avar;
-            strm << "]";
-
-            state_iter++;
-            p++;
-            ap++;
+        Map_iter m = map_begin();
+        while (m != map_end()) {
+            if ((*m)->send_p()) {
+                dynamic_cast<XDArray&>(**m++).print_xml_data(writer, show_type);
+            }
         }
-        strm << ", ";
 
-        index = a_grid_array->print_row(strm, index, rightmost_dim_size - 1);
-
-        more_indices = increment_state(&state, shape);
-        if (more_indices)
-            strm << "\n";
-
-    } while (more_indices);
+	// End the structure element
+	m_end_type_element(writer);
+    }
 }

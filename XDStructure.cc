@@ -80,55 +80,58 @@ XDStructure::~XDStructure()
 {
 }
 
-void
-XDStructure::print_header(ostream &strm)
+void XDStructure::m_start_structure_element(XMLWriter *writer)
 {
-    Vars_iter p = var_begin();
-    while (p != var_end()) {
-	if ((*p)->is_simple_type())
-	    strm << dynamic_cast<XDOutput*>(*p)->get_full_name() ;
-	else if ((*p)->type() == dods_structure_c)
-	    dynamic_cast<XDStructure*>((*p))->print_header(strm);
-	// May need a case here for Sequence 2/18/2002 jhrg
-	// Yes, we do, and for Grid as well. 04/04/03 jhrg
-	else
-	    throw InternalErr(__FILE__, __LINE__,
-			      "Support for ASCII output of datasets with structures which contain Sequences or Grids has not been completed.");
-	if (++p != var_end())
-	    strm << ", " ;
-    }
+    // Start the Array element (includes the name)
+    if (xmlTextWriterStartElement(writer->get_writer(), get_xc(/*btp->*/type_name())) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not write Structure element for " + /*btp->*/name());
+    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", get_xc(/*btp->*/name())) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not write name attribute for " + /*btp->*/name());
+
+#if 0
+    // For a structure, write each variable and its value, then move on to the
+    // next variable/value. Do not emulate the ASCII response, whcih is
+    // designed to work with excel.
+
+    // Start and End the Type element
+    if (xmlTextWriterStartElement(writer->get_writer(), get_xc(/*btp->*/var()->type_name())) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not write type element for " + /*btp->*/name());
+    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not end element for " + /*btp->*/name());
+
+    Array &a = dynamic_cast<Array&>(*btp);
+    for_each(a.dim_begin(), a.dim_end(), PrintArrayDimXML(writer, true));
+#endif
 }
 
-void
-XDStructure::print_ascii(ostream &strm, bool print_name) throw(InternalErr)
+void XDStructure::m_end_structure_element(XMLWriter *writer)
 {
-    BESDEBUG("ascii", "In 'XDStructure::print_ascii'" << endl);
-
-    if (is_linear()) {
-	if (print_name) {
-	    print_header(strm);
-	    strm << "\n" ;
-	}
-
-	Vars_iter p = var_begin();
-        while (p != var_end()) {
-            if ((*p)->send_p())
-                dynamic_cast<XDOutput*> ((*p))->print_ascii(strm, false);
-
-            if (++p != var_end())
-                strm << ", ";
-        }
-    }
-    else {
-        for (Vars_iter p = var_begin(); p != var_end(); ++p) {
-            if ((*p)->send_p()) {
-                dynamic_cast<XDOutput*> ((*p))->print_ascii(strm, true);
-                // This line outputs an extra endl when print_ascii is called for
-                // nested structures because an endl is written for each member
-                // and then once for the structure itself. 9/14/2001 jhrg
-                strm << "\n";
-            }
-        }
-    }
+    // End the element for the Array/name
+    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not end element for " + /*btp->*/name());
 }
 
+
+void
+XDStructure::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
+{
+#if 0
+    BaseType *btp = d_redirect;
+    if (!btp)
+	btp = dynamic_cast<XDStructure*>(this);
+    if (!btp)
+	throw InternalErr(__FILE__, __LINE__, "Could not get a valid BaseType");
+#endif
+
+    // Start the <Structure> element
+    m_start_structure_element(writer);
+
+    for (Vars_iter p = var_begin(); p != var_end(); ++p) {
+        if ((*p)->send_p()) {
+            dynamic_cast<XDOutput*> ((*p))->print_xml_data(writer, true);
+        }
+    }
+
+    // End the <Structure> element
+    m_end_structure_element(writer);
+}

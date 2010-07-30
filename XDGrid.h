@@ -41,8 +41,9 @@
 
 class XDGrid: public Grid, public XDOutput {
 private:
-    void print_vector(ostream &strm, bool print_name);
-    void print_grid(ostream &strm, bool print_name);
+    void m_start_structure_element(XMLWriter *writer);
+    void m_start_grid_element(XMLWriter *writer);
+    void m_end_type_element(XMLWriter *writer);
 
 public:
     XDGrid(const string &n);
@@ -50,8 +51,8 @@ public:
     virtual ~XDGrid();
 
     virtual BaseType *ptr_duplicate();
-    virtual void print_ascii(ostream &strm, bool print_name = true)
-	throw(InternalErr);
+
+    virtual void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 };
 
 #endif

@@ -106,9 +106,10 @@ XDSequence::element_count(bool leaves)
 void
 XDSequence::print_ascii_row(ostream &strm, int row, BaseTypeRow outer_vars)
 {
+#if 0
     BESDEBUG("ascii", "    In XDSequence::print_ascii_row" << endl);
 
-    Sequence *seq = dynamic_cast < Sequence * >(_redirect);
+    Sequence *seq = dynamic_cast < Sequence * >(d_redirect);
     if (!seq)
         seq = this;
 
@@ -153,11 +154,13 @@ XDSequence::print_ascii_row(ostream &strm, int row, BaseTypeRow outer_vars)
 
         ++j;
     } while (j < elements);
+#endif
 }
 
 void
 XDSequence::print_leading_vars(ostream &strm, BaseTypeRow & outer_vars)
 {
+#if 0
     BESDEBUG("ascii", "    In XDSequence::print_leading_vars" << endl);
 
     bool first_var = true;
@@ -175,12 +178,13 @@ XDSequence::print_leading_vars(ostream &strm, BaseTypeRow & outer_vars)
     }
 
     BESDEBUG("ascii", "    Out XDSequence::print_leading_vars" << endl);
+#endif
 }
 
 void
 XDSequence::print_ascii_rows(ostream &strm, BaseTypeRow outer_vars)
 {
-    Sequence *seq = dynamic_cast < Sequence * >(_redirect);
+    Sequence *seq = dynamic_cast < Sequence * >(d_redirect);
     if (!seq)
         seq = this;
 
@@ -205,6 +209,7 @@ XDSequence::print_ascii_rows(ostream &strm, BaseTypeRow outer_vars)
 void
 XDSequence::print_header(ostream &strm)
 {
+#if 0
     bool first_var = true;    // Print commas as separators
     Vars_iter p = var_begin();
     while (p != var_end())
@@ -231,13 +236,15 @@ XDSequence::print_header(ostream &strm)
 
         ++p;
     }
+#endif
 }
 
 void
 XDSequence::print_ascii(ostream &strm, bool print_name) throw(InternalErr)
 {
+#if 0
     BESDEBUG("ascii", "In XDSequence::print_ascii" << endl);
-    Sequence *seq = dynamic_cast < Sequence * >(_redirect);
+    Sequence *seq = dynamic_cast < Sequence * >(d_redirect);
     if (!seq)
         seq = this;
 
@@ -282,4 +289,5 @@ XDSequence::print_ascii(ostream &strm, bool print_name) throw(InternalErr)
                 strm << "\n" ;
         } while (!rows_done);
     }
+#endif
 }

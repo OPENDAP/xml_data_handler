@@ -78,8 +78,23 @@ public:
 	    b->set_value(i32b, i32b.size());
 
 	    c = dynamic_cast<XDArray*>(*p++);
+	    vector<dods_int32> i32c;
+	    for (dods_int32 i = 0; i < 5; i++)
+		for (dods_int32 j = 0; j < 5; j++)
+		    for (dods_int32 k = 0; k < 5; k++)
+		    i32c.push_back(i * j * k * (2));
+	    c->set_value(i32c, i32c.size());
+
 	    d = dynamic_cast<XDArray*>(*p++);
-        }
+	    vector<dods_int32> i32d;
+	    for (dods_int32 i = 0; i < 3; i++)
+		for (dods_int32 j = 0; j < 4; j++)
+		    for (dods_int32 k = 0; k < 5; k++)
+			for (dods_int32 l = 0; l < 6; l++)
+			    i32d.push_back(i * j * k * l * (2));
+	    d->set_value(i32d, i32d.size());
+
+       }
         catch (Error &e) {
             cerr << "Caught Error in setUp: " << e.get_error_message()
                 << endl;
@@ -99,9 +114,12 @@ public:
     CPPUNIT_TEST(test_get_nth_dim_size);
     CPPUNIT_TEST(test_get_shape_vector);
     CPPUNIT_TEST(test_get_index);
-
+#if 1
     CPPUNIT_TEST(test_print_xml_data_a);
     CPPUNIT_TEST(test_print_xml_data_b);
+    CPPUNIT_TEST(test_print_xml_data_c);
+#endif
+    CPPUNIT_TEST(test_print_xml_data_d);
 
     CPPUNIT_TEST_SUITE_END();
     
@@ -181,26 +199,26 @@ public:
     void test_get_index() {
 	try {
 	    vector<int> a_state(1); a_state[0] = 0;
-	    CPPUNIT_ASSERT(a->get_index(a_state) == 0);
+	    CPPUNIT_ASSERT(a->m_get_index(a_state) == 0);
 	    a_state[0] = 9;
-	    CPPUNIT_ASSERT(a->get_index(a_state) == 9);
+	    CPPUNIT_ASSERT(a->m_get_index(a_state) == 9);
 
 	    vector<int> b_state(2, 0);
-	    CPPUNIT_ASSERT(b->get_index(b_state) == 0);
+	    CPPUNIT_ASSERT(b->m_get_index(b_state) == 0);
 	    b_state[0]=0; b_state[1]=5;
-	    CPPUNIT_ASSERT(b->get_index(b_state) == 5);
+	    CPPUNIT_ASSERT(b->m_get_index(b_state) == 5);
 	    b_state[0]=5; b_state[1]=5;
-	    CPPUNIT_ASSERT(b->get_index(b_state) == 55);
+	    CPPUNIT_ASSERT(b->m_get_index(b_state) == 55);
 	    b_state[0]=9; b_state[1]=9;
-	    CPPUNIT_ASSERT(b->get_index(b_state) == 99);
+	    CPPUNIT_ASSERT(b->m_get_index(b_state) == 99);
 
 	    vector<int> d_state(4, 0);
-	    CPPUNIT_ASSERT(d->get_index(d_state) == 0);
+	    CPPUNIT_ASSERT(d->m_get_index(d_state) == 0);
 	    d_state[0]=2; d_state[1]=3; d_state[2]=4; d_state[3]=5;
-	    CPPUNIT_ASSERT(d->get_index(d_state) == 359);
+	    CPPUNIT_ASSERT(d->m_get_index(d_state) == 359);
 
 	    d_state[0]=1; d_state[1]=2; d_state[2]=0; d_state[3]=2;
-	    CPPUNIT_ASSERT(d->get_index(d_state) == 1*(4*5*6) + 2*(5*6) + 0*(6) + 2);
+	    CPPUNIT_ASSERT(d->m_get_index(d_state) == 1*(4*5*6) + 2*(5*6) + 0*(6) + 2);
 	}
         catch (Error &e) {
             cerr << "Error: " << e.get_error_message() << endl;
@@ -220,6 +238,7 @@ public:
 	    CPPUNIT_FAIL("Caught an InternalErr");
 	}
     }
+
     void test_print_xml_data_b() {
 	try {
 	b->set_send_p(true);
@@ -232,6 +251,32 @@ public:
 	    CPPUNIT_FAIL("Caught an InternalErr");
 	}
     }
+
+    void test_print_xml_data_c() {
+	try {
+	c->set_send_p(true);
+	XMLWriter writer;
+	dynamic_cast<XDOutput*>(c)->print_xml_data(&writer, true);
+	cout << writer.get_doc() << endl;
+	}
+	catch (InternalErr &e) {
+	    cerr << "Caught an InternalErr: " + e.get_error_message() << endl;
+	    CPPUNIT_FAIL("Caught an InternalErr");
+	}
+    }
+    void test_print_xml_data_d() {
+	try {
+	d->set_send_p(true);
+	XMLWriter writer;
+	dynamic_cast<XDOutput*>(d)->print_xml_data(&writer, true);
+	cout << writer.get_doc() << endl;
+	}
+	catch (InternalErr &e) {
+	    cerr << "Caught an InternalErr: " + e.get_error_message() << endl;
+	    CPPUNIT_FAIL("Caught an InternalErr");
+	}
+    }
+
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(XDArrayTest);
