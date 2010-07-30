@@ -51,12 +51,13 @@ private:
 
     void m_print_xml_vector(XMLWriter *writer, string element);
     void m_print_xml_array(XMLWriter *writer, string element);
+    void m_print_xml_complex_array(XMLWriter *writer, string element);
 
     int m_print_xml_row(XMLWriter *writer, int index, int number);
-
+#if 0
     void m_start_array_element(XMLWriter *writer, string element);
     void m_end_array_element(XMLWriter *writer);
-
+#endif
     friend class XDArrayTest;
 
 public:
@@ -78,6 +79,8 @@ public:
 	contains the highest index value. To get the size, add one. */
     vector<int> get_shape_vector(size_t n) throw(InternalErr);
 
+    virtual void start_xml_declaration(XMLWriter *writer, string element = "")  throw(InternalErr);
+
     /**
      * Print an array as a Map.
      * @note For use with XDGrid
@@ -85,7 +88,7 @@ public:
      */
     void print_xml_map_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 
-    void XDArray::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
+    void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 
 };
 

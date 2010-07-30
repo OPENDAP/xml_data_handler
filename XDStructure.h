@@ -42,15 +42,18 @@
 class XDStructure: public Structure, public XDOutput {
 
 private:
+#if 0
     void m_start_structure_element(XMLWriter *writer);
     void m_end_structure_element(XMLWriter *writer);
-
+#endif
 public:
     XDStructure(const string &n);
     XDStructure( Structure *bt ) ;
     virtual ~XDStructure();
 
     virtual BaseType *ptr_duplicate();
+
+    virtual void start_xml_declaration(XMLWriter *writer, string element = "")  throw(InternalErr);
 
     virtual void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 

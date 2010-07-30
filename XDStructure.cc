@@ -80,6 +80,20 @@ XDStructure::~XDStructure()
 {
 }
 
+void
+XDStructure::start_xml_declaration(XMLWriter *writer, string element)  throw(InternalErr)
+{
+    XDOutput::start_xml_declaration(writer);
+
+    for (Vars_iter p = var_begin(); p != var_end(); ++p) {
+        if ((*p)->send_p()) {
+            dynamic_cast<XDOutput&>(**p).start_xml_declaration(writer, element);
+            dynamic_cast<XDOutput&>(**p).end_xml_declaration(writer);
+        }
+    }
+}
+
+#if 0
 void XDStructure::m_start_structure_element(XMLWriter *writer)
 {
     // Start the Array element (includes the name)
@@ -110,7 +124,7 @@ void XDStructure::m_end_structure_element(XMLWriter *writer)
     if (xmlTextWriterEndElement(writer->get_writer()) < 0)
 	throw InternalErr(__FILE__, __LINE__, "Could not end element for " + /*btp->*/name());
 }
-
+#endif
 
 void
 XDStructure::print_xml_data(XMLWriter *writer, bool /*show_type*/) throw(InternalErr)
@@ -124,7 +138,12 @@ XDStructure::print_xml_data(XMLWriter *writer, bool /*show_type*/) throw(Interna
 #endif
 
     // Start the <Structure> element
-    m_start_structure_element(writer);
+    //m_start_structure_element(writer);
+
+    // Forcing the use of the generic version prints just the <Structure>
+    // element w/o the type information of the components. That will be printed
+    // by the embedded print_xml_data calls.
+    XDOutput::start_xml_declaration(writer);
 
     for (Vars_iter p = var_begin(); p != var_end(); ++p) {
         if ((*p)->send_p()) {
@@ -133,5 +152,6 @@ XDStructure::print_xml_data(XMLWriter *writer, bool /*show_type*/) throw(Interna
     }
 
     // End the <Structure> element
-    m_end_structure_element(writer);
+    //m_end_structure_element(writer);
+    end_xml_declaration(writer);
 }

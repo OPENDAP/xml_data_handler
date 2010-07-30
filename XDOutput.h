@@ -57,14 +57,13 @@ public:
     XDOutput( BaseType *bt ) : d_redirect( bt ) { }
     XDOutput() : d_redirect( 0 ) { }
     virtual ~XDOutput() {}
-
+#if 0
     /** Get the fully qualified name of this object. Names of nested
 	constructor types are separated by dots (.).
 
 	@return The fully qualified name of this object. */
     string get_full_name();
-
-    virtual void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
+#endif
 
     /** Increment #state# to the next value given #shape#. This method
 	uses simple modulo arithmetic to provide a way to iterate over all
@@ -79,6 +78,11 @@ public:
 	for an object of dimension N.
 	@return True if there are more states, false if not. */
     bool increment_state(vector<int> *state, const vector<int> &shape);
+
+    virtual void start_xml_declaration(XMLWriter *writer, string element = "")  throw(InternalErr);
+    virtual void end_xml_declaration(XMLWriter *writer)  throw(InternalErr);
+
+    virtual void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 };
 
 inline const xmlChar* get_xc(const string &s) {

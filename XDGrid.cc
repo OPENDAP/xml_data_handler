@@ -89,6 +89,7 @@ XDGrid::~XDGrid()
 {
 }
 
+#if 0
 void XDGrid::m_start_structure_element(XMLWriter *writer)
 {
     // Start the Array element (includes the name)
@@ -113,7 +114,7 @@ void XDGrid::m_end_type_element(XMLWriter *writer)
     if (xmlTextWriterEndElement(writer->get_writer()) < 0)
 	throw InternalErr(__FILE__, __LINE__, "Could not end type element for " + /*btp->*/name());
 }
-
+#endif
 
 void XDGrid::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
 {
@@ -122,7 +123,8 @@ void XDGrid::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr
     // Structure.
     if (projection_yields_grid()) {
 	// Start grid element
-	m_start_grid_element(writer);
+	//m_start_grid_element(writer);
+	start_xml_declaration(writer, "Grid");
 
 	// Print the Array part of the grid; since projection_yeilds_grid() is
 	// true, assume the array is in the current projection
@@ -137,11 +139,13 @@ void XDGrid::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr
         }
 
 	// End the grid element
-	m_end_type_element(writer);
+	//m_end_type_element(writer);
+        end_xml_declaration(writer);
     }
     else {
 	// Start structure element
-	m_start_structure_element(writer);
+	//m_start_structure_element(writer);
+	start_xml_declaration(writer, "Structure");
 
 	// Print the array and the maps, but use <Array> and not <Map>
         if (array_var()->send_p()) {
@@ -156,6 +160,7 @@ void XDGrid::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr
         }
 
 	// End the structure element
-	m_end_type_element(writer);
+	//m_end_type_element(writer);
+	end_xml_declaration(writer);
     }
 }

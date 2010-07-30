@@ -31,12 +31,18 @@
 
 #include "config.h"
 
-#include <algorithm>
 #include <iostream>
 #include <sstream>
 
+#include <vector>
+#include <algorithm>
+#include <iterator>
+
+
 #include <libxml/encoding.h>
 #include <libxml/xmlwriter.h>
+
+//#define DODS_DEBUG
 
 #include <BaseType.h>
 #include <debug.h>
@@ -47,69 +53,55 @@
 
 using namespace xml_data;
 
-// Is this ever used
-#if 0
-string XDOutput::get_full_name()
-{
-    BaseType *this_btp = dynamic_cast < BaseType * >(this);
-    BaseType *btp = d_redirect;
-    // TODO How can _redirect ever be null? Throw here
-    if (!btp)
-        btp = this_btp;
-    if (!btp)
-        throw InternalErr(__FILE__, __LINE__,
-                          "Instance of XDOuput must also be a BaseType.");
-
-    BaseType *btp2 = this_btp->get_parent();
-    if (!btp2)
-        return btp->name();     // Must be top-level node/variable.
-    else
-        return dynamic_cast < XDOutput * >(btp2)->get_full_name()
-            + "." + btp->name();
-}
-#endif
-#if 0
-/** @brief Print values as ASCII
-    Prints the values of \e this in ASCII suitable for import into a
-    spreadsheet. This version prints only the values of simple types; other
-    types such as Array specialize this method (see XDArray::print_ascii()).
-    @param strm Output stream for values
-    @print_name Name of this variable to include in the ASCII output. */
-void XDOutput::print_ascii(ostream &strm,
-                              bool print_name) throw(InternalErr)
+void XDOutput::start_xml_declaration(XMLWriter *writer, string /*element*/)  throw(InternalErr)
 {
     BaseType *btp = d_redirect;
-    if (!btp) {
+#if 1
+    if (!btp)
         btp = dynamic_cast < BaseType * >(this);
-    }
-
+#endif
     if (!btp)
         throw InternalErr(__FILE__, __LINE__,
                           "An instance of XDOutput failed to cast to BaseType.");
 
-    if (print_name)
-        strm << get_full_name() << ", " ;
-
-    btp->print_val(strm, "", false);
+    if (xmlTextWriterStartElement(writer->get_writer(), get_xc(btp->type_name())) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not write element for " + btp->name());
+    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", get_xc(btp->name())))
+	throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + btp->name());
 }
+
+void XDOutput::end_xml_declaration(XMLWriter *writer)  throw(InternalErr)
+{
+    BaseType *btp = d_redirect;
+#if 1
+    if (!btp)
+        btp = dynamic_cast < BaseType * >(this);
 #endif
+    if (!btp)
+        throw InternalErr(__FILE__, __LINE__,
+                          "An instance of XDOutput failed to cast to BaseType.");
+
+    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not end element for " + btp->name());
+}
 
 void XDOutput::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
 {
     BaseType *btp = d_redirect;
-    if (!btp) {
+    if (!btp)
         btp = dynamic_cast < BaseType * >(this);
-    }
-
     if (!btp)
         throw InternalErr(__FILE__, __LINE__,
                           "An instance of XDOutput failed to cast to BaseType.");
     if (show_type) {
+	start_xml_declaration(writer);
+#if 0
 	// Write the element for the name
 	if (xmlTextWriterStartElement(writer->get_writer(),  get_xc(btp->type_name())) < 0)
 	    throw InternalErr(__FILE__, __LINE__, "Could not write element for " + btp->name());
 	if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*)"name", get_xc(btp->name())))
 	    throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + btp->name());
+#endif
     }
     // Write the element for the value, then the value
     ostringstream oss;
@@ -118,13 +110,15 @@ void XDOutput::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalE
 	throw InternalErr(__FILE__, __LINE__, "Could not write value element for " + btp->name());
 
     if (show_type) {
+	end_xml_declaration(writer);
+#if 0
 	//close the element for the name
 	if (xmlTextWriterEndElement(writer->get_writer()) < 0)
 	    throw InternalErr(__FILE__, __LINE__, "Could not end element for " + btp->name());
+#endif
     }
 }
 
-// This code implements simple modulo arithmetic. The vector shape contains
 // This code implements simple modulo arithmetic. The vector shape contains
 // the maximum count value for each dimension, state contains the current
 // state. For example, if shape holds 10, 20 then when state holds 0, 20
@@ -145,18 +139,15 @@ bool XDOutput::increment_state(vector < int >*state,
             *state_riter = 0;
         } else {
             *state_riter = *state_riter + 1;
-
-            DBG(cerr << "Returning state:";
-                for_each(state->begin(), state->end(), print < int >);
-                cerr << endl);
-
+#if 0
+	    cerr << "New value of state: ";
+	    copy(state->begin(), state->end(),
+		 ostream_iterator<int>(cerr, ", "));
+	    cerr << endl;
+#endif
             return true;
         }
     }
-
-    DBG(cerr << "Returning state without change:";
-        for_each(state->begin(), state->end(), print < int >);
-        cerr << endl);
 
     return false;
 }

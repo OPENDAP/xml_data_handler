@@ -35,19 +35,24 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include <DDS.h>
+#include <Int32.h>
+#include <Structure.h>
 
 #include "XDArray.h"
+//#include "XDStructure.h"
 #include "XDOutputFactory.h"
 #include "test_config.h"
 
 bool translate = false;
+
 using namespace CppUnit;
 using namespace std;
+using namespace libdap;
 
 class XDArrayTest : public TestFixture {
 private:
     DDS *dds1;
-    XDArray *a, *b, *c, *d;
+    XDArray *a, *b, *c, *d, *e;
     XDOutputFactory *aof;
     
 public: 
@@ -94,6 +99,47 @@ public:
 			    i32d.push_back(i * j * k * l * (2));
 	    d->set_value(i32d, i32d.size());
 
+	    // Get the Structure array
+	    e = dynamic_cast<XDArray*>(*p++);
+
+	    // Build a structure that contains arrays
+	    Structure *elem = new Structure("elem");
+	    Int32 *e_a = new Int32("e_a");
+	    e_a->set_value(17);
+	    e_a->set_send_p(true);
+	    elem->add_var(e_a);
+
+	    Int32 *e_z = new Int32("e_z");
+	    e_z->set_value(42);
+	    e_z->set_send_p(true);
+	    elem->add_var(e_z);
+
+	    Array *e_b = new Array("e_b", new Int32("e_b"));
+	    e_b->append_dim(3, "e_b_values");
+	    vector<dods_int32> e_b_int32;
+	    for (dods_int32 i = 0; i < 3; i++)
+		e_b_int32.push_back(i * (-512));
+	    e_b->set_value(e_b_int32, e_b_int32.size());
+	    elem->add_var(e_b);
+
+	    Array *e_c = new Array("e_c", new Int32("e_c"));
+	    e_c->append_dim(2, "e_c_1_values");
+	    e_c->append_dim(3, "e_c_2_values");
+	    vector<dods_int32> e_c_int32;
+	    for (dods_int32 i = 0; i < 2; i++)
+		for (dods_int32 j = 0; j < 3; j++)
+		    e_c_int32.push_back(i * j * (2));
+	    e_c->set_value(e_c_int32, e_c_int32.size());
+	    elem->add_var(e_c);
+	    //elem->set_send_p(true);
+
+	    // Load the same pointer into the array 4 times; set_vec copies
+	    e->set_vec(0, elem);
+	    e->set_vec(1, elem);
+	    e->set_vec(2, elem);
+	    e->set_vec(3, elem);
+
+	    delete elem;
        }
         catch (Error &e) {
             cerr << "Caught Error in setUp: " << e.get_error_message()
@@ -110,16 +156,17 @@ public:
     }
 
     CPPUNIT_TEST_SUITE( XDArrayTest );
-
+#if 1
     CPPUNIT_TEST(test_get_nth_dim_size);
     CPPUNIT_TEST(test_get_shape_vector);
     CPPUNIT_TEST(test_get_index);
-#if 1
+
     CPPUNIT_TEST(test_print_xml_data_a);
     CPPUNIT_TEST(test_print_xml_data_b);
     CPPUNIT_TEST(test_print_xml_data_c);
-#endif
     CPPUNIT_TEST(test_print_xml_data_d);
+#endif
+    CPPUNIT_TEST(test_print_xml_data_e);
 
     CPPUNIT_TEST_SUITE_END();
     
@@ -146,18 +193,6 @@ public:
 	try {
 	    vector<int> a_shape(1, 10);
 
-#if defined(DODS_DEBUG)
-	    cerr << "a_shape: ";
-	    copy(a_shape.begin(), a_shape.end(),
-		 ostream_iterator<int>(cerr, ", "));
-	    cerr << endl;
-	    vector<int> response_shape = a->get_shape_vector(1);
-	    
-	    cerr << "response_shape: ";
-	    copy(response_shape.begin(), response_shape.end(),
-		 ostream_iterator<int>(cerr, ", "));
-	    cerr << endl;
-#endif
 	    CPPUNIT_ASSERT(a->get_shape_vector(1) == a_shape);
 
 	    vector<int> b_shape(2, 10);
@@ -264,11 +299,25 @@ public:
 	    CPPUNIT_FAIL("Caught an InternalErr");
 	}
     }
+
     void test_print_xml_data_d() {
 	try {
 	d->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(d)->print_xml_data(&writer, true);
+	cout << writer.get_doc() << endl;
+	}
+	catch (InternalErr &e) {
+	    cerr << "Caught an InternalErr: " + e.get_error_message() << endl;
+	    CPPUNIT_FAIL("Caught an InternalErr");
+	}
+    }
+
+    void test_print_xml_data_e() {
+	try {
+	e->set_send_p(true);
+	XMLWriter writer;
+	dynamic_cast<XDOutput*>(e)->print_xml_data(&writer, true);
 	cout << writer.get_doc() << endl;
 	}
 	catch (InternalErr &e) {
