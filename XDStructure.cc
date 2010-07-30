@@ -113,7 +113,7 @@ void XDStructure::m_end_structure_element(XMLWriter *writer)
 
 
 void
-XDStructure::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
+XDStructure::print_xml_data(XMLWriter *writer, bool /*show_type*/) throw(InternalErr)
 {
 #if 0
     BaseType *btp = d_redirect;

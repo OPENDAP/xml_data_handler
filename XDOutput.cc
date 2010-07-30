@@ -104,24 +104,24 @@ void XDOutput::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalE
     if (!btp)
         throw InternalErr(__FILE__, __LINE__,
                           "An instance of XDOutput failed to cast to BaseType.");
-
-    // Write the element for the name
-    if (xmlTextWriterStartElement(writer->get_writer(),  get_xc(btp->type_name())) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write element for " + btp->name());
-    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*)"name", get_xc(btp->name())))
-	throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + btp->name());
-
+    if (show_type) {
+	// Write the element for the name
+	if (xmlTextWriterStartElement(writer->get_writer(),  get_xc(btp->type_name())) < 0)
+	    throw InternalErr(__FILE__, __LINE__, "Could not write element for " + btp->name());
+	if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*)"name", get_xc(btp->name())))
+	    throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + btp->name());
+    }
     // Write the element for the value, then the value
     ostringstream oss;
     btp->print_val(oss, "", false);
     if (!xmlTextWriterWriteElement(writer->get_writer(), (const xmlChar*)"value", get_xc(oss.str())) < 0)
-	throw InternalErr(__FILE__, __LINE__,
-		"Could not write value element for " + btp->name());
+	throw InternalErr(__FILE__, __LINE__, "Could not write value element for " + btp->name());
 
-    //close the element for the name
-    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not end element for " + btp->name());
-
+    if (show_type) {
+	//close the element for the name
+	if (xmlTextWriterEndElement(writer->get_writer()) < 0)
+	    throw InternalErr(__FILE__, __LINE__, "Could not end element for " + btp->name());
+    }
 }
 
 // This code implements simple modulo arithmetic. The vector shape contains
