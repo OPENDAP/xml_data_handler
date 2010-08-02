@@ -93,7 +93,13 @@ XDArray::~XDArray()
 {
 }
 
-void XDArray::print_xml_map_data(XMLWriter *writer, bool show_type) throw(InternalErr)
+/**
+ * Print an array as a Map.
+ * @note For use with XDGrid
+ * @param writer
+ * @param show_type Ignored
+ */
+void XDArray::print_xml_map_data(XMLWriter *writer, bool /*show_type*/) throw(InternalErr)
 {
     if (var()->is_simple_type()) {
         if (dimensions(true) > 1) {
@@ -108,7 +114,6 @@ void XDArray::print_xml_map_data(XMLWriter *writer, bool show_type) throw(Intern
 	throw InternalErr(__FILE__, __LINE__, "A Map must be a simple type.");
     }
 }
-
 
 void XDArray::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
 {
@@ -382,6 +387,11 @@ int XDArray::m_get_index(vector < int >indices) throw(InternalErr)
 // get_shape_vector and get_nth_dim_size are public because that are called
 // from Grid. 9/14/2001 jhrg
 
+/** Get the sizes of the first N dimensions of this array. This
+    `shape vector' may be used in all sorts of output formatters.
+
+     @return A vector describing the shape of the array. Each value
+     contains the highest index value. To get the size, add one. */
 vector < int > XDArray::get_shape_vector(size_t n) throw(InternalErr)
 {
     if (n < 1 || n > dimensions(true)) {

@@ -57,6 +57,7 @@ public:
     XDOutput( BaseType *bt ) : d_redirect( bt ) { }
     XDOutput() : d_redirect( 0 ) { }
     virtual ~XDOutput() {}
+
 #if 0
     /** Get the fully qualified name of this object. Names of nested
 	constructor types are separated by dots (.).
@@ -65,18 +66,6 @@ public:
     string get_full_name();
 #endif
 
-    /** Increment #state# to the next value given #shape#. This method
-	uses simple modulo arithmetic to provide a way to iterate over all
-	combinations of dimensions of an Array or Grid. The vector #shape#
-	holds the maximum sizes of each of N dimensions. The vector #state#
-	holds the current index values of those N dimensions. Calling this
-	method increments #state# to the next dimension, varying the
-	right-most fastest.
-
-	To print DODS Array and Grid objects according to the DAP 2.0
-	specification, #state# and #shape# should be vectors of length N-1
-	for an object of dimension N.
-	@return True if there are more states, false if not. */
     bool increment_state(vector<int> *state, const vector<int> &shape);
 
     virtual void start_xml_declaration(XMLWriter *writer, string element = "")  throw(InternalErr);

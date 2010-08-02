@@ -39,7 +39,6 @@ using std::endl ;
 
 #include "get_xml_data.h"
 #include "XDOutput.h"
-//#include "name_map.h"
 
 #include "XDByte.h"
 #include "XDInt16.h"
@@ -56,6 +55,7 @@ using std::endl ;
 #include "XDGrid.h"
 
 namespace xml_data {
+
 /** Using the XDOutput::print_ascii(), write the data values to an
     output file/stream as ASCII.
 
@@ -64,23 +64,14 @@ namespace xml_data {
     build such a DataDDS from one whose types are, say NCByte, et cetera.
     @param strm Write ASCII to stream. */
 void
-get_data_values_as_ascii(DataDDS *dds, ostream &strm)
+get_data_values_as_xml(DataDDS *dds, XMLWriter *writer)
 {
-#if 0
-    BESDEBUG("ascii", "In get_data_values_as_ascii; dataset name = " << dds->get_dataset_name() << endl );
-    strm << "Dataset: " << dds->get_dataset_name() << "\n" ;
-
     DDS::Vars_iter i = dds->var_begin();
     while (i != dds->var_end()) {
-        if ((*i)->send_p()) {
-            dynamic_cast<XDOutput &>(**i).print_ascii(strm);
-            strm << "\n";
-        }
+        if ((*i)->send_p())
+            dynamic_cast<XDOutput &>(**i).print_xml_data(writer, true);
         ++i;
     }
-
-    BESDEBUG("ascii", "Out get_data_values_as_ascii" << endl );
-#endif
 }
 
 DataDDS *datadds_to_ascii_datadds(DataDDS * dds)

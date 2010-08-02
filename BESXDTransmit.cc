@@ -48,6 +48,8 @@
 #include "BESDapError.h"
 #include "BESInternalFatalError.h"
 
+#include "XMLWriter.h"
+
 #include "BESDebug.h"
 
 using namespace xml_data;
@@ -162,7 +164,9 @@ BESXDTransmit::send_basic_ascii( BESResponseObject * obj,
         DataDDS *ascii_dds = datadds_to_ascii_datadds(dds);
 
         BESDEBUG( "ascii", "getting ascii values" << endl ) ;
-        get_data_values_as_ascii(ascii_dds, dhi.get_output_stream());
+        XMLWriter writer;
+        get_data_values_as_xml(ascii_dds, &writer);
+        dhi.get_output_stream() << writer.get_doc();
 
         BESDEBUG( "ascii", "got the ascii values" << endl ) ;
 	dhi.get_output_stream() << flush ;

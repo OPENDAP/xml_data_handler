@@ -67,25 +67,12 @@ public:
 
     virtual BaseType *ptr_duplicate();
 
-    /** Get the size of dimension #n#.
-	@param n Return the size of the n^{th} dimension.
-	@return The size of the n^{th} dimension.
-	@exception InternalErr. */
     int get_nth_dim_size(size_t n) throw(InternalErr);
 
-    /** Get the sizes of the first N dimensions of this array. This
-	`shape vector' may be used in all sorts of output formatters.
-	@return A vector describing the shape of the array. Each value
-	contains the highest index value. To get the size, add one. */
     vector<int> get_shape_vector(size_t n) throw(InternalErr);
 
     virtual void start_xml_declaration(XMLWriter *writer, string element = "")  throw(InternalErr);
 
-    /**
-     * Print an array as a Map.
-     * @note For use with XDGrid
-     * @param writer
-     */
     void print_xml_map_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 
     void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);

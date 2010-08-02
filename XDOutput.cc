@@ -42,7 +42,7 @@
 #include <libxml/encoding.h>
 #include <libxml/xmlwriter.h>
 
-//#define DODS_DEBUG
+#define DODS_DEBUG
 
 #include <BaseType.h>
 #include <debug.h>
@@ -51,15 +51,16 @@
 #include "XDOutput.h"
 #include "get_xml_data.h"
 
-using namespace xml_data;
+//using namespace xml_data;
+using namespace std;
 
 void XDOutput::start_xml_declaration(XMLWriter *writer, string /*element*/)  throw(InternalErr)
 {
     BaseType *btp = d_redirect;
-#if 1
+    DBG(cerr << "d_redirect: " << d_redirect << endl;)
     if (!btp)
         btp = dynamic_cast < BaseType * >(this);
-#endif
+
     if (!btp)
         throw InternalErr(__FILE__, __LINE__,
                           "An instance of XDOutput failed to cast to BaseType.");
@@ -73,10 +74,10 @@ void XDOutput::start_xml_declaration(XMLWriter *writer, string /*element*/)  thr
 void XDOutput::end_xml_declaration(XMLWriter *writer)  throw(InternalErr)
 {
     BaseType *btp = d_redirect;
-#if 1
+    DBG(cerr << "d_redirect: " << d_redirect << endl);
     if (!btp)
         btp = dynamic_cast < BaseType * >(this);
-#endif
+
     if (!btp)
         throw InternalErr(__FILE__, __LINE__,
                           "An instance of XDOutput failed to cast to BaseType.");
@@ -119,12 +120,27 @@ void XDOutput::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalE
     }
 }
 
-// This code implements simple modulo arithmetic. The vector shape contains
-// the maximum count value for each dimension, state contains the current
-// state. For example, if shape holds 10, 20 then when state holds 0, 20
-// calling this method will increment state to 1, 0. For this example,
-// calling the method with state equal to 10, 20 will reset state to 0, 0 and
-// the return value will be false.
+/** Increment #state# to the next value given #shape#. This method
+ uses simple modulo arithmetic to provide a way to iterate over all
+ combinations of dimensions of an Array or Grid. The vector #shape#
+ holds the maximum sizes of each of N dimensions. The vector #state#
+ holds the current index values of those N dimensions. Calling this
+ method increments #state# to the next dimension, varying the
+ right-most fastest.
+
+ To print DODS Array and Grid objects according to the DAP 2.0
+ specification, #state# and #shape# should be vectors of length N-1
+ for an object of dimension N.
+
+ For example, if shape holds 10, 20 then when state holds 0, 20
+ calling this method will increment state to 1, 0. For this example,
+ calling the method with state equal to 10, 20 will reset state to 0, 0 and
+ the return value will be false.
+
+ @param state A pointer to the current state vector, a value-result parameter
+ @param share A reference to a vector of the dimension sizes.
+
+ @return True if there are more states, false if not. */
 bool XDOutput::increment_state(vector < int >*state,
                                   const vector < int >&shape)
 {
@@ -137,7 +153,8 @@ bool XDOutput::increment_state(vector < int >*state,
          state_riter < state->rend(); state_riter++, shape_riter++) {
         if (*state_riter == *shape_riter - 1) {
             *state_riter = 0;
-        } else {
+        }
+        else {
             *state_riter = *state_riter + 1;
 #if 0
 	    cerr << "New value of state: ";

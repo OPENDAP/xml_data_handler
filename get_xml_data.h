@@ -25,14 +25,15 @@
 
 #include <DataDDS.h>
 
+#include "XMLWriter.h"
+
 using namespace libdap ;
 
 class libdap::BaseType ;
 
 namespace xml_data {
 
-void get_data_values_as_ascii(DataDDS *dds, FILE *dest);
-void get_data_values_as_ascii(DataDDS *dds, ostream &strm);
+void get_data_values_as_xml(DataDDS *dds, XMLWriter *writer);
 
 DataDDS *datadds_to_ascii_datadds( DataDDS *dds ) ;
 

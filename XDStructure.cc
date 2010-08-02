@@ -39,10 +39,10 @@
 
 #include <BESDebug.h>
 
-#include "InternalErr.h"
+#include <InternalErr.h>
+
 #include "XDStructure.h"
 #include "XDSequence.h"
-//#include "name_map.h"
 #include "get_xml_data.h"
 
 using namespace xml_data;
