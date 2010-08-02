@@ -58,14 +58,6 @@ public:
     XDOutput() : d_redirect( 0 ) { }
     virtual ~XDOutput() {}
 
-#if 0
-    /** Get the fully qualified name of this object. Names of nested
-	constructor types are separated by dots (.).
-
-	@return The fully qualified name of this object. */
-    string get_full_name();
-#endif
-
     bool increment_state(vector<int> *state, const vector<int> &shape);
 
     virtual void start_xml_declaration(XMLWriter *writer, string element = "")  throw(InternalErr);

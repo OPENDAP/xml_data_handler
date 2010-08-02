@@ -34,13 +34,16 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+//#define DODS_DEBUG
+
 #include <DDS.h>
 #include <Int32.h>
 #include <Structure.h>
+#include <debug.h>
 
 #include "XDArray.h"
-//#include "XDStructure.h"
 #include "XDOutputFactory.h"
+
 #include "test_config.h"
 
 bool translate = false;
@@ -48,6 +51,22 @@ bool translate = false;
 using namespace CppUnit;
 using namespace std;
 using namespace libdap;
+
+static int str_to_file_cmp(const string &s, const string &f)
+{
+    ifstream ifs;
+    ifs.open(f.c_str());
+    if (!ifs)
+	throw InternalErr(__FILE__, __LINE__, "Could not open file");
+    string line, doc;
+    while (!ifs.eof()) {
+	getline(ifs, line);
+	doc.append(line);
+	doc.append("\n");
+    }
+
+    return doc.compare(s);
+}
 
 class XDArrayTest : public TestFixture {
 private:
@@ -203,18 +222,6 @@ public:
 
 	    vector<int> d_shape(3); d_shape[0]=3; d_shape[1]=4; d_shape[2]=5;
 
-#if defined(DODS_DEBUG)
-	    cerr << "d_shape: ";
-	    copy(d_shape.begin(), d_shape.end(),
-		 ostream_iterator<int>(cerr, ", "));
-	    cerr << endl;
-	    response_shape = d->get_shape_vector(3);
-	    
-	    cerr << "response_shape: ";
-	    copy(response_shape.begin(), response_shape.end(),
-		 ostream_iterator<int>(cerr, ", "));
-	    cerr << endl;
-#endif
 	    CPPUNIT_ASSERT(d->get_shape_vector(3) == d_shape);
 
 	    try {a->get_shape_vector(0); CPPUNIT_ASSERT(false);}
@@ -266,7 +273,12 @@ public:
 	a->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(a)->print_xml_data(&writer, true);
-	cout << writer.get_doc() << endl;
+
+	DBG(cerr << writer.get_doc() << endl);
+
+	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(),
+		(string)TEST_SRC_DIR + "/testsuite/xdarraytest_a.xml") == 0);
+
 	}
 	catch (InternalErr &e) {
 	    cerr << "Caught an InternalErr: " + e.get_error_message() << endl;
@@ -279,7 +291,11 @@ public:
 	b->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(b)->print_xml_data(&writer, true);
-	cout << writer.get_doc() << endl;
+	DBG(cerr << writer.get_doc() << endl);
+
+	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(),
+		(string)TEST_SRC_DIR + "/testsuite/xdarraytest_b.xml") == 0);
+
 	}
 	catch (InternalErr &e) {
 	    cerr << "Caught an InternalErr: " + e.get_error_message() << endl;
@@ -292,7 +308,11 @@ public:
 	c->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(c)->print_xml_data(&writer, true);
-	cout << writer.get_doc() << endl;
+	DBG(cerr << writer.get_doc() << endl);
+
+	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(),
+		(string)TEST_SRC_DIR + "/testsuite/xdarraytest_c.xml") == 0);
+
 	}
 	catch (InternalErr &e) {
 	    cerr << "Caught an InternalErr: " + e.get_error_message() << endl;
@@ -305,7 +325,11 @@ public:
 	d->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(d)->print_xml_data(&writer, true);
-	cout << writer.get_doc() << endl;
+	DBG(cerr << writer.get_doc() << endl);
+
+	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(),
+		(string)TEST_SRC_DIR + "/testsuite/xdarraytest_d.xml") == 0);
+
 	}
 	catch (InternalErr &e) {
 	    cerr << "Caught an InternalErr: " + e.get_error_message() << endl;
@@ -318,7 +342,11 @@ public:
 	e->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(e)->print_xml_data(&writer, true);
-	cout << writer.get_doc() << endl;
+	DBG(cerr << writer.get_doc() << endl);
+
+	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(),
+		(string)TEST_SRC_DIR + "/testsuite/xdarraytest_e.xml") == 0);
+
 	}
 	catch (InternalErr &e) {
 	    cerr << "Caught an InternalErr: " + e.get_error_message() << endl;

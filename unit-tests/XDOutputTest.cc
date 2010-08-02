@@ -29,6 +29,8 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+//#define DODS_DEBUG
+
 #include <DDS.h>
 #include <Grid.h>
 #include <debug.h>
@@ -51,6 +53,22 @@ bool translate = false;
 using namespace CppUnit;
 using namespace std;
 using namespace libdap;
+
+static int str_to_file_cmp(const string &s, const string &f)
+{
+    ifstream ifs;
+    ifs.open(f.c_str());
+    if (!ifs)
+	throw InternalErr(__FILE__, __LINE__, "Could not open file");
+    string line, doc;
+    while (!ifs.eof()) {
+	getline(ifs, line);
+	doc.append(line);
+	doc.append("\n");
+    }
+
+    return doc.compare(s);
+}
 
 class XDOutputTest : public TestFixture {
 private:
@@ -95,46 +113,39 @@ public:
     }
 
     CPPUNIT_TEST_SUITE(XDOutputTest);
-#if 0
-    CPPUNIT_TEST(test_get_full_name);
-#endif
+
     CPPUNIT_TEST(test_print_xml_data);
     CPPUNIT_TEST(test_print_xml_data_structure);
     CPPUNIT_TEST(test_print_xml_data_grid);
 
     CPPUNIT_TEST_SUITE_END();
-#if 0
-    void test_get_full_name() {
-	CPPUNIT_ASSERT(dynamic_cast<XDOutput*>(dds->var("a"))->get_full_name() == "a");
-	DBG(cerr << "full name: " 
-	     << dynamic_cast<XDOutput*>(dds->var("e.c"))->get_full_name()
-	     << endl);
 
-	CPPUNIT_ASSERT(dynamic_cast<XDOutput*>(dds->var("e.c"))->get_full_name() == "e.c");
-	CPPUNIT_ASSERT(dynamic_cast<XDOutput*>(dds->var("f.c"))->get_full_name() == "f.c");
-	CPPUNIT_ASSERT(dynamic_cast<XDOutput*>(dds->var("g.y"))->get_full_name() == "g.y");
-	CPPUNIT_ASSERT(dynamic_cast<XDOutput*>(dds->var("k.h.i"))->get_full_name() == "k.h.i");
-    }
-#endif
     void test_print_xml_data() {
 	dds->var("a")->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(dds->var("a"))->print_xml_data(&writer, true);
-	cout << writer.get_doc() << endl;
+	DBG2(cerr << writer.get_doc() << endl);
+
+	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(),
+		(string)TEST_SRC_DIR + "/testsuite/xdoutputtest_a.xml") == 0);
     }
 
     void test_print_xml_data_structure() {
 	dds->var("e")->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(dds->var("e"))->print_xml_data(&writer, true);
-	cout << writer.get_doc() << endl;
+	DBG(cerr << writer.get_doc() << endl);
+
+	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_e.xml") == 0);
     }
 
     void test_print_xml_data_grid() {
 	dds->var("g")->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(dds->var("g"))->print_xml_data(&writer, true);
-	cout << writer.get_doc() << endl;
+	DBG2(cerr << writer.get_doc() << endl);
+	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(),
+		(string)TEST_SRC_DIR + "/testsuite/xdoutputtest_g.xml") == 0);
     }
 
 };

@@ -168,119 +168,36 @@ void XDArray::start_xml_declaration(XMLWriter *writer, string element)  throw(In
 {
     // Start the Array element (includes the name)
     if (xmlTextWriterStartElement(writer->get_writer(), get_xc(element)) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + /*btp->*/name());
-    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", get_xc(/*btp->*/name())) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + /*btp->*/name());
+	throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
+    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", get_xc(name())) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + name());
 
     // Start and End the Type element/s
     dynamic_cast<XDOutput&>(*var()).start_xml_declaration(writer, element);
+
     end_xml_declaration(writer);
 
-#if 0
-    if (var()->is_simple_type()) {
-	if (xmlTextWriterStartElement(writer->get_writer(), get_xc(/*btp->*/var()->type_name())) < 0)
-	    throw InternalErr(__FILE__, __LINE__, "Could not write type element for " + /*btp->*/name());
-	if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-	    throw InternalErr(__FILE__, __LINE__, "Could not end element for " + /*btp->*/name());
-    }
-    else {
-	// This can only be a Structure
-	if (xmlTextWriterStartElement(writer->get_writer(), get_xc(/*btp->*/var()->type_name())) < 0)
-	    throw InternalErr(__FILE__, __LINE__, "Could not write type element for " + /*btp->*/name());
-	if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "debug", (const xmlChar*)"yes"))
-	    throw InternalErr(__FILE__, __LINE__, "Could not write attribute for size");
-	if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-	    throw InternalErr(__FILE__, __LINE__, "Could not end element for " + /*btp->*/name());
-    }
-#endif
-
     for_each(dim_begin(), dim_end(), PrintArrayDimXML(writer, true));
 }
 
-#if 0
-void XDArray::m_start_array_element(XMLWriter *writer, string element)
-{
-    // Start the Array element (includes the name)
-    if (xmlTextWriterStartElement(writer->get_writer(), get_xc(element)) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + /*btp->*/name());
-    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", get_xc(/*btp->*/name())) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + /*btp->*/name());
-
-    // Start and End the Type element/s
-    if (var()->is_simple_type()) {
-	if (xmlTextWriterStartElement(writer->get_writer(), get_xc(/*btp->*/var()->type_name())) < 0)
-	    throw InternalErr(__FILE__, __LINE__, "Could not write type element for " + /*btp->*/name());
-	if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-	    throw InternalErr(__FILE__, __LINE__, "Could not end element for " + /*btp->*/name());
-    }
-    else {
-	// This can only be a Structure
-	if (xmlTextWriterStartElement(writer->get_writer(), get_xc(/*btp->*/var()->type_name())) < 0)
-	    throw InternalErr(__FILE__, __LINE__, "Could not write type element for " + /*btp->*/name());
-	if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "debug", (const xmlChar*)"yes"))
-	    throw InternalErr(__FILE__, __LINE__, "Could not write attribute for size");
-	if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-	    throw InternalErr(__FILE__, __LINE__, "Could not end element for " + /*btp->*/name());
-    }
-
-    for_each(dim_begin(), dim_end(), PrintArrayDimXML(writer, true));
-
-}
-
-void XDArray::m_end_array_element(XMLWriter *writer)
-{
-    // End the element for the Array/name
-    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not end element for " + /*btp->*/name());
-}
-#endif
 // Print out a values for a vector (one dimensional array) of simple types.
 void XDArray::m_print_xml_vector(XMLWriter *writer, string element)
 {
-#if 0
-    Array *btp = dynamic_cast < Array * >(d_redirect);
-    if (!btp) {
-        btp = this;
-    }
-#endif
-
-
-    //m_start_array_element(writer, element);
     start_xml_declaration(writer, element);
 
     // only one dimension
-    int end = dimension_size(dim_begin(), true) - 1;
+    int end = dimension_size(dim_begin(), true);
+    m_print_xml_row(writer, 0, end);
 
-    for (int i = 0; i < end; ++i) {
-        BaseType *curr_var = basetype_to_asciitype(/*btp->*/var(i));
-        dynamic_cast < XDOutput & >(*curr_var).print_xml_data(writer, false);
-        // we're not saving curr_var for future use, so delete it here
-        delete curr_var;
-    }
-    BaseType *curr_var = basetype_to_asciitype(/*btp->*/var(end));
-    dynamic_cast < XDOutput & >(*curr_var).print_xml_data(writer, false);
-    // we're not saving curr_var for future use, so delete it here
-    delete curr_var;
-
-    //m_end_array_element(writer);
     end_xml_declaration(writer);
 }
 
 void XDArray::m_print_xml_array(XMLWriter *writer, string element)
 {
-    DBG(cerr << "Entering XDArray::print_xml_array" << endl);
-#if 0
-    Array *btp = dynamic_cast < Array * >(d_redirect);
-    if (!btp) {
-        btp = this;
-    }
-#endif
-
     int dims = dimensions(true);
     if (dims <= 1)
         throw InternalErr(__FILE__, __LINE__, "Dimension count is <= 1 while printing multidimensional array.");
 
-    // m_start_array_element(writer, element);
     start_xml_declaration(writer, element);
 
     // shape holds the maximum index value of all but the last dimension of
@@ -297,23 +214,37 @@ void XDArray::m_print_xml_array(XMLWriter *writer, string element)
     bool more_indices;
     int index = 0;
     do {
+#if 0
         for (int i = 0; i < dims - 1; ++i) {
 	    if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*) "dim") < 0)
-		throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + /*btp->*/name());
+		throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
 	    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "number", get_xc(long_to_string(i))) < 0)
-		throw InternalErr(__FILE__, __LINE__, "Could not write number attribute for " + /*btp->*/name() + ": " + long_to_string(i));
+		throw InternalErr(__FILE__, __LINE__, "Could not write number attribute for " + name() + ": " + long_to_string(i));
 	    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "index", get_xc(long_to_string(state[i]))) < 0)
-		throw InternalErr(__FILE__, __LINE__, "Could not write index attribute for " + /*btp->*/name());
+		throw InternalErr(__FILE__, __LINE__, "Could not write index attribute for " + name());
 	    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-		throw InternalErr(__FILE__, __LINE__, "Could not end element for " + /*btp->*/name());
+		throw InternalErr(__FILE__, __LINE__, "Could not end element for " + name());
+	}
+#endif
+        for (int i = 0; i < dims - 1; ++i) {
+	    if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*) "dim") < 0)
+		throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
+	    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "number", get_xc(long_to_string(i))) < 0)
+		throw InternalErr(__FILE__, __LINE__, "Could not write number attribute for " + name() + ": " + long_to_string(i));
+	    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "index", get_xc(long_to_string(state[i]))) < 0)
+		throw InternalErr(__FILE__, __LINE__, "Could not write index attribute for " + name());
 	}
 
-	index = m_print_xml_row(writer, index, rightmost_dim_size - 1);
+	index = m_print_xml_row(writer, index, rightmost_dim_size);
+
+        for (int i = 0; i < dims - 1; ++i) {
+	    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
+		throw InternalErr(__FILE__, __LINE__, "Could not end element for " + name());
+	}
 
         more_indices = increment_state(&state, shape);
     } while (more_indices);
 
-    //m_end_array_element(writer);
     end_xml_declaration(writer);
 }
 
@@ -332,22 +263,12 @@ void XDArray::m_print_xml_array(XMLWriter *writer, string element)
     @see print\_array */
 int XDArray::m_print_xml_row(XMLWriter *writer, int index, int number)
 {
-#if 0
-    Array *bt = dynamic_cast < Array * >(d_redirect);
-    if (!bt) {
-        bt = this;
-    }
-#endif
     for (int i = 0; i < number; ++i) {
-        BaseType *curr_var = basetype_to_asciitype(/*bt->*/var(index++));
+        BaseType *curr_var = basetype_to_asciitype(var(index++));
         dynamic_cast < XDOutput & >(*curr_var).print_xml_data(writer, false);
         // we're not saving curr_var for future use, so delete it here
         delete curr_var;
     }
-    BaseType *curr_var = basetype_to_asciitype(/*bt->*/var(index++));
-    dynamic_cast < XDOutput & >(*curr_var).print_xml_data(writer, false);
-    // we're not saving curr_var for future use, so delete it here
-    delete curr_var;
 
     return index;
 }
@@ -431,7 +352,6 @@ int XDArray::get_nth_dim_size(size_t n) throw(InternalErr)
 
 void XDArray::m_print_xml_complex_array(XMLWriter *writer, string element)
 {
-    //m_start_array_element(writer, element);
     start_xml_declaration(writer, element);
 
     int dims = dimensions(true);
@@ -448,13 +368,13 @@ void XDArray::m_print_xml_complex_array(XMLWriter *writer, string element)
     do {
         for (int i = 0; i < dims - 1; ++i) {
 	    if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*) "dim") < 0)
-		throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + /*btp->*/name());
+		throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
 	    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "number", get_xc(long_to_string(i))) < 0)
-		throw InternalErr(__FILE__, __LINE__, "Could not write number attribute for " + /*btp->*/name() + ": " + long_to_string(i));
+		throw InternalErr(__FILE__, __LINE__, "Could not write number attribute for " + name() + ": " + long_to_string(i));
 	    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "index", get_xc(long_to_string(state[i]))) < 0)
-		throw InternalErr(__FILE__, __LINE__, "Could not write index attribute for " + /*btp->*/name());
+		throw InternalErr(__FILE__, __LINE__, "Could not write index attribute for " + name());
 	    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-		throw InternalErr(__FILE__, __LINE__, "Could not end element for " + /*btp->*/name());
+		throw InternalErr(__FILE__, __LINE__, "Could not end element for " + name());
 	}
 
         int index = m_get_index(state);
@@ -470,6 +390,5 @@ void XDArray::m_print_xml_complex_array(XMLWriter *writer, string element)
 
     } while (more_indices);
 
-    //m_end_array_element(writer);
     end_xml_declaration(writer);
 }
