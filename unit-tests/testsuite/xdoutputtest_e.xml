@@ -2,11 +2,8 @@
 <Dataset xmlns="http://xml.opendap.org/ns/dap/3.3#">
     <Structure name="e">
         <Int32 name="b">
-            <value>-1073741821</value>
+            <value>5252800</value>
         </Int32>
-        <Float64 name="c">
-            <value>4.24658689493431e-314</value>
-        </Float64>
         <String name="d">
             <value>&quot;&quot;</value>
         </String>
