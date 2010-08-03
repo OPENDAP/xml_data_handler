@@ -33,25 +33,24 @@
 
 using std::endl ;
 
-#include "BESXDModule.h"
-#include "BESDebug.h"
+#include <BESXDModule.h>
+#include <BESDebug.h>
+
+#include <BESDapNames.h>
+#include <BESResponseNames.h>
+#include <BESResponseHandlerList.h>
+#include <BESRequestHandlerList.h>
+
+#include <BESDapService.h>
+
+#include <BESTransmitter.h>
+#include <BESReturnManager.h>
+#include <BESTransmitterNames.h>
 
 #include "BESXDNames.h"
-#include "BESDapNames.h"
-#include "BESResponseNames.h"
-#include "BESResponseHandlerList.h"
 #include "BESXDResponseHandler.h"
-
 #include "BESXDRequestHandler.h"
-#include "BESRequestHandlerList.h"
-
-#include "BESDapService.h"
-
 #include "BESXDTransmit.h"
-#include "BESTransmitter.h"
-#include "BESReturnManager.h"
-#include "BESTransmitterNames.h"
-
 
 void
 BESXDModule::initialize( const string &modname )

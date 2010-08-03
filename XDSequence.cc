@@ -40,11 +40,13 @@
 
 #include <BESDebug.h>
 
-#include "InternalErr.h"
+#include <InternalErr.h>
+#include <util.h>
+#include <debug.h>
+
 #include "XDSequence.h"
 #include "XDStructure.h"
 #include "get_xml_data.h"
-#include "debug.h"
 
 using std::endl ;
 using namespace xml_data;
@@ -123,13 +125,38 @@ XDSequence::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
     // by the embedded print_xml_data calls.
     if (show_type)
 	XDOutput::start_xml_declaration(writer);
-#if 0
-    for (Vars_iter p = var_begin(); p != var_end(); ++p) {
-        if ((*p)->send_p()) {
-            dynamic_cast<XDOutput*> ((*p))->print_xml_data(writer, show_type);
-        }
-    }
-#endif
+
+    XDSequence *seq = dynamic_cast<XDSequence*>(d_redirect);
+    if (!seq)
+        seq = this;
+
+    const int rows = seq->number_of_rows() - 1;
+    const int elements = seq->element_count() - 1;
+
+    // For each row of the Sequence...
+    int i = 0;
+    do {
+	// Print the row information
+	if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*) "row") < 0)
+	    throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
+	if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "number", get_xc(long_to_string(i))) < 0)
+	    throw InternalErr(__FILE__, __LINE__, "Could not write number attribute for " + name());
+
+	// For each variable of the row...
+	int j = 0;
+	do {
+	    BaseType *bt_ptr = seq->var_value(i, j++);
+	    BaseType *abt_ptr = basetype_to_asciitype(bt_ptr);
+	    dynamic_cast<XDOutput&>(*abt_ptr).print_xml_data(writer, true);
+	    // abt_ptr is not stored for future use, so delete it
+	    delete abt_ptr;
+	} while (++j > elements);
+
+	// Close the row element
+	if (xmlTextWriterEndElement(writer->get_writer()) < 0)
+	    throw InternalErr(__FILE__, __LINE__, "Could not end element for " + name());
+
+    } while (++i > rows);
 
     // End the <Structure> element
     if (show_type)
@@ -148,7 +175,7 @@ XDSequence::print_ascii_row(ostream &strm, int row, BaseTypeRow outer_vars)
         seq = this;
 
     // Print the values from this sequence.
-    // XDSequence::element_count() returns only vars with send_p() set.
+    // XDSequence::element_count() counts only vars with send_p() set.
     const int elements = element_count();
     bool first_var = true;     // used to control printing the comma separator
     int j = 0;

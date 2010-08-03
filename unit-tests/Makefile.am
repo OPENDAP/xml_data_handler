@@ -6,9 +6,6 @@ AUTOMAKE_OPTIONS = foreign
 # Arrange to build with the backward compatibility mode enabled.
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/asciival $(BES_CPPFLAGS)
 
-# libtool complains about this because linking to the module is not portable
-# -L../ -lxml_data_module
-
 AM_LDADD = 
 AM_CXXFLAGS = 
 
@@ -67,6 +64,6 @@ XDArrayTest_SOURCES = XDArrayTest.cc
 XDOutputTest_SOURCES = XDOutputTest.cc
 
 # if not linking with the module, use $(XDOBJS) below
-XDArrayTest_LDADD = ../libxml_data_handler.la $(BES_DAP_LIBS) $(AM_LDADD)
-XDOutputTest_LDADD = ../libxml_data_handler.la $(BES_DAP_LIBS) $(AM_LDADD)
+XDArrayTest_LDADD = ../libxml_data_module.la $(BES_DAP_LIBS) $(AM_LDADD)
+XDOutputTest_LDADD = ../libxml_data_module.la $(BES_DAP_LIBS) $(AM_LDADD)
 

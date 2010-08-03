@@ -30,13 +30,16 @@
 //      pwest       Patrick West <pwest@ucar.edu>
 //      jgarcia     Jose Garcia <jgarcia@ucar.edu>
 
+#include "config.h"
+
+//#include "BESXDRequestHandler.h"
+#include <BESResponseHandler.h>
+#include <BESResponseNames.h>
+#include <BESVersionInfo.h>
+#include <BESDataNames.h>
+//#include "config.h"
 
 #include "BESXDRequestHandler.h"
-#include "BESResponseHandler.h"
-#include "BESResponseNames.h"
-#include "BESVersionInfo.h"
-#include "BESDataNames.h"
-#include "config.h"
 
 BESXDRequestHandler::BESXDRequestHandler( const string &name )
     : BESRequestHandler( name )

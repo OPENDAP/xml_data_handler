@@ -30,27 +30,26 @@
 //      pwest       Patrick West <pwest@ucar.edu>
 //      jgarcia     Jose Garcia <jgarcia@ucar.edu>
 
-#include "BESDapTransmit.h"
-#include "DODSFilter.h"
-#include "BESXDTransmit.h"
-#include "DODSFilter.h"
-#include "BESContainer.h"
-#include "BESDataNames.h"
-#include "mime_util.h"
-#include "BESDataDDSResponse.h"
-#include "BaseType.h"
-#include "Sequence.h"
-#include "ConstraintEvaluator.h"
-#include "get_xml_data.h"
-#include "InternalErr.h"
-#include "util.h"
+#include <BaseType.h>
+#include <Sequence.h>
+#include <ConstraintEvaluator.h>
+#include <DODSFilter.h>
 #include <escaping.h>
-#include "BESDapError.h"
-#include "BESInternalFatalError.h"
+#include <InternalErr.h>
+#include <util.h>
+#include <mime_util.h>
+
+#include <BESDapTransmit.h>
+#include <BESContainer.h>
+#include <BESDataNames.h>
+#include <BESDataDDSResponse.h>
+#include <BESDapError.h>
+#include <BESInternalFatalError.h>
+#include <BESDebug.h>
 
 #include "XMLWriter.h"
-
-#include "BESDebug.h"
+#include "BESXDTransmit.h"
+#include "get_xml_data.h"
 
 using namespace xml_data;
 

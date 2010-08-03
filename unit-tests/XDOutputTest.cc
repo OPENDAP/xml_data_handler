@@ -29,7 +29,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#define DODS_DEBUG
+//#define DODS_DEBUG
 
 #include <DDS.h>
 #include <Grid.h>
@@ -124,17 +124,18 @@ public:
 	dds->var("a")->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(dds->var("a"))->print_xml_data(&writer, true);
+
 	DBG2(cerr << writer.get_doc() << endl);
 
-	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(),
-		(string)TEST_SRC_DIR + "/testsuite/xdoutputtest_a.xml") == 0);
+	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_a.xml") == 0);
     }
 
     void test_print_xml_data_structure() {
 	dds->var("e")->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(dds->var("e"))->print_xml_data(&writer, true);
-	DBG2(cerr << writer.get_doc() << endl);
+
+	DBG(cerr << writer.get_doc() << endl);
 
 	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_e.xml") == 0);
     }
@@ -143,9 +144,10 @@ public:
 	dds->var("g")->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(dds->var("g"))->print_xml_data(&writer, true);
-	DBG(cerr << writer.get_doc() << endl);
-	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(),
-		(string)TEST_SRC_DIR + "/testsuite/xdoutputtest_g.xml") == 0);
+
+	DBG2(cerr << writer.get_doc() << endl);
+
+	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_g.xml") == 0);
     }
 
 };

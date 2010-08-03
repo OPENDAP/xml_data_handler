@@ -2,7 +2,7 @@
 dnl -*- autoconf -*-
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.59)
+AC_PREREQ(2.61)
 AC_INIT(xml_data_handler, 1.0.0, opendap-tech@opendap.org)
 AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_MACRO_DIR([conf])
@@ -10,6 +10,8 @@ AC_CONFIG_MACRO_DIR([conf])
 AM_INIT_AUTOMAKE(1.10)
 AC_CONFIG_SRCDIR([BESXDModule.cc])
 AM_CONFIG_HEADER([config.h])
+
+AC_CONFIG_TESTDIR(tests, [.])
 
 dnl flags for the compilers and linkers - set these before locating the
 dnl actual tools since some of the AC_PROG macros set these `flag variables'
@@ -77,6 +79,8 @@ AH_BOTTOM([/* Shorthand for gcc's unused attribute feature */
 #endif /* _config_h */])
 
 AC_CONFIG_FILES([Makefile
-                 unit-tests/Makefile])
+                 unit-tests/Makefile
+                 tests/Makefile
+                 tests/atlocal])
 
 AC_OUTPUT

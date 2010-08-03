@@ -33,7 +33,7 @@
 #ifndef I_BESXDTransmit_h
 #define I_BESXDTransmit_h 1
 
-#include "BESDataHandlerInterface.h"
+#include <BESDataHandlerInterface.h>
 
 class BESResponseObject ;
 

@@ -30,12 +30,13 @@
 //      pwest       Patrick West <pwest@ucar.edu>
 //      jgarcia     Jose Garcia <jgarcia@ucar.edu>
 
-#include "BESXDResponseHandler.h"
-#include "BESRequestHandlerList.h"
-#include "BESDapNames.h"
+#include <BESRequestHandlerList.h>
+#include <BESDapNames.h>
+#include <BESDataDDSResponse.h>
+
 #include "BESXDNames.h"
-#include "BESDataDDSResponse.h"
 #include "BESXDTransmit.h"
+#include "BESXDResponseHandler.h"
 
 BESXDResponseHandler::BESXDResponseHandler( const string &name )
     : BESResponseHandler( name )

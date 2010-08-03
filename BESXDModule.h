@@ -32,7 +32,7 @@
 #ifndef A_BESXDModule_H
 #define A_BESXDModule_H 1
 
-#include "BESAbstractModule.h"
+#include <BESAbstractModule.h>
 
 class BESXDModule : public BESAbstractModule
 {

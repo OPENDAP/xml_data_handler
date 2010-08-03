@@ -34,7 +34,7 @@
 #ifndef I_BESXDRequestHandler_H
 #define I_BESXDRequestHandler_H 1
 
-#include "BESRequestHandler.h"
+#include <BESRequestHandler.h>
 
 class BESXDRequestHandler : public BESRequestHandler
 {

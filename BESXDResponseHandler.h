@@ -33,7 +33,7 @@
 #ifndef I_BESXDResponseHandler_h
 #define I_BESXDResponseHandler_h 1
 
-#include "BESResponseHandler.h"
+#include <BESResponseHandler.h>
 
 /** @brief response handler that builds an OPeNDAP ASCII response object
  *
