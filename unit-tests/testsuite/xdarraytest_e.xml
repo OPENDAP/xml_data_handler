@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Dataset xmlns="http://xml.opendap.org/ns/dap/3.3#">
+    <Array name="e">
+        <Structure name="e">
+            <Int32 name="a"/>
+            <Int32 name="z"/>
+            <Array name="b">
+                <Int32 name="b"/>
+                <dimension size="3"/>
+            </Array>
+            <Array name="c">
+                <Int32 name="c"/>
+                <dimension size="2"/>
+                <dimension size="3"/>
+            </Array>
+        </Structure>
+        <dimension size="4"/>
+        <Structure name="elem">
+            <Int32 name="e_a">
+                <value>17</value>
+            </Int32>
+            <Int32 name="e_z">
+                <value>42</value>
+            </Int32>
+        </Structure>
+        <Structure name="elem">
+            <Int32 name="e_a">
+                <value>17</value>
+            </Int32>
+            <Int32 name="e_z">
+                <value>42</value>
+            </Int32>
+        </Structure>
+        <Structure name="elem">
+            <Int32 name="e_a">
+                <value>17</value>
+            </Int32>
+            <Int32 name="e_z">
+                <value>42</value>
+            </Int32>
+        </Structure>
+        <Structure name="elem">
+            <Int32 name="e_a">
+                <value>17</value>
+            </Int32>
+            <Int32 name="e_z">
+                <value>42</value>
+            </Int32>
+        </Structure>
+    </Array>
+</Dataset>
