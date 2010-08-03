@@ -49,13 +49,17 @@ public:
 
     virtual int length();
     virtual int element_count(bool leaves = false);
-
+#if 0
     virtual void print_ascii(ostream &strm, bool print_name) throw(InternalErr);
     virtual void print_header(ostream &strm);
 
     virtual void print_leading_vars(ostream &strm, BaseTypeRow &outer_vars);
     virtual void print_ascii_row(ostream &strm, int row, BaseTypeRow out_vars);
     virtual void print_ascii_rows(ostream &strm, BaseTypeRow out_vars);
+#endif
+    virtual void start_xml_declaration(XMLWriter *writer, string element = "")  throw(InternalErr);
+
+    virtual void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 };
 
 #endif

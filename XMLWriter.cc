@@ -26,9 +26,9 @@ XMLWriter::XMLWriter()
     try {
 	if (!(d_doc_buf = xmlBufferCreate()))
 	    throw InternalErr(__FILE__, __LINE__, "Error allocating the xml buffer");
+
 	/* Create a new XmlWriter for memory, with no compression.
 	 * Remark: there is no compression for this kind of xmlTextWriter */
-	;
 	if (!(d_writer = xmlNewTextWriterMemory(d_doc_buf, 0)))
 	    throw InternalErr(__FILE__, __LINE__, "Error allocating memory for xml writer");
 
@@ -52,9 +52,9 @@ XMLWriter::XMLWriter()
 		< 0)
 	    throw InternalErr(__FILE__, __LINE__,  "Error starting the response element for response ");
 
-	/* Add the an attribute */
+	/* Add an attribute... */
 #if 0
-	if( xmlTextWriterWriteAttribute( _writer, REQUEST_ID, reqid.c_str() ) < 0 )
+	if( xmlTextWriterWriteAttribute(d_writer, REQUEST_ID, reqid.c_str() ) < 0 )
 	throw InternalErr(__FILE__, __LINE__, "Error adding attribute to the Dataset element.");
 #endif
     }

@@ -40,12 +40,6 @@
 #include "XDOutput.h"
 
 class XDGrid: public Grid, public XDOutput {
-private:
-#if 0
-    void m_start_structure_element(XMLWriter *writer);
-    void m_start_grid_element(XMLWriter *writer);
-    void m_end_type_element(XMLWriter *writer);
-#endif
 public:
     XDGrid(const string &n);
     XDGrid( Grid *grid ) ;

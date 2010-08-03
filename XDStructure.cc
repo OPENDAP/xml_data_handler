@@ -93,65 +93,22 @@ XDStructure::start_xml_declaration(XMLWriter *writer, string element)  throw(Int
     }
 }
 
-#if 0
-void XDStructure::m_start_structure_element(XMLWriter *writer)
-{
-    // Start the Array element (includes the name)
-    if (xmlTextWriterStartElement(writer->get_writer(), get_xc(/*btp->*/type_name())) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write Structure element for " + /*btp->*/name());
-    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", get_xc(/*btp->*/name())) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write name attribute for " + /*btp->*/name());
-
-#if 0
-    // For a structure, write each variable and its value, then move on to the
-    // next variable/value. Do not emulate the ASCII response, whcih is
-    // designed to work with excel.
-
-    // Start and End the Type element
-    if (xmlTextWriterStartElement(writer->get_writer(), get_xc(/*btp->*/var()->type_name())) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write type element for " + /*btp->*/name());
-    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not end element for " + /*btp->*/name());
-
-    Array &a = dynamic_cast<Array&>(*btp);
-    for_each(a.dim_begin(), a.dim_end(), PrintArrayDimXML(writer, true));
-#endif
-}
-
-void XDStructure::m_end_structure_element(XMLWriter *writer)
-{
-    // End the element for the Array/name
-    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not end element for " + /*btp->*/name());
-}
-#endif
-
 void
-XDStructure::print_xml_data(XMLWriter *writer, bool /*show_type*/) throw(InternalErr)
+XDStructure::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
 {
-#if 0
-    BaseType *btp = d_redirect;
-    if (!btp)
-	btp = dynamic_cast<XDStructure*>(this);
-    if (!btp)
-	throw InternalErr(__FILE__, __LINE__, "Could not get a valid BaseType");
-#endif
-
-    // Start the <Structure> element
-    //m_start_structure_element(writer);
-
     // Forcing the use of the generic version prints just the <Structure>
     // element w/o the type information of the components. That will be printed
     // by the embedded print_xml_data calls.
-    XDOutput::start_xml_declaration(writer);
+    if (show_type)
+	XDOutput::start_xml_declaration(writer);
 
     for (Vars_iter p = var_begin(); p != var_end(); ++p) {
         if ((*p)->send_p()) {
-            dynamic_cast<XDOutput*> ((*p))->print_xml_data(writer, true);
+            dynamic_cast<XDOutput*> ((*p))->print_xml_data(writer, show_type);
         }
     }
 
     // End the <Structure> element
-    //m_end_structure_element(writer);
-    end_xml_declaration(writer);
+    if (show_type)
+	end_xml_declaration(writer);
 }

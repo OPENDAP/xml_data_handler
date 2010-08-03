@@ -214,18 +214,6 @@ void XDArray::m_print_xml_array(XMLWriter *writer, string element)
     bool more_indices;
     int index = 0;
     do {
-#if 0
-        for (int i = 0; i < dims - 1; ++i) {
-	    if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*) "dim") < 0)
-		throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
-	    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "number", get_xc(long_to_string(i))) < 0)
-		throw InternalErr(__FILE__, __LINE__, "Could not write number attribute for " + name() + ": " + long_to_string(i));
-	    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "index", get_xc(long_to_string(state[i]))) < 0)
-		throw InternalErr(__FILE__, __LINE__, "Could not write index attribute for " + name());
-	    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-		throw InternalErr(__FILE__, __LINE__, "Could not end element for " + name());
-	}
-#endif
         for (int i = 0; i < dims - 1; ++i) {
 	    if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*) "dim") < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
@@ -373,18 +361,17 @@ void XDArray::m_print_xml_complex_array(XMLWriter *writer, string element)
 		throw InternalErr(__FILE__, __LINE__, "Could not write number attribute for " + name() + ": " + long_to_string(i));
 	    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "index", get_xc(long_to_string(state[i]))) < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not write index attribute for " + name());
-	    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-		throw InternalErr(__FILE__, __LINE__, "Could not end element for " + name());
 	}
 
-        int index = m_get_index(state);
-        DBG(cerr << "index: " << index << endl);
-        BaseType *tmp = var(index);
-        DBG(cerr << "tmp: " << tmp << endl);
-        BaseType *curr_var = basetype_to_asciitype(tmp);
+        BaseType *curr_var = basetype_to_asciitype(var(m_get_index(state)));
         dynamic_cast < XDOutput & >(*curr_var).print_xml_data(writer, true);
         // we are not saving curr_var for future reference, so delete it
         delete curr_var;
+
+        for (int i = 0; i < dims - 1; ++i) {
+	    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
+		throw InternalErr(__FILE__, __LINE__, "Could not end element for " + name());
+	}
 
         more_indices = increment_state(&state, shape);
 

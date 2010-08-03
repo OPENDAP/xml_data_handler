@@ -102,7 +102,41 @@ XDSequence::element_count(bool leaves)
         return i;
     }
 }
+void
+XDSequence::start_xml_declaration(XMLWriter *writer, string element)  throw(InternalErr)
+{
+    XDOutput::start_xml_declaration(writer);
 
+    for (Vars_iter p = var_begin(); p != var_end(); ++p) {
+        if ((*p)->send_p()) {
+            dynamic_cast<XDOutput&>(**p).start_xml_declaration(writer, element);
+            dynamic_cast<XDOutput&>(**p).end_xml_declaration(writer);
+        }
+    }
+}
+
+void
+XDSequence::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
+{
+    // Forcing the use of the generic version prints just the <Structure>
+    // element w/o the type information of the components. That will be printed
+    // by the embedded print_xml_data calls.
+    if (show_type)
+	XDOutput::start_xml_declaration(writer);
+#if 0
+    for (Vars_iter p = var_begin(); p != var_end(); ++p) {
+        if ((*p)->send_p()) {
+            dynamic_cast<XDOutput*> ((*p))->print_xml_data(writer, show_type);
+        }
+    }
+#endif
+
+    // End the <Structure> element
+    if (show_type)
+	end_xml_declaration(writer);
+}
+
+#if 0
 void
 XDSequence::print_ascii_row(ostream &strm, int row, BaseTypeRow outer_vars)
 {
@@ -206,38 +240,6 @@ XDSequence::print_ascii_rows(ostream &strm, BaseTypeRow outer_vars)
     BESDEBUG("ascii", "    Out XDSequence::print_ascii_rows" << endl);
 }
 
-void
-XDSequence::print_header(ostream &strm)
-{
-#if 0
-    bool first_var = true;    // Print commas as separators
-    Vars_iter p = var_begin();
-    while (p != var_end())
-    {
-        if ((*p)->send_p()) {
-            if (!first_var)
-                strm << ", ";
-            else
-                first_var = false;
-
-            if ((*p)->is_simple_type())
-                strm << dynamic_cast<XDOutput *> (*p)->get_full_name();
-            else if ((*p)->type() == dods_sequence_c)
-                dynamic_cast<XDSequence *> ((*p))->print_header(strm);
-            else if ((*p)->type() == dods_structure_c)
-                dynamic_cast<XDStructure *> ((*p))->print_header(strm);
-            else
-                throw InternalErr(
-                        __FILE__,
-                        __LINE__,
-                        "This method should only be called by instances for which `is_simple_sequence' returns true.");
-
-        }
-
-        ++p;
-    }
-#endif
-}
 
 void
 XDSequence::print_ascii(ostream &strm, bool print_name) throw(InternalErr)
@@ -291,3 +293,4 @@ XDSequence::print_ascii(ostream &strm, bool print_name) throw(InternalErr)
     }
 #endif
 }
+#endif

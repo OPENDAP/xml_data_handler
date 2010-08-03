@@ -89,78 +89,31 @@ XDGrid::~XDGrid()
 {
 }
 
-#if 0
-void XDGrid::m_start_structure_element(XMLWriter *writer)
-{
-    // Start the Array element (includes the name)
-    if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*)"Structure") < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write Structure element for " + /*btp->*/name());
-    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", get_xc(/*btp->*/name())) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write name attribute for " + /*btp->*/name());
-}
-
-void XDGrid::m_start_grid_element(XMLWriter *writer)
-{
-    // Start the Array element (includes the name)
-    if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*)"Grid") < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write Structure element for " + /*btp->*/name());
-    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", get_xc(/*btp->*/name())) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write name attribute for " + /*btp->*/name());
-}
-
-void XDGrid::m_end_type_element(XMLWriter *writer)
-{
-    // End the element for the Array/name
-    if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not end type element for " + /*btp->*/name());
-}
-#endif
-
-void XDGrid::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
+void XDGrid::print_xml_data(XMLWriter *writer, bool show_type) throw (InternalErr)
 {
     // General rule: If everything in the Grid (all maps plus the array)
     // is projected, then print as a Grid, else print as if the Gird is a
     // Structure.
-    if (projection_yields_grid()) {
-	// Start grid element
-	//m_start_grid_element(writer);
-	start_xml_declaration(writer, "Grid");
+    if (projection_yields_grid())
+	start_xml_declaration(writer, "Grid"); // Start grid element
+    else
+	start_xml_declaration(writer, "Structure"); // Start structure element
 
-	// Print the Array part of the grid; since projection_yeilds_grid() is
-	// true, assume the array is in the current projection
-	dynamic_cast<XDArray&>(*array_var()).print_xml_data(writer, show_type);
-
-	// Print the maps, which are vectors but use <Map> and not <Array>
-        Map_iter m = map_begin();
-        while (m != map_end()) {
-            if ((*m)->send_p()) {
-                dynamic_cast<XDArray&>(**m++).print_xml_map_data(writer, show_type);
-            }
-        }
-
-	// End the grid element
-	//m_end_type_element(writer);
-        end_xml_declaration(writer);
+    // Print the array and the maps, but use <Array> and not <Map>
+    if (array_var()->send_p()) {
+	dynamic_cast<XDArray&> (*array_var()).print_xml_data(writer, show_type);
     }
-    else {
-	// Start structure element
-	//m_start_structure_element(writer);
-	start_xml_declaration(writer, "Structure");
 
-	// Print the array and the maps, but use <Array> and not <Map>
-        if (array_var()->send_p()) {
-            dynamic_cast<XDArray&>(*array_var()).print_xml_data(writer, show_type);
-        }
-
-        Map_iter m = map_begin();
-        while (m != map_end()) {
-            if ((*m)->send_p()) {
-                dynamic_cast<XDArray&>(**m++).print_xml_data(writer, show_type);
-            }
-        }
-
-	// End the structure element
-	//m_end_type_element(writer);
-	end_xml_declaration(writer);
+    Map_iter m = map_begin();
+    while (m != map_end()) {
+	if ((*m)->send_p()) {
+	    if (projection_yields_grid())
+		dynamic_cast<XDArray&> (**m++).print_xml_map_data(writer, show_type);
+	    else
+		dynamic_cast<XDArray&> (**m++).print_xml_data(writer, show_type);
+	}
     }
+
+    // End the structure element
+    end_xml_declaration(writer);
 }

@@ -45,8 +45,6 @@ using namespace libdap ;
 
 class XDArray: public Array, public XDOutput {
 private:
-    // void print_complex_array(ostream &strm, bool print_name);
-
     int m_get_index(vector<int> indices) throw(InternalErr);
 
     void m_print_xml_vector(XMLWriter *writer, string element);
@@ -54,10 +52,7 @@ private:
     void m_print_xml_complex_array(XMLWriter *writer, string element);
 
     int m_print_xml_row(XMLWriter *writer, int index, int number);
-#if 0
-    void m_start_array_element(XMLWriter *writer, string element);
-    void m_end_array_element(XMLWriter *writer);
-#endif
+
     friend class XDArrayTest;
 
 public:
