@@ -65,7 +65,7 @@ XDStructure::XDStructure( Structure *bt )
     // each of the underlying vars of the structure.
     Vars_iter p = bt->var_begin();
     while (p != bt->var_end()) {
-        BaseType *new_bt = basetype_to_asciitype(*p);
+        BaseType *new_bt = basetype_to_xd(*p);
         add_var(new_bt);
         // add_var makes a copy of the base type passed to it, so delete
         // it here
@@ -83,7 +83,7 @@ XDStructure::~XDStructure()
 void
 XDStructure::start_xml_declaration(XMLWriter *writer, string element)  throw(InternalErr)
 {
-    XDOutput::start_xml_declaration(writer);
+    XDOutput::start_xml_declaration(writer, element);
 
     for (Vars_iter p = var_begin(); p != var_end(); ++p) {
         if ((*p)->send_p()) {

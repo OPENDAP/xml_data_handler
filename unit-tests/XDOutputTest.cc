@@ -29,7 +29,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-//#define DODS_DEBUG
+#define DODS_DEBUG
 
 #include <DDS.h>
 #include <Grid.h>
@@ -88,23 +88,27 @@ public:
 
 	// Load various arrays with data
 	// g.xy[12][12], g.x[12], g.y[12]
-	XDGrid &g = dynamic_cast<XDGrid&>(*(dds->var("g")));
-	XDArray &xy = dynamic_cast<XDArray&>(*(g.array_var()));
-	Grid::Map_iter m = g.map_begin();
-	XDArray &x = dynamic_cast<XDArray&>(**m++);
-	XDArray &y = dynamic_cast<XDArray&>(**m);
+	XDGrid *g = dynamic_cast<XDGrid*>(dds->var("g"));
+	XDArray *xy = dynamic_cast<XDArray*>(g->array_var());
+	// See XDArrayTest for a note about this trick.
+	//xy->set_redirect(xy);
+	Grid::Map_iter m = g->map_begin();
+	XDArray *x = dynamic_cast<XDArray*>(*m++);
+	//x->set_redirect(x);
+	XDArray *y = dynamic_cast<XDArray*>(*m);
+	//y->set_redirect(y);
 
 	vector<dods_float64> f64x;
 	for (int i = 0; i < 12; i++)
 	    f64x.push_back(i * (-51.2));
-	x.set_value(f64x, f64x.size());
-	y.set_value(f64x, f64x.size());
+	x->set_value(f64x, f64x.size());
+	y->set_value(f64x, f64x.size());
 
 	vector<dods_byte> bxy;
 	for (int i = 0; i < 12; i++)
 	    for (int j = 0; j < 12; j++)
 		bxy.push_back(i * j * (2));
-	xy.set_value(bxy, bxy.size());
+	xy->set_value(bxy, bxy.size());
     }
 
     void tearDown() {
@@ -120,34 +124,59 @@ public:
 
     CPPUNIT_TEST_SUITE_END();
 
-    void test_print_xml_data() {
-	dds->var("a")->set_send_p(true);
-	XMLWriter writer;
-	dynamic_cast<XDOutput*>(dds->var("a"))->print_xml_data(&writer, true);
+    void test_print_xml_data()
+    {
+	try {
+	    dds->var("a")->set_send_p(true);
+	    XMLWriter writer;
+	    // See note in XDArrayTest about this trick.
+	    //dynamic_cast<XDOutput*> (dds->var("a"))->set_redirect(dds->var("a"));
+	    dynamic_cast<XDOutput*> (dds->var("a"))->print_xml_data(&writer, true);
 
-	DBG2(cerr << writer.get_doc() << endl);
+	    DBG2(cerr << writer.get_doc() << endl);
 
-	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_a.xml") == 0);
+	    CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_a.xml") == 0);
+	}
+	catch (InternalErr &e) {
+	    cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
+	    CPPUNIT_FAIL("Caught an InternalErr");
+	}
     }
 
-    void test_print_xml_data_structure() {
-	dds->var("e")->set_send_p(true);
-	XMLWriter writer;
-	dynamic_cast<XDOutput*>(dds->var("e"))->print_xml_data(&writer, true);
+    void test_print_xml_data_structure()
+    {
+	try {
+	    dds->var("e")->set_send_p(true);
+	    XMLWriter writer;
+	    //dynamic_cast<XDOutput*> (dds->var("e"))->set_redirect(dds->var("e"));
+	    dynamic_cast<XDOutput*> (dds->var("e"))->print_xml_data(&writer, true);
 
-	DBG(cerr << writer.get_doc() << endl);
+	    DBG(cerr << writer.get_doc() << endl);
 
-	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_e.xml") == 0);
+	    CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_e.xml") == 0);
+	}
+	catch (InternalErr &e) {
+	    cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
+	    CPPUNIT_FAIL("Caught an InternalErr");
+	}
     }
 
-    void test_print_xml_data_grid() {
-	dds->var("g")->set_send_p(true);
-	XMLWriter writer;
-	dynamic_cast<XDOutput*>(dds->var("g"))->print_xml_data(&writer, true);
+    void test_print_xml_data_grid()
+    {
+	try {
+	    dds->var("g")->set_send_p(true);
+	    XMLWriter writer;
+	    //dynamic_cast<XDOutput*> (dds->var("g"))->set_redirect(dds->var("g"));
+	    dynamic_cast<XDOutput*> (dds->var("g"))->print_xml_data(&writer, true);
 
-	DBG2(cerr << writer.get_doc() << endl);
+	    DBG2(cerr << writer.get_doc() << endl);
 
-	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_g.xml") == 0);
+	    CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_g.xml") == 0);
+	}
+	catch (InternalErr &e) {
+	    cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
+	    CPPUNIT_FAIL("Caught an InternalErr");
+	}
     }
 
 };
@@ -155,7 +184,7 @@ public:
 CPPUNIT_TEST_SUITE_REGISTRATION(XDOutputTest);
 
 int 
-main( int argc, char* argv[] )
+main( int /*argc*/, char* /*argv*/[] )
 {
     CppUnit::TextTestRunner runner;
     runner.addTest( CppUnit::TestFactoryRegistry::getRegistry().makeTest() );

@@ -68,28 +68,30 @@ get_data_values_as_xml(DataDDS *dds, XMLWriter *writer)
 {
     DDS::Vars_iter i = dds->var_begin();
     while (i != dds->var_end()) {
-        if ((*i)->send_p())
+        if ((*i)->send_p()) {
+            BESDEBUG("xd","Printing the values for " << (*i)->name() << " (" << (*i)->type_name() << ")" << endl);
             dynamic_cast<XDOutput &>(**i).print_xml_data(writer, true);
+        }
         ++i;
     }
 }
 
-DataDDS *datadds_to_ascii_datadds(DataDDS * dds)
+DataDDS *datadds_to_xd_datadds(DataDDS * dds)
 {
-    BESDEBUG("ascii", "In datadds_to_ascii_datadds" << endl);
+    BESDEBUG("xd", "In datadds_to_xd_datadds" << endl);
     // Should the following use XDOutputFactory instead of the source DDS'
     // factory class? It doesn't matter for the following since the function
     // basetype_to_asciitype() doesn't use the factory. So long as no other
     // code uses the DDS' factory, this is fine. jhrg 9/5/06
-    DataDDS *asciidds = new DataDDS(dds->get_factory(),
+    DataDDS *xd_dds = new DataDDS(dds->get_factory(),
                                     dds->get_dataset_name(),
                                     dds->get_version(),
                                     dds->get_protocol());
 
     DDS::Vars_iter i = dds->var_begin();
     while (i != dds->var_end()) {
-        BaseType *abt = basetype_to_asciitype(*i);
-        asciidds->add_var(abt);
+        BaseType *abt = basetype_to_xd(*i);
+	xd_dds->add_var(abt);
         // add_var makes a copy of the base type passed to it, so delete
         // it here
         delete abt;
@@ -98,14 +100,14 @@ DataDDS *datadds_to_ascii_datadds(DataDDS * dds)
 
     // Calling tag_nested_sequences() makes it easier to figure out if a
     // sequence has parent or child sequences or if it is a 'flat' sequence.
-    asciidds->tag_nested_sequences();
+    xd_dds->tag_nested_sequences();
 
-    return asciidds;
+    return xd_dds;
 }
 
 
 BaseType *
-basetype_to_asciitype( BaseType *bt )
+basetype_to_xd( BaseType *bt )
 {
     switch( bt->type() )
     {

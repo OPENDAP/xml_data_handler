@@ -90,13 +90,10 @@ BESXDResponseHandler::execute( BESDataHandlerInterface &dhi )
  * @see BESTransmitter
  * @see _BESDataHandlerInterface
  */
-void
-BESXDResponseHandler::transmit( BESTransmitter *transmitter,
-                                   BESDataHandlerInterface &dhi )
+void BESXDResponseHandler::transmit(BESTransmitter *transmitter, BESDataHandlerInterface &dhi)
 {
-    if( _response )
-    {
-	transmitter->send_response( ASCII_TRANSMITTER, _response, dhi ) ;
+    if (_response) {
+	transmitter->send_response(ASCII_TRANSMITTER, _response, dhi);
     }
 }
 

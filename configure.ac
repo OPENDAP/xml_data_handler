@@ -65,6 +65,26 @@ AC_PATH_PROG([CURL], [curl], [*** Where is curl? ***], [/bin:/usr/bin])
 
 OPENDAP_DEBUG_OPTION
 
+AC_ARG_ENABLE(unit-tests, 
+    [  --enable-unit-tests     On by default (yes|no)],
+    [case "$enableval" in
+        no)
+          AC_MSG_NOTICE(Unit tests disabled)
+           UNIT_TESTS_VAL=0
+           ;;
+         yes)
+          AC_MSG_NOTICE(Unit tests enabled)
+          UNIT_TESTS_VAL=1
+          ;;
+         *)
+          AC_MSG_ERROR(Bad unit tests value, use 'yes' or 'no')
+          ;;
+     esac],
+     [UNIT_TESTS_VAL=1
+     AC_MSG_NOTICE(Unit tests enabled)])
+
+AC_DEFINE_UNQUOTED([ENABLE_UNIT_TESTS], $UNIT_TESTS_VAL, [Should the code be compiled to suport unit tests?])
+    
 dnl autoheader macros; tack some text at the top and bottom of config.h.in
 AH_TOP([#ifndef _config_h
 #define _config_h])

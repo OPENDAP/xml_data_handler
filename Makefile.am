@@ -13,7 +13,7 @@ AM_CPPFLAGS = -I$(top_srcdir)
 CXXFLAGS_DEBUG = -g3 -O0 -Wall -fno-defer-pop
 TEST_COV_FLAGS = -ftest-coverage -fprofile-arcs
 
-SUBDIRS = unit-tests
+SUBDIRS = unit-tests tests
 
 lib_besdir=$(libdir)/bes
 lib_bes_LTLIBRARIES = libxml_data_module.la

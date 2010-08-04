@@ -32,12 +32,10 @@
 
 #include "config.h"
 
-//#include "BESXDRequestHandler.h"
 #include <BESResponseHandler.h>
 #include <BESResponseNames.h>
 #include <BESVersionInfo.h>
 #include <BESDataNames.h>
-//#include "config.h"
 
 #include "BESXDRequestHandler.h"
 
@@ -55,23 +53,19 @@ BESXDRequestHandler::~BESXDRequestHandler()
 bool
 BESXDRequestHandler::dap_build_help( BESDataHandlerInterface &dhi )
 {
-    // the usage request handler is already loading this and, since all
-    // three dap-server modules are usually loaded, we'll assume it's
-    // already taken care of
-    /*
     BESResponseObject *response = dhi.response_handler->get_response_object() ;
     BESInfo *info = dynamic_cast < BESInfo * >(response) ;
     if( !info )
 	throw BESInternalError( "cast error", __FILE__, __LINE__ ) ;
 
     map<string,string> attrs ;
-    string name = (string)PACKAGE_NAME + "/ascii" ;
+    string name = (string)PACKAGE_NAME + "/xd" ;
     attrs["name"] = name ;
     attrs["version"] = PACKAGE_VERSION ;
     info->begin_tag( "module", &attrs ) ;
+    // TODO: Fix the help file
     info->add_data_from_file( "DAP-SERVER.Help", "Dap server Help" ) ;
     info->end_tag( "module" ) ;
-    */
 
     return true ;
 }

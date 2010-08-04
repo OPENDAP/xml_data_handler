@@ -79,4 +79,4 @@ AT_RUN_BES_AND_COMPARE([fnoc1.nc], [ascii], [fnoc1.nc.u], [u])
 AT_RUN_BES_AND_COMPARE([fnoc1.nc], [ascii], [fnoc1.nc.lat], [lat])
 
 AT_RUN_BES_AND_COMPARE([coads_climatology.nc], [ascii], [coads_climatology.nc])
-
+AT_RUN_BES_AND_COMPARE([coads_climatology.nc], [ascii], [coads_climatology.nc.COADSY], [SST.COADSY])

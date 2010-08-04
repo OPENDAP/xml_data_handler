@@ -54,12 +54,36 @@ protected:
     BaseType *d_redirect;
 
 public:
+    /**
+     * Build an instance of XDOutput and set the redirect field to 'bt'
+     * @param bt
+     */
     XDOutput( BaseType *bt ) : d_redirect( bt ) { }
+
+    /**
+     * Build an instance of XDOutput. The redirect field is null.
+     * @return
+     */
     XDOutput() : d_redirect( 0 ) { }
+
     virtual ~XDOutput() {}
 
-    bool increment_state(vector<int> *state, const vector<int> &shape);
+    virtual bool increment_state(vector<int> *state, const vector<int> &shape);
+#if 0
+    /**
+     * Set the redirect field. This is intended for use with tests where
+     * instances are made without using a BaseType derived from some other
+     * handler.
+     * @param r
+     */
+    virtual void set_redirect(BaseType *r) { d_redirect = r; }
 
+    /**
+     * Get the redirect value.
+     * @return
+     */
+    virtual BaseType *get_redirect() { return d_redirect; }
+#endif
     virtual void start_xml_declaration(XMLWriter *writer, string element = "")  throw(InternalErr);
     virtual void end_xml_declaration(XMLWriter *writer)  throw(InternalErr);
 

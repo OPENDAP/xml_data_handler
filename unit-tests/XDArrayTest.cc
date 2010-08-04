@@ -88,6 +88,15 @@ public:
 	    DDS::Vars_iter p = dds1->var_begin();
 
 	    a = dynamic_cast<XDArray*> (*p++);
+	    // Trick: by setting the redirect to the variable we emulate the
+	    // real use where the XDtype is a copy of some BaseType _except_
+	    // that is does not contain any data. The data values themselves
+	    // are not copied from the source BaseType. Instead a pointer to
+	    // that BaseType is kept in the XDOutput part of the XDtype and
+	    // accessed using the 'd_redirect' field. For these tests, since
+	    // we load the values into the XDtype, we set d_redirect to point
+	    // back to the XDtype.
+	    //a->set_redirect(a);
 	    vector<dods_int32> i32a;
 	    for (dods_int32 i = 0; i < 10; i++) {
 		i32a.push_back(i * (-512));
@@ -95,6 +104,7 @@ public:
 	    a->set_value(i32a, i32a.size());
 
 	    b = dynamic_cast<XDArray*>(*p++);
+	    //b->set_redirect(b);
 	    vector<dods_int32> i32b;
 	    for (dods_int32 i = 0; i < 10; i++)
 		for (dods_int32 j = 0; j < 10; j++)
@@ -102,6 +112,7 @@ public:
 	    b->set_value(i32b, i32b.size());
 
 	    c = dynamic_cast<XDArray*>(*p++);
+	    //c->set_redirect(c);
 	    vector<dods_int32> i32c;
 	    for (dods_int32 i = 0; i < 5; i++)
 		for (dods_int32 j = 0; j < 5; j++)
@@ -110,6 +121,7 @@ public:
 	    c->set_value(i32c, i32c.size());
 
 	    d = dynamic_cast<XDArray*>(*p++);
+	    //d->set_redirect(d);
 	    vector<dods_int32> i32d;
 	    for (dods_int32 i = 0; i < 3; i++)
 		for (dods_int32 j = 0; j < 4; j++)
@@ -120,6 +132,7 @@ public:
 
 	    // Get the Structure array
 	    e = dynamic_cast<XDArray*>(*p++);
+	    //e->set_redirect(e);
 
 	    // Build a structure that contains arrays
 	    Structure *elem = new Structure("elem");
@@ -281,7 +294,7 @@ public:
 
 	}
 	catch (InternalErr &e) {
-	    cerr << "Caught an InternalErr: " + e.get_error_message() << endl;
+	    cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
 	    CPPUNIT_FAIL("Caught an InternalErr");
 	}
     }
@@ -298,7 +311,7 @@ public:
 
 	}
 	catch (InternalErr &e) {
-	    cerr << "Caught an InternalErr: " + e.get_error_message() << endl;
+	    cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
 	    CPPUNIT_FAIL("Caught an InternalErr");
 	}
     }
@@ -315,7 +328,7 @@ public:
 
 	}
 	catch (InternalErr &e) {
-	    cerr << "Caught an InternalErr: " + e.get_error_message() << endl;
+	    cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
 	    CPPUNIT_FAIL("Caught an InternalErr");
 	}
     }
@@ -332,7 +345,7 @@ public:
 
 	}
 	catch (InternalErr &e) {
-	    cerr << "Caught an InternalErr: " + e.get_error_message() << endl;
+	    cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
 	    CPPUNIT_FAIL("Caught an InternalErr");
 	}
     }
@@ -349,7 +362,7 @@ public:
 
 	}
 	catch (InternalErr &e) {
-	    cerr << "Caught an InternalErr: " + e.get_error_message() << endl;
+	    cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
 	    CPPUNIT_FAIL("Caught an InternalErr");
 	}
     }
@@ -359,7 +372,7 @@ public:
 CPPUNIT_TEST_SUITE_REGISTRATION(XDArrayTest);
 
 int 
-main( int argc, char* argv[] )
+main( int /*argc*/, char* /*argv*/[] )
 {
     CppUnit::TextTestRunner runner;
     runner.addTest( CppUnit::TestFactoryRegistry::getRegistry().makeTest() );

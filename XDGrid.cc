@@ -66,7 +66,7 @@ XDGrid::XDGrid(const string &n) :
 XDGrid::XDGrid(Grid *grid) :
     Grid(grid->name()), XDOutput(grid)
 {
-    BaseType *bt = basetype_to_asciitype(grid->array_var());
+    BaseType *bt = basetype_to_xd(grid->array_var());
     add_var(bt, array);
     // add_var makes a copy of the base type passed to it, so delete it here
     delete bt;
@@ -75,7 +75,7 @@ XDGrid::XDGrid(Grid *grid) :
     Grid::Map_iter i = grid->map_begin();
     Grid::Map_iter e = grid->map_end();
     while (i != e) {
-        bt = basetype_to_asciitype(*i);
+        bt = basetype_to_xd(*i);
         add_var(bt, maps);
         // add_var makes a copy of the base type passed to it, so delete it here
         delete bt;
@@ -108,10 +108,11 @@ void XDGrid::print_xml_data(XMLWriter *writer, bool show_type) throw (InternalEr
     while (m != map_end()) {
 	if ((*m)->send_p()) {
 	    if (projection_yields_grid())
-		dynamic_cast<XDArray&> (**m++).print_xml_map_data(writer, show_type);
+		dynamic_cast<XDArray&> (**m).print_xml_map_data(writer, show_type);
 	    else
-		dynamic_cast<XDArray&> (**m++).print_xml_data(writer, show_type);
+		dynamic_cast<XDArray&> (**m).print_xml_data(writer, show_type);
 	}
+	++m;
     }
 
     // End the structure element

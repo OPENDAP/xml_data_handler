@@ -55,72 +55,55 @@ using std::endl ;
 void
 BESXDModule::initialize( const string &modname )
 {
-    BESDEBUG( "ascii", "Initializing OPeNDAP XD module "
-		       << modname << endl ) ;
+    BESDEBUG( "xd", "Initializing OPeNDAP XD module " << modname << endl );
 
-    BESDEBUG( "ascii", "    adding " << modname
-		       << " request handler" << endl ) ;
-    BESRequestHandler *handler = new BESXDRequestHandler( modname ) ;
-    BESRequestHandlerList::TheList()->add_handler( modname, handler ) ;
+    BESDEBUG( "xd", "    adding " << modname << " request handler" << endl );
+    BESRequestHandler *handler = new BESXDRequestHandler(modname);
+    BESRequestHandlerList::TheList()->add_handler(modname, handler);
 
-    BESDEBUG( "ascii", "    adding " << ASCII_RESPONSE
-		       << " response handler" << endl ) ;
-    BESResponseHandlerList::TheList()->add_handler( ASCII_RESPONSE, BESXDResponseHandler::XDResponseBuilder ) ;
+    BESDEBUG( "xd", "    adding " << ASCII_RESPONSE << " response handler" << endl );
+    BESResponseHandlerList::TheList()->add_handler(ASCII_RESPONSE, BESXDResponseHandler::XDResponseBuilder);
 
-    BESDEBUG( "ascii", "Adding to dap services" << endl ) ;
-    BESDapService::add_to_dap_service( ASCII_SERVICE,
-				       "OPeNDAP ascii data representation" ) ;
+    BESDEBUG( "xd", "Adding to dap services" << endl );
+    BESDapService::add_to_dap_service(ASCII_SERVICE, "OPeNDAP ascii data representation");
 
-    BESTransmitter *t =
-	BESReturnManager::TheManager()->find_transmitter( DAP2_FORMAT ) ;
-    if( t )
-    {
-	BESDEBUG( "ascii", "    adding basic " << ASCII_TRANSMITTER
-			   << " transmit function" << endl ) ;
-	t->add_method( ASCII_TRANSMITTER, BESXDTransmit::send_basic_ascii ) ;
+    BESTransmitter *t = BESReturnManager::TheManager()->find_transmitter(DAP2_FORMAT);
+    if (t) {
+	BESDEBUG( "xd", "    adding basic " << ASCII_TRANSMITTER << " transmit function" << endl );
+	t->add_method(ASCII_TRANSMITTER, BESXDTransmit::send_basic_ascii);
     }
 
-    BESDEBUG( "ascii", "    adding ascii debug context" << endl ) ;
-    BESDebug::Register( "ascii" ) ;
+    BESDEBUG( "xd", "    adding ascii debug context" << endl );
+    BESDebug::Register("xd");
 
-    BESDEBUG( "ascii", "Done Initializing OPeNDAP XD module "
-		       << modname << endl ) ;
+    BESDEBUG( "xd", "Done Initializing OPeNDAP XD module " << modname << endl );
 }
 
-void
-BESXDModule::terminate( const string &modname )
+void BESXDModule::terminate(const string &modname)
 {
-    BESDEBUG( "ascii", "Cleaning OPeNDAP XD module "
-		       << modname << endl ) ;
+    BESDEBUG( "xd", "Cleaning OPeNDAP XD module " << modname << endl );
 
-    BESDEBUG( "ascii", "    removing " << modname
-		       << " request handler " << endl ) ;
-    BESRequestHandler *rh = BESRequestHandlerList::TheList()->remove_handler( modname ) ;
-    if( rh ) delete rh ;
+    BESDEBUG( "xd", "    removing " << modname << " request handler " << endl );
+    BESRequestHandler *rh = BESRequestHandlerList::TheList()->remove_handler(modname);
+    if (rh)
+	delete rh;
 
-    BESDEBUG( "ascii", "    removing " << ASCII_RESPONSE
-		       << " response handler" << endl ) ;
-    BESResponseHandlerList::TheList()->remove_handler( ASCII_RESPONSE ) ;
+    BESDEBUG( "xd", "    removing " << ASCII_RESPONSE << " response handler" << endl );
+    BESResponseHandlerList::TheList()->remove_handler(ASCII_RESPONSE);
 
-    BESTransmitter *t =
-	BESReturnManager::TheManager()->find_transmitter( DAP2_FORMAT ) ;
-    if( t )
-    {
-	BESDEBUG( "ascii", "    removing basic " << ASCII_TRANSMITTER
-			   << " transmit function" << endl ) ;
-	t->remove_method( ASCII_TRANSMITTER ) ;
+    BESTransmitter *t = BESReturnManager::TheManager()->find_transmitter(DAP2_FORMAT);
+    if (t) {
+	BESDEBUG( "xd", "    removing basic " << ASCII_TRANSMITTER << " transmit function" << endl );
+	t->remove_method(ASCII_TRANSMITTER);
     }
 
-    t = BESReturnManager::TheManager()->find_transmitter( DAP2_FORMAT ) ;
-    if( t )
-    {
-	BESDEBUG( "ascii", "    removing http " << ASCII_TRANSMITTER
-			   << " transmit function" << endl ) ;
-	t->remove_method( ASCII_TRANSMITTER ) ;
+    t = BESReturnManager::TheManager()->find_transmitter(DAP2_FORMAT);
+    if (t) {
+	BESDEBUG( "xd", "    removing http " << ASCII_TRANSMITTER << " transmit function" << endl );
+	t->remove_method(ASCII_TRANSMITTER);
     }
 
-    BESDEBUG( "ascii", "Done Cleaning OPeNDAP XD module "
-		       << modname << endl ) ;
+    BESDEBUG( "xd", "Done Cleaning OPeNDAP XD module "  << modname << endl );
 }
 
 /** @brief dumps information about this object
@@ -129,18 +112,15 @@ BESXDModule::terminate( const string &modname )
  *
  * @param strm C++ i/o stream to dump the information to
  */
-void
-BESXDModule::dump( ostream &strm ) const
+void BESXDModule::dump(ostream &strm) const
 {
-    strm << BESIndent::LMarg << "BESXDModule::dump - ("
-			     << (void *)this << ")" << endl ;
+    strm << BESIndent::LMarg << "BESXDModule::dump - (" << (void *) this << ")" << endl;
 }
 
-extern "C"
+extern "C" {
+BESAbstractModule *maker()
 {
-    BESAbstractModule *maker()
-    {
-	return new BESXDModule ;
-    }
+    return new BESXDModule;
+}
 }
 

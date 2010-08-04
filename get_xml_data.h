@@ -35,9 +35,9 @@ namespace xml_data {
 
 void get_data_values_as_xml(DataDDS *dds, XMLWriter *writer);
 
-DataDDS *datadds_to_ascii_datadds( DataDDS *dds ) ;
+DataDDS *datadds_to_xd_datadds( DataDDS *dds ) ;
 
-BaseType *basetype_to_asciitype( BaseType *bt ) ;
+BaseType *basetype_to_xd( BaseType *bt ) ;
 
 }
 

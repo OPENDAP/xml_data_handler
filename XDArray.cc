@@ -43,6 +43,7 @@
 using namespace std;
 
 //#define DODS_DEBUG
+#include <BESDebug.h>
 
 #include <InternalErr.h>
 #include <escaping.h>
@@ -70,7 +71,7 @@ XDArray::XDArray( Array *bt )
     // By calling var() without any parameters we get back the template
     // itself, then we can add it to this Array as the template. By doing
     // this we set the parent as well, which is what we need.
-    BaseType *abt = basetype_to_asciitype( bt->var() ) ;
+    BaseType *abt = basetype_to_xd( bt->var() ) ;
     add_var( abt ) ;
     // add_var makes a copy of the base type passed, so delete the original
     delete abt ;
@@ -115,15 +116,15 @@ void XDArray::print_xml_map_data(XMLWriter *writer, bool /*show_type*/) throw(In
     }
 }
 
-void XDArray::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
+void XDArray::print_xml_data(XMLWriter *writer, bool /*show_type*/) throw(InternalErr)
 {
+    BESDEBUG("xd", "Entering XDArray::print_xml_data" << endl);
+
     if (var()->is_simple_type()) {
-        if (dimensions(true) > 1) {
+        if (dimensions(true) > 1)
             m_print_xml_array(writer, "Array");
-        }
-        else {
+        else
             m_print_xml_vector(writer, "Array");
-        }
     }
     else {
 	m_print_xml_complex_array(writer, "Array");
@@ -173,7 +174,7 @@ void XDArray::start_xml_declaration(XMLWriter *writer, string element)  throw(In
 	throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + name());
 
     // Start and End the Type element/s
-    dynamic_cast<XDOutput&>(*var()).start_xml_declaration(writer, element);
+    dynamic_cast<XDOutput&>(*var()).start_xml_declaration(writer);
 
     end_xml_declaration(writer);
 
@@ -183,6 +184,8 @@ void XDArray::start_xml_declaration(XMLWriter *writer, string element)  throw(In
 // Print out a values for a vector (one dimensional array) of simple types.
 void XDArray::m_print_xml_vector(XMLWriter *writer, string element)
 {
+    BESDEBUG("xd", "Entering XDArray::m_print_xml_vector" << endl);
+
     start_xml_declaration(writer, element);
 
     // only one dimension
@@ -194,6 +197,8 @@ void XDArray::m_print_xml_vector(XMLWriter *writer, string element)
 
 void XDArray::m_print_xml_array(XMLWriter *writer, string element)
 {
+    BESDEBUG("xd", "Entering XDArray::m_print_xml_array" << endl);
+
     int dims = dimensions(true);
     if (dims <= 1)
         throw InternalErr(__FILE__, __LINE__, "Dimension count is <= 1 while printing multidimensional array.");
@@ -243,6 +248,20 @@ void XDArray::m_print_xml_array(XMLWriter *writer, string element)
 
     @note This is called only for simple types.
 
+    @note About 'redirect': The d_redirect field is used here because this is
+    where actual values are needed. In this handler the data values have
+    already been read and stored in the BaseType variables from the source
+    (likely another handler such as the netCDF or HDF4 handler). Instead of
+    allocating more memory to hold a copy of those data, the original BaseType
+    objects are referenced using the d_redirect field. This field is also used
+    in the simple types, which are all printed using XDOutput::print_xml_data().
+    This is not done for complex types because those print data using either
+    this method or the XDOutput version.
+
+    @note That in testing instances of the various XDtypes are made directly,
+    without any sibling BaseType. In those cases the XDtype variables are hold
+    the data so we fool the code here.
+
     @param writer Write to this xml sink.
     @param index Print values starting from this point.
     @param number Print this many values.
@@ -251,8 +270,19 @@ void XDArray::m_print_xml_array(XMLWriter *writer, string element)
     @see print\_array */
 int XDArray::m_print_xml_row(XMLWriter *writer, int index, int number)
 {
+    Array *a = dynamic_cast<Array*>(d_redirect);
+#if ENABLE_UNIT_TESTS
+    if (!a)
+	a = this;
+#else
+    if (!a)
+	throw InternalErr(__FILE__, __LINE__, "d_redirect is null");
+#endif
+
+    BESDEBUG("xd", "Entering XDArray::m_print_xml_row" << endl);
     for (int i = 0; i < number; ++i) {
-        BaseType *curr_var = basetype_to_asciitype(var(index++));
+	// Must use the variable that holds the data here!
+        BaseType *curr_var = basetype_to_xd(a->var(index++));
         dynamic_cast < XDOutput & >(*curr_var).print_xml_data(writer, false);
         // we're not saving curr_var for future use, so delete it here
         delete curr_var;
@@ -265,7 +295,7 @@ int XDArray::m_print_xml_row(XMLWriter *writer, int index, int number)
 
 int XDArray::m_get_index(vector < int >indices) throw(InternalErr)
 {
-    if (indices.size() != /*bt->*/dimensions(true)) {
+    if (indices.size() != dimensions(true)) {
         throw InternalErr(__FILE__, __LINE__,
                           "Index vector is the wrong size!");
     }
@@ -326,16 +356,16 @@ vector < int > XDArray::get_shape_vector(size_t n) throw(InternalErr)
     @return the size of the dimension. */
 int XDArray::get_nth_dim_size(size_t n) throw(InternalErr)
 {
-    if (n > /*bt->*/dimensions(true) - 1) {
+    if (n > dimensions(true) - 1) {
         string msg = "Attempt to get dimension ";
         msg +=
-            long_to_string(n + 1) + " from `" + /*bt->*/name() +
-            "' which has " + long_to_string(/*bt->*/dimensions(true)) +
+            long_to_string(n + 1) + " from `" + name() +
+            "' which has " + long_to_string(dimensions(true)) +
             " dimension(s).";
         throw InternalErr(__FILE__, __LINE__, msg);
     }
 
-    return /*bt->*/dimension_size(/*bt->*/dim_begin() + n, true);
+    return dimension_size(dim_begin() + n, true);
 }
 
 void XDArray::m_print_xml_complex_array(XMLWriter *writer, string element)
@@ -363,7 +393,7 @@ void XDArray::m_print_xml_complex_array(XMLWriter *writer, string element)
 		throw InternalErr(__FILE__, __LINE__, "Could not write index attribute for " + name());
 	}
 
-        BaseType *curr_var = basetype_to_asciitype(var(m_get_index(state)));
+        BaseType *curr_var = basetype_to_xd(var(m_get_index(state)));
         dynamic_cast < XDOutput & >(*curr_var).print_xml_data(writer, true);
         // we are not saving curr_var for future reference, so delete it
         delete curr_var;

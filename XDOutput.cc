@@ -31,6 +31,9 @@
 
 #include "config.h"
 
+#include <libxml/encoding.h>
+#include <libxml/xmlwriter.h>
+
 #include <iostream>
 #include <sstream>
 
@@ -38,14 +41,12 @@
 #include <algorithm>
 #include <iterator>
 
-
-#include <libxml/encoding.h>
-#include <libxml/xmlwriter.h>
-
 //#define DODS_DEBUG
 
 #include <BaseType.h>
 #include <debug.h>
+
+#include <BESDebug.h>
 
 #include "XMLWriter.h"
 #include "XDOutput.h"
@@ -54,18 +55,11 @@
 //using namespace xml_data;
 using namespace std;
 
-void XDOutput::start_xml_declaration(XMLWriter *writer, string /*element*/)  throw(InternalErr)
+void XDOutput::start_xml_declaration(XMLWriter *writer, string element)  throw(InternalErr)
 {
-    BaseType *btp = d_redirect;
-    DBG(cerr << "d_redirect: " << d_redirect << endl;)
-    if (!btp)
-        btp = dynamic_cast < BaseType * >(this);
+    BaseType *btp = dynamic_cast < BaseType * >(this);
 
-    if (!btp)
-        throw InternalErr(__FILE__, __LINE__,
-                          "An instance of XDOutput failed to cast to BaseType.");
-
-    if (xmlTextWriterStartElement(writer->get_writer(), get_xc(btp->type_name())) < 0)
+    if (xmlTextWriterStartElement(writer->get_writer(), !element.empty() ? get_xc(element) : get_xc(btp->type_name())) < 0)
 	throw InternalErr(__FILE__, __LINE__, "Could not write element for " + btp->name());
     if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", get_xc(btp->name())))
 	throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + btp->name());
@@ -73,14 +67,7 @@ void XDOutput::start_xml_declaration(XMLWriter *writer, string /*element*/)  thr
 
 void XDOutput::end_xml_declaration(XMLWriter *writer)  throw(InternalErr)
 {
-    BaseType *btp = d_redirect;
-    DBG(cerr << "d_redirect: " << d_redirect << endl);
-    if (!btp)
-        btp = dynamic_cast < BaseType * >(this);
-
-    if (!btp)
-        throw InternalErr(__FILE__, __LINE__,
-                          "An instance of XDOutput failed to cast to BaseType.");
+    BaseType *btp = dynamic_cast < BaseType * >(this);
 
     if (xmlTextWriterEndElement(writer->get_writer()) < 0)
 	throw InternalErr(__FILE__, __LINE__, "Could not end element for " + btp->name());
@@ -88,12 +75,17 @@ void XDOutput::end_xml_declaration(XMLWriter *writer)  throw(InternalErr)
 
 void XDOutput::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
 {
+    BESDEBUG("xd", "Entering XDOutput::print_xml_data" << endl);
+
     BaseType *btp = d_redirect;
+#if ENABLE_UNIT_TESTS
     if (!btp)
         btp = dynamic_cast < BaseType * >(this);
+#else
     if (!btp)
-        throw InternalErr(__FILE__, __LINE__,
-                          "An instance of XDOutput failed to cast to BaseType.");
+        throw InternalErr(__FILE__, __LINE__, "d_redirect is null.");
+#endif
+
     if (show_type)
 	start_xml_declaration(writer);
 

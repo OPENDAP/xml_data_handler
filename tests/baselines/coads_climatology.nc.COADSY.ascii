@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <Dataset xmlns="http://xml.opendap.org/ns/dap/3.3#">
-    <Grid name="SST">
+    <Structure name="SST">
         <Array name="COADSY">
             <Float64 name="COADSY"/>
             <dimension name="COADSY" size="90"/>
@@ -95,5 +95,5 @@
             <value>87</value>
             <value>89</value>
         </Array>
-    </Grid>
+    </Structure>
 </Dataset>

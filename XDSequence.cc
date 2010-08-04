@@ -68,7 +68,7 @@ XDSequence::XDSequence(Sequence * bt)
     // don't have to do it on the fly.
     Vars_iter p = bt->var_begin();
     while (p != bt->var_end()) {
-        BaseType *new_bt = basetype_to_asciitype(*p);
+        BaseType *new_bt = basetype_to_xd(*p);
         add_var(new_bt);
         delete new_bt;
         p++;
@@ -146,7 +146,7 @@ XDSequence::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
 	int j = 0;
 	do {
 	    BaseType *bt_ptr = seq->var_value(i, j++);
-	    BaseType *abt_ptr = basetype_to_asciitype(bt_ptr);
+	    BaseType *abt_ptr = basetype_to_xd(bt_ptr);
 	    dynamic_cast<XDOutput&>(*abt_ptr).print_xml_data(writer, true);
 	    // abt_ptr is not stored for future use, so delete it
 	    delete abt_ptr;
@@ -168,7 +168,7 @@ void
 XDSequence::print_ascii_row(ostream &strm, int row, BaseTypeRow outer_vars)
 {
 #if 0
-    BESDEBUG("ascii", "    In XDSequence::print_ascii_row" << endl);
+    BESDEBUG("xd", "    In XDSequence::print_ascii_row" << endl);
 
     Sequence *seq = dynamic_cast < Sequence * >(d_redirect);
     if (!seq)
@@ -182,7 +182,7 @@ XDSequence::print_ascii_row(ostream &strm, int row, BaseTypeRow outer_vars)
     do {
         BaseType *bt_ptr = seq->var_value(row, j);
         if (bt_ptr) {           // Check for data.
-            BaseType *abt_ptr = basetype_to_asciitype(bt_ptr);
+            BaseType *abt_ptr = basetype_to_xd(bt_ptr);
             if (abt_ptr->type() == dods_sequence_c) {
                 if (abt_ptr->send_p()) {
                     if (!first_var)
@@ -222,12 +222,12 @@ void
 XDSequence::print_leading_vars(ostream &strm, BaseTypeRow & outer_vars)
 {
 #if 0
-    BESDEBUG("ascii", "    In XDSequence::print_leading_vars" << endl);
+    BESDEBUG("xd", "    In XDSequence::print_leading_vars" << endl);
 
     bool first_var = true;
     BaseTypeRow::iterator BTR_iter = outer_vars.begin();
     while (BTR_iter != outer_vars.end()) {
-        BaseType *abt_ptr = basetype_to_asciitype(*BTR_iter);
+        BaseType *abt_ptr = basetype_to_xd(*BTR_iter);
         if (!first_var)
             strm << ", " ;
         else
@@ -238,7 +238,7 @@ XDSequence::print_leading_vars(ostream &strm, BaseTypeRow & outer_vars)
         ++BTR_iter;
     }
 
-    BESDEBUG("ascii", "    Out XDSequence::print_leading_vars" << endl);
+    BESDEBUG("xd", "    Out XDSequence::print_leading_vars" << endl);
 #endif
 }
 
@@ -264,7 +264,7 @@ XDSequence::print_ascii_rows(ostream &strm, BaseTypeRow outer_vars)
             strm << "\n" ;
     } while (!done);
 
-    BESDEBUG("ascii", "    Out XDSequence::print_ascii_rows" << endl);
+    BESDEBUG("xd", "    Out XDSequence::print_ascii_rows" << endl);
 }
 
 
@@ -272,7 +272,7 @@ void
 XDSequence::print_ascii(ostream &strm, bool print_name) throw(InternalErr)
 {
 #if 0
-    BESDEBUG("ascii", "In XDSequence::print_ascii" << endl);
+    BESDEBUG("xd", "In XDSequence::print_ascii" << endl);
     Sequence *seq = dynamic_cast < Sequence * >(d_redirect);
     if (!seq)
         seq = this;
@@ -299,7 +299,7 @@ XDSequence::print_ascii(ostream &strm, bool print_name) throw(InternalErr)
             int j = 0;
             do {
                 BaseType *bt_ptr = seq->var_value(i, j++);
-                BaseType *abt_ptr = basetype_to_asciitype(bt_ptr);
+                BaseType *abt_ptr = basetype_to_xd(bt_ptr);
                 dynamic_cast < XDOutput * >(abt_ptr)->print_ascii(strm,
                                                                      true);
                 // abt_ptr is not stored for future use, so delete it
