@@ -37,6 +37,8 @@
 
 #include <string>
 
+#include <BESDebug.h>
+
 #include "XDUrl.h"
 
 BaseType *
@@ -44,4 +46,29 @@ XDUrl::ptr_duplicate()
 {
     return new XDUrl(*this);
 }
+
+void XDUrl::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
+{
+    BESDEBUG("xd", "Entering XDUrl::print_xml_data" << endl);
+
+    Url *u = dynamic_cast<Url*>(d_redirect);
+#if ENABLE_UNIT_TESTS
+    if (!u)
+        u = dynamic_cast < Url * >(this);
+#else
+    if (!u)
+        throw InternalErr(__FILE__, __LINE__, "d_redirect is null.");
+#endif
+
+    if (show_type)
+	start_xml_declaration(writer);
+
+    // Write the element for the value, then the value
+    if (!xmlTextWriterWriteElement(writer->get_writer(), (const xmlChar*)"value", get_xc(u->value())) < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not write value element for " + u->name());
+
+    if (show_type)
+	end_xml_declaration(writer);
+}
+
 

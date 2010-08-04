@@ -12,8 +12,9 @@
 
 #include <InternalErr.h>
 
-#define ENCODING "ISO-8859-1"
-#define DAP_SCHEMA "http://xml.opendap.org/ns/dap/3.3#"
+const char *ENCODING = "ISO-8859-1";
+const char *DAP_SCHEMA = "http://xml.opendap.org/ns/dap/3.3#";
+const int XML_BUF_SIZE = 2000000;
 
 using namespace libdap;
 
@@ -24,8 +25,10 @@ XMLWriter::XMLWriter()
     /* Create a new XML buffer, to which the XML document will be
      * written */
     try {
-	if (!(d_doc_buf = xmlBufferCreate()))
+	if (!(d_doc_buf = xmlBufferCreateSize(XML_BUF_SIZE)))
 	    throw InternalErr(__FILE__, __LINE__, "Error allocating the xml buffer");
+
+	xmlBufferSetAllocationScheme(d_doc_buf, XML_BUFFER_ALLOC_DOUBLEIT);
 
 	/* Create a new XmlWriter for memory, with no compression.
 	 * Remark: there is no compression for this kind of xmlTextWriter */

@@ -48,6 +48,8 @@ public:
     virtual ~XDStr() {}
 
     virtual BaseType *ptr_duplicate();
+
+    void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 };
 
 #endif

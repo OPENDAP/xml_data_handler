@@ -88,15 +88,6 @@ public:
 	    DDS::Vars_iter p = dds1->var_begin();
 
 	    a = dynamic_cast<XDArray*> (*p++);
-	    // Trick: by setting the redirect to the variable we emulate the
-	    // real use where the XDtype is a copy of some BaseType _except_
-	    // that is does not contain any data. The data values themselves
-	    // are not copied from the source BaseType. Instead a pointer to
-	    // that BaseType is kept in the XDOutput part of the XDtype and
-	    // accessed using the 'd_redirect' field. For these tests, since
-	    // we load the values into the XDtype, we set d_redirect to point
-	    // back to the XDtype.
-	    //a->set_redirect(a);
 	    vector<dods_int32> i32a;
 	    for (dods_int32 i = 0; i < 10; i++) {
 		i32a.push_back(i * (-512));
@@ -362,7 +353,11 @@ public:
 
 	}
 	catch (InternalErr &e) {
-	    cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
+	    xmlErrorPtr error = xmlGetLastError();
+	    if (error)
+		cerr << "Caught an InternalErr: " << e.get_error_message() << "libxml: " << error->message << endl;
+	    else
+		cerr << "Caught an InternalErr: " << e.get_error_message() << "libxml: no message" << endl;
 	    CPPUNIT_FAIL("Caught an InternalErr");
 	}
     }

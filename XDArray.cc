@@ -256,7 +256,7 @@ void XDArray::m_print_xml_array(XMLWriter *writer, string element)
     objects are referenced using the d_redirect field. This field is also used
     in the simple types, which are all printed using XDOutput::print_xml_data().
     This is not done for complex types because those print data using either
-    this method or the XDOutput version.
+    this method or the XDOutput version. But see XDSequence for an exception...
 
     @note That in testing instances of the various XDtypes are made directly,
     without any sibling BaseType. In those cases the XDtype variables are hold

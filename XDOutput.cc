@@ -62,7 +62,7 @@ void XDOutput::start_xml_declaration(XMLWriter *writer, string element)  throw(I
     if (xmlTextWriterStartElement(writer->get_writer(), !element.empty() ? get_xc(element) : get_xc(btp->type_name())) < 0)
 	throw InternalErr(__FILE__, __LINE__, "Could not write element for " + btp->name());
     if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", get_xc(btp->name())))
-	throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + btp->name());
+	throw InternalErr(__FILE__, __LINE__, "Could not write attribute 'name' for " + btp->name());
 }
 
 void XDOutput::end_xml_declaration(XMLWriter *writer)  throw(InternalErr)

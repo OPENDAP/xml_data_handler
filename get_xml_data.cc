@@ -66,13 +66,22 @@ namespace xml_data {
 void
 get_data_values_as_xml(DataDDS *dds, XMLWriter *writer)
 {
-    DDS::Vars_iter i = dds->var_begin();
-    while (i != dds->var_end()) {
-        if ((*i)->send_p()) {
-            BESDEBUG("xd","Printing the values for " << (*i)->name() << " (" << (*i)->type_name() << ")" << endl);
-            dynamic_cast<XDOutput &>(**i).print_xml_data(writer, true);
-        }
-        ++i;
+    try {
+	DDS::Vars_iter i = dds->var_begin();
+	while (i != dds->var_end()) {
+	    if ((*i)->send_p()) {
+		BESDEBUG("xd","Printing the values for " << (*i)->name() << " (" << (*i)->type_name() << ")" << endl);
+		dynamic_cast<XDOutput &> (**i).print_xml_data(writer, true);
+	    }
+	    ++i;
+	}
+    }
+    catch (InternalErr &e) {
+	xmlErrorPtr error = xmlGetLastError();
+	if (error->message)
+	    throw InternalErr(e.get_error_message() + "; libxml: " + error->message);
+	else
+	    throw InternalErr(e.get_error_message() + "; libxml: no message");
     }
 }
 
@@ -109,6 +118,9 @@ DataDDS *datadds_to_xd_datadds(DataDDS * dds)
 BaseType *
 basetype_to_xd( BaseType *bt )
 {
+    if (!bt)
+	throw InternalErr(__FILE__, __LINE__, "Null BaseType to XD factory");
+
     switch( bt->type() )
     {
 	case dods_byte_c:

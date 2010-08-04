@@ -126,16 +126,42 @@ XDSequence::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
     if (show_type)
 	XDOutput::start_xml_declaration(writer);
 
-    XDSequence *seq = dynamic_cast<XDSequence*>(d_redirect);
+    Sequence *seq = dynamic_cast<Sequence*>(d_redirect);
     if (!seq)
         seq = this;
 
-    const int rows = seq->number_of_rows() - 1;
-    const int elements = seq->element_count() - 1;
+    const int rows = seq->number_of_rows() /*- 1*/;
+    const int elements = seq->element_count() /*- 1*/;
 
     // For each row of the Sequence...
+    for (int i = 0; i < rows; ++i) {
+	BESDEBUG("yd", "Working on the " << i << "th row" << endl);
+	// Print the row information
+	if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*) "row") < 0)
+	    throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
+	if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "number", get_xc(long_to_string(i))) < 0)
+	    throw InternalErr(__FILE__, __LINE__, "Could not write number attribute for " + name());
+
+	// For each variable of the row...
+	for (int j = 0; j < elements; ++j) {
+	    BESDEBUG("yd", "Working on the " << j << "th field" << endl);
+	    BaseType *bt_ptr = seq->var_value(i, j);
+	    BaseType *abt_ptr = basetype_to_xd(bt_ptr);
+	    dynamic_cast<XDOutput&>(*abt_ptr).print_xml_data(writer, true);
+	    BESDEBUG("yd", "Back from print xml data." << endl);
+	    // abt_ptr is not stored for future use, so delete it
+	    delete abt_ptr;
+	}
+
+	// Close the row element
+	if (xmlTextWriterEndElement(writer->get_writer()) < 0)
+	    throw InternalErr(__FILE__, __LINE__, "Could not end element for " + name());
+    }
+
+#if 0
     int i = 0;
     do {
+	BESDEBUG("yd", "Working on the " << i << "th row" << endl);
 	// Print the row information
 	if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*) "row") < 0)
 	    throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
@@ -145,18 +171,23 @@ XDSequence::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
 	// For each variable of the row...
 	int j = 0;
 	do {
-	    BaseType *bt_ptr = seq->var_value(i, j++);
+	    BESDEBUG("yd", "Working on the " << j << "th field" << endl);
+	    BaseType *bt_ptr = seq->var_value(i, j);
 	    BaseType *abt_ptr = basetype_to_xd(bt_ptr);
 	    dynamic_cast<XDOutput&>(*abt_ptr).print_xml_data(writer, true);
+	    BESDEBUG("yd", "Back from print xml data." << endl);
 	    // abt_ptr is not stored for future use, so delete it
 	    delete abt_ptr;
-	} while (++j > elements);
+	    ++j;
+	} while (j < elements);
 
 	// Close the row element
 	if (xmlTextWriterEndElement(writer->get_writer()) < 0)
 	    throw InternalErr(__FILE__, __LINE__, "Could not end element for " + name());
 
-    } while (++i > rows);
+	++i;
+    } while (i < rows);
+#endif
 
     // End the <Structure> element
     if (show_type)

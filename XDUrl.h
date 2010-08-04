@@ -36,8 +36,24 @@
 #ifndef _asciiurl_h
 #define _asciiurl_h 1
 
-#include "Url.h"
+#include <Url.h>
+
 #include "XDOutput.h"
+
+#if 0
+// This should work, but linking fails because of the XDOutputFactory which
+// returns a pointer to this class using Url*
+class XDUrl: public XDStr {
+public:
+    XDUrl(const string &n) : XDStr( n ) {}
+    XDUrl( Url *bt ) : XDStr( bt ) {
+        set_send_p(bt->send_p());
+    }
+    virtual ~XDUrl() {}
+
+    virtual BaseType *ptr_duplicate();
+};
+#endif
 
 class XDUrl: public Url, public XDOutput {
 public:
@@ -48,6 +64,8 @@ public:
     virtual ~XDUrl() {}
 
     virtual BaseType *ptr_duplicate();
+
+    void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 };
 
 #endif
