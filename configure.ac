@@ -14,7 +14,7 @@ AM_CONFIG_HEADER([config.h])
 AC_CONFIG_TESTDIR(tests, [.])
 
 dnl flags for the compilers and linkers - set these before locating the
-dnl actual tools since some of the AC_PROG macros set these `flag variables'
+dnl actual tools since some of the AC_PROG macros set these 'flag variables'
 dnl to default values otherwise.
 
 AC_CANONICAL_HOST
@@ -89,7 +89,7 @@ dnl autoheader macros; tack some text at the top and bottom of config.h.in
 AH_TOP([#ifndef _config_h
 #define _config_h])
 
-AH_BOTTOM([/* Shorthand for gcc's unused attribute feature */
+AH_BOTTOM([/* Shorthand for gccs unused attribute feature */
 #if defined(__GNUG__) || defined(__GNUC__)
 #define not_used __attribute__ ((unused))
 #else
