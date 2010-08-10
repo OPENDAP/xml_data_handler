@@ -20,8 +20,8 @@
 //
 // You can contact OPeNDAP, Inc. at PO Box 112, Saunderstown, RI. 02874-0112.
 
-#ifndef ascii_output_factory_h
-#define ascii_output_factory_h
+#ifndef xd_output_factory_h
+#define xd_output_factory_h
 
 #include <string>
 
@@ -65,4 +65,4 @@ public:
     virtual Grid *NewGrid(const string &n = "") const;
 };
 
-#endif // ascii_output_factory_h
+#endif // xd_output_factory_h

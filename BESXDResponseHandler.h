@@ -37,10 +37,10 @@
 
 /** @brief response handler that builds an OPeNDAP ASCII response object
  *
- * A request 'get ascii for &lt;def_name&gt;;' will be handled by this
+ * A request 'get xml_data for &lt;def_name&gt;;' will be handled by this
  * response handler. Given a definition name it determines what containers
  * are to be used to build the OPeNDAP ASCII response object. It then
- * transmits the DataDDS object as ascii values.
+ * transmits the DataDDS object as xml_data values.
  *
  * @see DataDDS
  * @see BESContainer

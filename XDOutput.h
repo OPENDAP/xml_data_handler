@@ -1,7 +1,7 @@
 
 // -*- mode: c++; c-basic-offset:4 -*-
 
-// This file is part of asciival, software which can return an XML data
+// This file is part of xml_data_handler, software which can return an XML data
 // representation of the data read from a DAP server.
 
 // Copyright (c) 2010 OPeNDAP, Inc.
@@ -29,11 +29,11 @@
 // Authors:
 //      jhrg,jimg       James Gallagher <jgallagher@gso.uri.edu>
 
-// An interface which can be used to print ascii representations of DAP
+// An interface which can be used to print xml_data representations of DAP
 // variables. 9/12/2001 jhrg
 
-#ifndef _asciioutput_h
-#define _asciioutput_h 1
+#ifndef _xdoutput_h
+#define _xdoutput_h 1
 
 #include <stdio.h>
 #include <vector>

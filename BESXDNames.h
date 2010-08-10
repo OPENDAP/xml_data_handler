@@ -33,18 +33,18 @@
 #ifndef D_BESXDNames_H
 #define D_BESXDNames_H 1
 
-/** @brief macros representing the ascii response objects handled
+/** @brief macros representing the xml_data response objects handled
  *
  * These include
  * <pre>
  * get
- *     ascii
+ *     xml_data
  * </pre>
  */
 
-#define ASCII_RESPONSE "get.ascii"
-#define ASCII_SERVICE "ascii"
-#define ASCII_RESPONSE_STR "getXD"
+#define XD_RESPONSE "get.xml_data"
+#define XD_SERVICE "xml_data"
+#define XD_RESPONSE_STR "getXml_data"
 
 #endif // E_BESXDNames_H
 

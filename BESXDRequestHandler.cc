@@ -59,12 +59,9 @@ BESXDRequestHandler::dap_build_help( BESDataHandlerInterface &dhi )
 	throw BESInternalError( "cast error", __FILE__, __LINE__ ) ;
 
     map<string,string> attrs ;
-    string name = (string)PACKAGE_NAME + "/xd" ;
-    attrs["name"] = name ;
+    attrs["name"] = PACKAGE_NAME ;
     attrs["version"] = PACKAGE_VERSION ;
     info->begin_tag( "module", &attrs ) ;
-    // TODO: Fix the help file
-    info->add_data_from_file( "DAP-SERVER.Help", "Dap server Help" ) ;
     info->end_tag( "module" ) ;
 
     return true ;
@@ -78,8 +75,7 @@ BESXDRequestHandler::dap_build_version( BESDataHandlerInterface &dhi )
     if( !info )
 	throw BESInternalError( "cast error", __FILE__, __LINE__ ) ;
 
-    string name = (string)PACKAGE_NAME + "/ascii" ;
-    info->add_module( name, PACKAGE_VERSION ) ;
+    info->add_module( PACKAGE_NAME, PACKAGE_VERSION ) ;
 
     return true ;
 }

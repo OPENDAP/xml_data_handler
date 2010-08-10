@@ -63,7 +63,7 @@ BESXDResponseHandler::~BESXDResponseHandler( )
 void
 BESXDResponseHandler::execute( BESDataHandlerInterface &dhi )
 {
-    dhi.action_name = ASCII_RESPONSE_STR ;
+    dhi.action_name = XD_RESPONSE_STR ;
     // Create the DDS.
     // NOTE: It is the responsibility of the specific request handler to set
     // the BaseTypeFactory. It is set to NULL here
@@ -74,7 +74,7 @@ BESXDResponseHandler::execute( BESDataHandlerInterface &dhi )
     dhi.action = DATA_RESPONSE ;
     BESRequestHandlerList::TheList()->execute_each( dhi ) ;
 
-    dhi.action = ASCII_RESPONSE ;
+    dhi.action = XD_RESPONSE ;
     _response = bdds ;
 }
 
@@ -93,7 +93,7 @@ BESXDResponseHandler::execute( BESDataHandlerInterface &dhi )
 void BESXDResponseHandler::transmit(BESTransmitter *transmitter, BESDataHandlerInterface &dhi)
 {
     if (_response) {
-	transmitter->send_response(ASCII_TRANSMITTER, _response, dhi);
+	transmitter->send_response(XD_TRANSMITTER, _response, dhi);
     }
 }
 

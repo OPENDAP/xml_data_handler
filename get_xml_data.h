@@ -20,8 +20,8 @@
 //
 // You can contact OPeNDAP, Inc. at PO Box 112, Saunderstown, RI. 02874-0112.
 
-#ifndef E_get_ascii_h
-#define E_get_ascii_h 1
+#ifndef E_get_xml_data_h
+#define E_get_xml_data_h 1
 
 #include <DataDDS.h>
 
@@ -41,5 +41,5 @@ BaseType *basetype_to_xd( BaseType *bt ) ;
 
 }
 
-#endif // E_get_ascii_h
+#endif // E_get_xml_data_h
 

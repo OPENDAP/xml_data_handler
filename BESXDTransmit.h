@@ -37,7 +37,7 @@
 
 class BESResponseObject ;
 
-#define ASCII_TRANSMITTER "ascii"
+#define XD_TRANSMITTER "xml_data"
 
 class BESXDTransmit
 {
