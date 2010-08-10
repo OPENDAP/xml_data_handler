@@ -65,7 +65,7 @@ BESXDModule::initialize( const string &modname )
     BESResponseHandlerList::TheList()->add_handler(XD_RESPONSE, BESXDResponseHandler::XDResponseBuilder);
 
     BESDEBUG( "xd", "Adding to dap services" << endl );
-    BESDapService::add_to_dap_service(XD_SERVICE, "OPeNDAP ascii data representation");
+    BESDapService::add_to_dap_service(XD_SERVICE, "OPeNDAP xml data representation");
 
     BESTransmitter *t = BESReturnManager::TheManager()->find_transmitter(DAP2_FORMAT);
     if (t) {
@@ -73,7 +73,7 @@ BESXDModule::initialize( const string &modname )
 	t->add_method(XD_TRANSMITTER, BESXDTransmit::send_basic_ascii);
     }
 
-    BESDEBUG( "xd", "    adding ascii debug context" << endl );
+    BESDEBUG( "xd", "    adding xd debug context" << endl );
     BESDebug::Register("xd");
 
     BESDEBUG( "xd", "Done Initializing OPeNDAP XD module " << modname << endl );
