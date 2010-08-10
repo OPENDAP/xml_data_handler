@@ -78,7 +78,7 @@ get_data_values_as_xml(DataDDS *dds, XMLWriter *writer)
     }
     catch (InternalErr &e) {
 	xmlErrorPtr error = xmlGetLastError();
-	if (error->message)
+	if (error && error->message)
 	    throw InternalErr(e.get_error_message() + "; libxml: " + error->message);
 	else
 	    throw InternalErr(e.get_error_message() + "; libxml: no message");

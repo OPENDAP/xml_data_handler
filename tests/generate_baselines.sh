@@ -65,7 +65,7 @@ CONSTRAINT_EXPR=$2;
 echo "Using constraint=\"$CONSTRAINT_EXPR\""
 
 # Create baselines for all responses....
-for response in "ascii"
+for response in "xml_data"
 do
     echo "Generating $BESCMD_FILENAME for $DATA_FILE response $response...";
     # use the helper script

@@ -64,7 +64,7 @@ void XDUrl::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
 	start_xml_declaration(writer);
 
     // Write the element for the value, then the value
-    if (!xmlTextWriterWriteElement(writer->get_writer(), (const xmlChar*)"value", get_xc(u->value())) < 0)
+    if (!xmlTextWriterWriteElement(writer->get_writer(), (const xmlChar*)"value", (const xmlChar*)u->value().c_str()) < 0)
 	throw InternalErr(__FILE__, __LINE__, "Could not write value element for " + u->name());
 
     if (show_type)

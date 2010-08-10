@@ -154,7 +154,7 @@ public:
 		    e_c_int32.push_back(i * j * (2));
 	    e_c->set_value(e_c_int32, e_c_int32.size());
 	    elem->add_var(e_c);
-	    //elem->set_send_p(true);
+	    elem->set_send_p(true);
 
 	    // Load the same pointer into the array 4 times; set_vec copies
 	    e->set_vec(0, elem);
@@ -189,7 +189,9 @@ public:
     CPPUNIT_TEST(test_print_xml_data_c);
     CPPUNIT_TEST(test_print_xml_data_d);
 #endif
+#if 1
     CPPUNIT_TEST(test_print_xml_data_e);
+#endif
 
     CPPUNIT_TEST_SUITE_END();
     
@@ -278,7 +280,7 @@ public:
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(a)->print_xml_data(&writer, true);
 
-	DBG(cerr << writer.get_doc() << endl);
+	DBG2(cerr << writer.get_doc() << endl);
 
 	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(),
 		(string)TEST_SRC_DIR + "/testsuite/xdarraytest_a.xml") == 0);
@@ -295,7 +297,7 @@ public:
 	b->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(b)->print_xml_data(&writer, true);
-	DBG(cerr << writer.get_doc() << endl);
+	DBG2(cerr << writer.get_doc() << endl);
 
 	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(),
 		(string)TEST_SRC_DIR + "/testsuite/xdarraytest_b.xml") == 0);
@@ -312,7 +314,7 @@ public:
 	c->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(c)->print_xml_data(&writer, true);
-	DBG(cerr << writer.get_doc() << endl);
+	DBG2(cerr << writer.get_doc() << endl);
 
 	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(),
 		(string)TEST_SRC_DIR + "/testsuite/xdarraytest_c.xml") == 0);
@@ -329,7 +331,7 @@ public:
 	d->set_send_p(true);
 	XMLWriter writer;
 	dynamic_cast<XDOutput*>(d)->print_xml_data(&writer, true);
-	DBG(cerr << writer.get_doc() << endl);
+	DBG2(cerr << writer.get_doc() << endl);
 
 	CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(),
 		(string)TEST_SRC_DIR + "/testsuite/xdarraytest_d.xml") == 0);

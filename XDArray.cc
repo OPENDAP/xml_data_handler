@@ -147,17 +147,18 @@ public:
 	if (d.name.empty()) {
 	    if (xmlTextWriterStartElement(d_writer->get_writer(),  (const xmlChar*) "dimension") < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not write dimension element");
-	    if (xmlTextWriterWriteAttribute(d_writer->get_writer(), (const xmlChar*) "size", get_xc(long_to_string(size))))
+	    if (xmlTextWriterWriteFormatAttribute(d_writer->get_writer(), (const xmlChar*)"size", "%d", size) < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not write attribute for size");
 	    if (xmlTextWriterEndElement(d_writer->get_writer()) < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not end dimension element");
 	}
 	else {
+	    string id_name = id2xml(d.name);
 	    if (xmlTextWriterStartElement(d_writer->get_writer(), (const xmlChar*) "dimension") < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not write dimension element");
-	    if (xmlTextWriterWriteAttribute(d_writer->get_writer(), (const xmlChar*) "name", get_xc(id2xml(d.name))))
+	    if (xmlTextWriterWriteAttribute(d_writer->get_writer(), (const xmlChar*) "name", (const xmlChar*)id_name.c_str()) < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not write attribute for name");
-	    if (xmlTextWriterWriteAttribute(d_writer->get_writer(), (const xmlChar*) "size", get_xc(long_to_string(size))))
+	    if (xmlTextWriterWriteFormatAttribute(d_writer->get_writer(), (const xmlChar*) "size", "%d", size) < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not write attribute for size");
 	    if (xmlTextWriterEndElement(d_writer->get_writer()) < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not end dimension element");
@@ -165,12 +166,12 @@ public:
     }
 };
 
-void XDArray::start_xml_declaration(XMLWriter *writer, string element)  throw(InternalErr)
+void XDArray::start_xml_declaration(XMLWriter *writer, const char *element)  throw(InternalErr)
 {
     // Start the Array element (includes the name)
-    if (xmlTextWriterStartElement(writer->get_writer(), get_xc(element)) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
-    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", get_xc(name())) < 0)
+    if (xmlTextWriterStartElement(writer->get_writer(), (element != 0) ? (const xmlChar*)element : (const xmlChar*)"Array") < 0)
+	throw InternalErr(__FILE__, __LINE__, "Could not write Array element '" + (string)element + "' for " + name());
+    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", (const xmlChar*)name().c_str()) < 0)
 	throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + name());
 
     // Start and End the Type element/s
@@ -182,7 +183,7 @@ void XDArray::start_xml_declaration(XMLWriter *writer, string element)  throw(In
 }
 
 // Print out a values for a vector (one dimensional array) of simple types.
-void XDArray::m_print_xml_vector(XMLWriter *writer, string element)
+void XDArray::m_print_xml_vector(XMLWriter *writer, const char *element)
 {
     BESDEBUG("xd", "Entering XDArray::m_print_xml_vector" << endl);
 
@@ -195,7 +196,7 @@ void XDArray::m_print_xml_vector(XMLWriter *writer, string element)
     end_xml_declaration(writer);
 }
 
-void XDArray::m_print_xml_array(XMLWriter *writer, string element)
+void XDArray::m_print_xml_array(XMLWriter *writer, const char *element)
 {
     BESDEBUG("xd", "Entering XDArray::m_print_xml_array" << endl);
 
@@ -222,9 +223,9 @@ void XDArray::m_print_xml_array(XMLWriter *writer, string element)
         for (int i = 0; i < dims - 1; ++i) {
 	    if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*) "dim") < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
-	    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "number", get_xc(long_to_string(i))) < 0)
+	    if (xmlTextWriterWriteFormatAttribute(writer->get_writer(), (const xmlChar*) "number", "%d", i) < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not write number attribute for " + name() + ": " + long_to_string(i));
-	    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "index", get_xc(long_to_string(state[i]))) < 0)
+	    if (xmlTextWriterWriteFormatAttribute(writer->get_writer(), (const xmlChar*) "index",  "%d", state[i]) < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not write index attribute for " + name());
 	}
 
@@ -368,7 +369,7 @@ int XDArray::get_nth_dim_size(size_t n) throw(InternalErr)
     return dimension_size(dim_begin() + n, true);
 }
 
-void XDArray::m_print_xml_complex_array(XMLWriter *writer, string element)
+void XDArray::m_print_xml_complex_array(XMLWriter *writer, const char *element)
 {
     start_xml_declaration(writer, element);
 
@@ -387,9 +388,9 @@ void XDArray::m_print_xml_complex_array(XMLWriter *writer, string element)
         for (int i = 0; i < dims - 1; ++i) {
 	    if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*) "dim") < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
-	    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "number", get_xc(long_to_string(i))) < 0)
+	    if (xmlTextWriterWriteFormatAttribute(writer->get_writer(), (const xmlChar*) "number", "%d", i) < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not write number attribute for " + name() + ": " + long_to_string(i));
-	    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "index", get_xc(long_to_string(state[i]))) < 0)
+	    if (xmlTextWriterWriteFormatAttribute(writer->get_writer(), (const xmlChar*) "index", "%d", state[i]) < 0)
 		throw InternalErr(__FILE__, __LINE__, "Could not write index attribute for " + name());
 	}
 

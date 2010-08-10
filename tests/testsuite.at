@@ -74,15 +74,16 @@ dnl -----------------------------------------------------------------
 dnl The actual tests!
 dnl -----------------------------------------------------------------
 
-AT_RUN_BES_AND_COMPARE([fnoc1.nc], [ascii], [fnoc1.nc])
-AT_RUN_BES_AND_COMPARE([fnoc1.nc], [ascii], [fnoc1.nc.u], [u])
-AT_RUN_BES_AND_COMPARE([fnoc1.nc], [ascii], [fnoc1.nc.lat], [lat])
+AT_RUN_BES_AND_COMPARE([fnoc1.nc], [xml_data], [fnoc1.nc])
+AT_RUN_BES_AND_COMPARE([fnoc1.nc], [xml_data], [fnoc1.nc.u], [u])
+AT_RUN_BES_AND_COMPARE([fnoc1.nc], [xml_data], [fnoc1.nc.lat], [lat])
 
-AT_RUN_BES_AND_COMPARE([coads_climatology.nc], [ascii], [coads_climatology.nc])
-AT_RUN_BES_AND_COMPARE([coads_climatology.nc], [ascii], [coads_climatology.nc.COADSY], [SST.COADSY])
+AT_RUN_BES_AND_COMPARE([coads_climatology.nc], [xml_data], [coads_climatology.nc])
+AT_RUN_BES_AND_COMPARE([coads_climatology.nc], [xml_data], [coads_climatology.nc.COADSY], [SST.COADSY])
 
-AT_RUN_BES_AND_COMPARE([S2000415.HDF], [ascii], [S2000415.HDF.NSCAT_Rev_20.WVC_Lat], [NSCAT%20Rev%2020.WVC_Lat])
-AT_RUN_BES_AND_COMPARE([S2000415.HDF], [ascii], [S2000415.HDF.NSCAT_Rev_20.WVC_Lat.WVC_Lon], [NSCAT%20Rev%2020.WVC_Lat,WVC_Lon])
-AT_RUN_BES_AND_COMPARE([S2000415.HDF], [ascii], [S2000415.HDF.SwathIndex], [NSCAT%20Rev%2020.SwathIndex[[0:100]]])
-AT_RUN_BES_AND_COMPARE([S2000415.HDF], [ascii], [S2000415.HDF.NSCAT_L2], [NSCAT%20Rev%2020.NSCAT%20L2[[0:4]]])
+AT_RUN_BES_AND_COMPARE([S2000415.HDF], [xml_data], [S2000415.HDF.NSCAT_Rev_20.WVC_Lat], [NSCAT%20Rev%2020.WVC_Lat])
+AT_RUN_BES_AND_COMPARE([S2000415.HDF], [xml_data], [S2000415.HDF.NSCAT_Rev_20.WVC_Lat.WVC_Lon], [NSCAT%20Rev%2020.WVC_Lat,WVC_Lon])
+AT_RUN_BES_AND_COMPARE([S2000415.HDF], [xml_data], [S2000415.HDF.SwathIndex], [NSCAT%20Rev%2020.SwathIndex[[0:100]]])
+
+AT_RUN_BES_AND_COMPARE([S2000415.HDF], [xml_data], [S2000415.HDF.NSCAT_L2_0_10], [NSCAT%20Rev%2020.NSCAT%20L2[[0:10]]])
 

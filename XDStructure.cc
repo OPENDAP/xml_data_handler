@@ -81,7 +81,7 @@ XDStructure::~XDStructure()
 }
 
 void
-XDStructure::start_xml_declaration(XMLWriter *writer, string element)  throw(InternalErr)
+XDStructure::start_xml_declaration(XMLWriter *writer, const char *element)  throw(InternalErr)
 {
     XDOutput::start_xml_declaration(writer, element);
 

@@ -47,9 +47,9 @@ class XDArray: public Array, public XDOutput {
 private:
     int m_get_index(vector<int> indices) throw(InternalErr);
 
-    void m_print_xml_vector(XMLWriter *writer, string element);
-    void m_print_xml_array(XMLWriter *writer, string element);
-    void m_print_xml_complex_array(XMLWriter *writer, string element);
+    void m_print_xml_vector(XMLWriter *writer, const char *element);
+    void m_print_xml_array(XMLWriter *writer, const char *element);
+    void m_print_xml_complex_array(XMLWriter *writer, const char *element);
 
     int m_print_xml_row(XMLWriter *writer, int index, int number);
 
@@ -66,7 +66,7 @@ public:
 
     vector<int> get_shape_vector(size_t n) throw(InternalErr);
 
-    virtual void start_xml_declaration(XMLWriter *writer, string element = "")  throw(InternalErr);
+    virtual void start_xml_declaration(XMLWriter *writer, const char *element = 0)  throw(InternalErr);
 
     void print_xml_map_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 

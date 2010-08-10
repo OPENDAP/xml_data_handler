@@ -69,29 +69,11 @@ public:
     virtual ~XDOutput() {}
 
     virtual bool increment_state(vector<int> *state, const vector<int> &shape);
-#if 0
-    /**
-     * Set the redirect field. This is intended for use with tests where
-     * instances are made without using a BaseType derived from some other
-     * handler.
-     * @param r
-     */
-    virtual void set_redirect(BaseType *r) { d_redirect = r; }
 
-    /**
-     * Get the redirect value.
-     * @return
-     */
-    virtual BaseType *get_redirect() { return d_redirect; }
-#endif
-    virtual void start_xml_declaration(XMLWriter *writer, string element = "")  throw(InternalErr);
+    virtual void start_xml_declaration(XMLWriter *writer, const char *element = 0)  throw(InternalErr);
     virtual void end_xml_declaration(XMLWriter *writer)  throw(InternalErr);
 
     virtual void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 };
-
-inline const xmlChar* get_xc(const string &s) {
-    return reinterpret_cast<const xmlChar*>(s.c_str());
-}
 
 #endif

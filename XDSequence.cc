@@ -105,7 +105,7 @@ XDSequence::element_count(bool leaves)
     }
 }
 void
-XDSequence::start_xml_declaration(XMLWriter *writer, string element)  throw(InternalErr)
+XDSequence::start_xml_declaration(XMLWriter *writer, const char *element)  throw(InternalErr)
 {
     XDOutput::start_xml_declaration(writer);
 
@@ -139,7 +139,7 @@ XDSequence::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
 	// Print the row information
 	if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*) "row") < 0)
 	    throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
-	if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "number", get_xc(long_to_string(i))) < 0)
+	if (xmlTextWriterWriteFormatAttribute(writer->get_writer(), (const xmlChar*) "number", "%d", i) < 0)
 	    throw InternalErr(__FILE__, __LINE__, "Could not write number attribute for " + name());
 
 	// For each variable of the row...
@@ -158,197 +158,7 @@ XDSequence::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
 	    throw InternalErr(__FILE__, __LINE__, "Could not end element for " + name());
     }
 
-#if 0
-    int i = 0;
-    do {
-	BESDEBUG("yd", "Working on the " << i << "th row" << endl);
-	// Print the row information
-	if (xmlTextWriterStartElement(writer->get_writer(), (const xmlChar*) "row") < 0)
-	    throw InternalErr(__FILE__, __LINE__, "Could not write Array element for " + name());
-	if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "number", get_xc(long_to_string(i))) < 0)
-	    throw InternalErr(__FILE__, __LINE__, "Could not write number attribute for " + name());
-
-	// For each variable of the row...
-	int j = 0;
-	do {
-	    BESDEBUG("yd", "Working on the " << j << "th field" << endl);
-	    BaseType *bt_ptr = seq->var_value(i, j);
-	    BaseType *abt_ptr = basetype_to_xd(bt_ptr);
-	    dynamic_cast<XDOutput&>(*abt_ptr).print_xml_data(writer, true);
-	    BESDEBUG("yd", "Back from print xml data." << endl);
-	    // abt_ptr is not stored for future use, so delete it
-	    delete abt_ptr;
-	    ++j;
-	} while (j < elements);
-
-	// Close the row element
-	if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-	    throw InternalErr(__FILE__, __LINE__, "Could not end element for " + name());
-
-	++i;
-    } while (i < rows);
-#endif
-
     // End the <Structure> element
     if (show_type)
 	end_xml_declaration(writer);
 }
-
-#if 0
-void
-XDSequence::print_ascii_row(ostream &strm, int row, BaseTypeRow outer_vars)
-{
-#if 0
-    BESDEBUG("xd", "    In XDSequence::print_ascii_row" << endl);
-
-    Sequence *seq = dynamic_cast < Sequence * >(d_redirect);
-    if (!seq)
-        seq = this;
-
-    // Print the values from this sequence.
-    // XDSequence::element_count() counts only vars with send_p() set.
-    const int elements = element_count();
-    bool first_var = true;     // used to control printing the comma separator
-    int j = 0;
-    do {
-        BaseType *bt_ptr = seq->var_value(row, j);
-        if (bt_ptr) {           // Check for data.
-            BaseType *abt_ptr = basetype_to_xd(bt_ptr);
-            if (abt_ptr->type() == dods_sequence_c) {
-                if (abt_ptr->send_p()) {
-                    if (!first_var)
-                        strm << ", ";
-                    else
-                        first_var = false;
-
-                    dynamic_cast <XDSequence * >(abt_ptr)
-                        ->print_ascii_rows(strm, outer_vars);
-                }
-            }
-            else {
-                // push the real base type pointer instead of the ascii one.
-                // We can cast it again later from the outer_vars vector.
-                outer_vars.push_back(bt_ptr);
-                if (abt_ptr->send_p()) {
-                    if (!first_var)
-                        strm << ", ";
-                    else
-                        first_var = false;
-
-                    dynamic_cast < XDOutput * >(abt_ptr)->print_ascii(strm,
-                        false);
-                }
-            }
-
-            // we only need the ascii type here, so delete it
-            delete abt_ptr;
-        }
-
-        ++j;
-    } while (j < elements);
-#endif
-}
-
-void
-XDSequence::print_leading_vars(ostream &strm, BaseTypeRow & outer_vars)
-{
-#if 0
-    BESDEBUG("xd", "    In XDSequence::print_leading_vars" << endl);
-
-    bool first_var = true;
-    BaseTypeRow::iterator BTR_iter = outer_vars.begin();
-    while (BTR_iter != outer_vars.end()) {
-        BaseType *abt_ptr = basetype_to_xd(*BTR_iter);
-        if (!first_var)
-            strm << ", " ;
-        else
-            first_var = false;
-        dynamic_cast < XDOutput * >(abt_ptr)->print_ascii(strm, false);
-        delete abt_ptr;
-
-        ++BTR_iter;
-    }
-
-    BESDEBUG("xd", "    Out XDSequence::print_leading_vars" << endl);
-#endif
-}
-
-void
-XDSequence::print_ascii_rows(ostream &strm, BaseTypeRow outer_vars)
-{
-    Sequence *seq = dynamic_cast < Sequence * >(d_redirect);
-    if (!seq)
-        seq = this;
-
-    const int rows = seq->number_of_rows() - 1;
-    int i = 0;
-    bool done = false;
-    do {
-        if (i > 0 && !outer_vars.empty())
-            print_leading_vars(strm, outer_vars);
-
-        print_ascii_row(strm, i++, outer_vars);
-
-        if (i > rows)
-            done = true;
-        else
-            strm << "\n" ;
-    } while (!done);
-
-    BESDEBUG("xd", "    Out XDSequence::print_ascii_rows" << endl);
-}
-
-
-void
-XDSequence::print_ascii(ostream &strm, bool print_name) throw(InternalErr)
-{
-#if 0
-    BESDEBUG("xd", "In XDSequence::print_ascii" << endl);
-    Sequence *seq = dynamic_cast < Sequence * >(d_redirect);
-    if (!seq)
-        seq = this;
-
-    if (seq->is_linear()) {
-        if (print_name) {
-            print_header(strm);
-            strm << "\n" ;
-        }
-
-        BaseTypeRow outer_vars(0);
-        print_ascii_rows(strm, outer_vars);
-    }
-    else {
-        const int rows = seq->number_of_rows() - 1;
-        const int elements = seq->element_count() - 1;
-
-        // For each row of the Sequence...
-        bool rows_done = false;
-        int i = 0;
-        do {
-            // For each variable of the row...
-            bool vars_done = false;
-            int j = 0;
-            do {
-                BaseType *bt_ptr = seq->var_value(i, j++);
-                BaseType *abt_ptr = basetype_to_xd(bt_ptr);
-                dynamic_cast < XDOutput * >(abt_ptr)->print_ascii(strm,
-                                                                     true);
-                // abt_ptr is not stored for future use, so delete it
-                delete abt_ptr;
-
-                if (j > elements)
-                    vars_done = true;
-                else
-                    strm << "\n" ;
-            } while (!vars_done);
-
-            i++;
-            if (i > rows)
-                rows_done = true;
-            else
-                strm << "\n" ;
-        } while (!rows_done);
-    }
-#endif
-}
-#endif

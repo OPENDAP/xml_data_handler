@@ -48,7 +48,7 @@ public:
 
     virtual BaseType *ptr_duplicate();
 
-    virtual void start_xml_declaration(XMLWriter *writer, string element = "")  throw(InternalErr);
+    virtual void start_xml_declaration(XMLWriter *writer, const char *element = 0)  throw(InternalErr);
 
     virtual void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
 };
