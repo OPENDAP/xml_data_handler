@@ -1,9 +1,9 @@
 
 	$Id: INSTALL 22716 2010-05-12 16:23:29Z jimg $
 
-Updated for version 4.0.0 of the dap-server package
+Updated for version 1.0.0 (14 Spet 2010)
 
-Building and Installing the OPeNDAP Server Base. See README for information
+Building and Installing the OPeNDAP XML/Data handler. See README for information
 about server configuration.
 
 ---------------------------------------------------------------------------
@@ -45,10 +45,10 @@ BUILDING THE SOFTWARE
 
 REQUIREMENTS
 
-  o The Server Base Software uses libdap 3.10.0 or greater. You must install
+  o The Server Base Software uses libdap 3.11.0 or greater. You must install
     that software. See http://www.opendap.org/download/.
     
-  o To build this as part of Hyrax, you need the bes, version 3.8.0
+  o To build this as part of Hyrax, you need the bes, version 3.9.0
 
   o You should have gcc/g++ 2.95.x or greater. You'll also need to get
     the stdc++ library that matches the compiler (whatever version).

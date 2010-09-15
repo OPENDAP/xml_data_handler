@@ -1,0 +1,104 @@
+2010-08-10  Patrick West <pwest@ucar.edu>
+
+	Made sure xml_data response added to dap service and description
+	correct.
+	M    BESXDModule.cc
+
+2010-08-10  Patrick West <pwest@ucar.edu>
+
+	Changed from 'get ascii' go get xml_data' found in the code and comments
+	the use of ascii instead of xd or xml_data_handler.
+	M    XDOutput.h
+	M    conf/libtool.m4
+	M    XDByte.h
+	M    XDFloat32.h
+	M    XDArray.h
+	M    BESXDResponseHandler.cc
+	M    XDUInt32.h
+	M    XDUInt16.h
+	M    XDOutputFactory.h
+	M    BESXDTransmit.h
+	M    get_xml_data.h
+	M    BESXDNames.h
+	M    XDInt32.h
+	M    XDStructure.h
+	M    XDInt16.h
+	M    XDUrl.h
+	M    XDSequence.h
+	M    XDStr.h
+	M    BESXDModule.cc
+	M    BESXDRequestHandler.cc
+	M    XDFloat64.h
+	M    XDGrid.h
+	M    BESXDResponseHandler.h
+
+2010-08-04  James Gallagher <jgallagher@opendap.org>
+
+	Minor fixes for eclipse 3.6's autotools syntax stuff
+
+2010-08-04  James Gallagher <jgallagher@opendap.org>
+
+2010-08-04  James Gallagher <jgallagher@opendap.org>
+
+	More tests... This version works for all types.
+
+2010-08-04  James Gallagher <jgallagher@opendap.org>
+
+2010-08-04  James Gallagher <jgallagher@opendap.org>
+
+	Works; Grid projection to Structure bug fixed.
+
+2010-08-04  James Gallagher <jgallagher@opendap.org>
+
+	Ignore a bunch of files (WRT svn)
+
+2010-08-04  James Gallagher <jgallagher@opendap.org>
+
+	Regression tests - first version. There's a problem with Grids projected to Structures
+
+2010-08-03  James Gallagher <jgallagher@opendap.org>
+
+	unit-test fixes; header fixes and new code for Sequences.
+
+2010-08-03  James Gallagher <jgallagher@opendap.org>
+
+	Removed the float64 from the structure test because it was breaking things with a changing value - values depend on calling order and frequency.
+
+2010-08-02  James Gallagher <jgallagher@opendap.org>
+
+	Removed old code; added boilerplate versions of methods for Sequences.
+
+2010-08-02  James Gallagher <jgallagher@opendap.org>
+
+	Tests now use external files
+
+2010-08-02  James Gallagher <jgallagher@opendap.org>
+
+	Multi-dimensional arrays now have the information about dimensions 0 ... N-1 in enclosing <dim> elements. Consolodated the vector case to a single function.
+
+2010-08-02  James Gallagher <jgallagher@opendap.org>
+
+	This version handles complex arrays without crashing.
+
+2010-07-30  James Gallagher <jgallagher@opendap.org>
+
+	Added support for 'complex' arrays - arrays of structures. Testing structure arrays that contain arrays themselves is not working...
+
+2010-07-30  James Gallagher <jgallagher@opendap.org>
+
+	Fixed problem with arrays. Now works for all types except Sequences and arrays of structures. Array printing still has hold-over code from the asciival days.
+
+2010-07-29  James Gallagher <jgallagher@opendap.org>
+
+	Not quite working...
+
+2010-07-28  James Gallagher <jgallagher@opendap.org>
+
+	Removed stuff that's automatically generated - got added by import's over zealous algorithm
+
+2010-07-28  James Gallagher <jgallagher@opendap.org>
+
+	Added
+
+	A    .
+
