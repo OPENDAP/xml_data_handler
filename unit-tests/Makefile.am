@@ -39,13 +39,6 @@ DISTCLEANFILES = *.Po test_config.h
 test_config.h: test_config.h.in Makefile
 	sed -e "s%[@]srcdir[@]%${srcdir}%" $< > test_config.h
 
-# The object files from asciival are needed to link the unit tests
-XDOBJS = ../XDByte.o ../XDInt32.o ../XDFloat64.o ../XDStr.o   \
-	../XDUrl.o ../XDArray.o ../XDStructure.o ../XDSequence.o \
-	../XDGrid.o ../XDUInt32.o ../XDInt16.o ../XDUInt16.o     \
-	../XDFloat32.o ../XDOutput.o ../XDOutputFactory.o	     \
-	../get_xml_data.o ../XMLWriter.o
-
 if CPPUNIT
 UNIT_TESTS = XDArrayTest XDOutputTest
 else
@@ -64,6 +57,6 @@ XDArrayTest_SOURCES = XDArrayTest.cc
 XDOutputTest_SOURCES = XDOutputTest.cc
 
 # if not linking with the module, use $(XDOBJS) below
-XDArrayTest_LDADD = ../libxml_data_module.la $(BES_DAP_LIBS) $(AM_LDADD)
-XDOutputTest_LDADD = ../libxml_data_module.la $(BES_DAP_LIBS) $(AM_LDADD)
+XDArrayTest_LDADD = -L.. -lxml_data_module $(BES_DAP_LIBS) $(AM_LDADD)
+XDOutputTest_LDADD = -L.. -lxml_data_module $(BES_DAP_LIBS) $(AM_LDADD)
 
