@@ -1,4 +1,3 @@
-
 // -*- mode: c++; c-basic-offset:4 -*-
 
 // This file is part of asciival, software which can return an ASCII
@@ -39,6 +38,9 @@
 #include "XDOutputFactory.h"
 #include "XDGrid.h"
 #include "XDArray.h"
+#include "XDInt32.h"
+#include "XDStr.h"
+#include "XDStructure.h"
 
 #include "test_config.h"
 
@@ -54,143 +56,146 @@ using namespace CppUnit;
 using namespace std;
 using namespace libdap;
 
-static int str_to_file_cmp(const string &s, const string &f)
-{
-    ifstream ifs;
-    ifs.open(f.c_str());
-    if (!ifs)
-	throw InternalErr(__FILE__, __LINE__, "Could not open file");
-    string line, doc;
-    while (!ifs.eof()) {
-	getline(ifs, line);
-	doc.append(line);
-	doc.append("\n");
-    }
+static int str_to_file_cmp(const string &s, const string &f) {
+	ifstream ifs;
+	ifs.open(f.c_str());
+	if (!ifs)
+		throw InternalErr(__FILE__, __LINE__, "Could not open file");
+	string line, doc;
+	while (!ifs.eof()) {
+		getline(ifs, line);
+		doc.append(line);
+		doc.append("\n");
+	}
 
-    return doc.compare(s);
+	return doc.compare(s);
 }
 
-class XDOutputTest : public TestFixture {
+class XDOutputTest: public TestFixture {
 private:
-    DDS *dds;
-    XDOutputFactory *aof;
-    
-public: 
-    XDOutputTest() {}
-    ~XDOutputTest() {}
+	DDS *dds;
+	XDOutputFactory *aof;
 
-    void setUp() {
-        aof = new XDOutputFactory;
-	dds = new DDS(aof, "xml_data_output_test");
-	string parsefile = (string)TEST_SRC_DIR
-			    + "/testsuite/XDOutputTest1.dds";
-	dds->parse(parsefile);
-
-	// Load various arrays with data
-	// g.xy[12][12], g.x[12], g.y[12]
-	XDGrid *g = dynamic_cast<XDGrid*>(dds->var("g"));
-	XDArray *xy = dynamic_cast<XDArray*>(g->array_var());
-	// See XDArrayTest for a note about this trick.
-	//xy->set_redirect(xy);
-	Grid::Map_iter m = g->map_begin();
-	XDArray *x = dynamic_cast<XDArray*>(*m++);
-	//x->set_redirect(x);
-	XDArray *y = dynamic_cast<XDArray*>(*m);
-	//y->set_redirect(y);
-
-	vector<dods_float64> f64x;
-	for (int i = 0; i < 12; i++)
-	    f64x.push_back(i * (-51.2));
-	x->set_value(f64x, f64x.size());
-	y->set_value(f64x, f64x.size());
-
-	vector<dods_byte> bxy;
-	for (int i = 0; i < 12; i++)
-	    for (int j = 0; j < 12; j++)
-		bxy.push_back(i * j * (2));
-	xy->set_value(bxy, bxy.size());
-    }
-
-    void tearDown() {
-        delete aof; aof = 0;
-	delete dds; dds = 0;
-    }
-
-    CPPUNIT_TEST_SUITE(XDOutputTest);
-
-    CPPUNIT_TEST(test_print_xml_data);
-    CPPUNIT_TEST(test_print_xml_data_structure);
-    CPPUNIT_TEST(test_print_xml_data_grid);
-
-    CPPUNIT_TEST_SUITE_END();
-
-    void test_print_xml_data()
-    {
-	try {
-	    dds->var("a")->set_send_p(true);
-	    XMLWriter writer;
-	    // See note in XDArrayTest about this trick.
-	    //dynamic_cast<XDOutput*> (dds->var("a"))->set_redirect(dds->var("a"));
-	    dynamic_cast<XDOutput*> (dds->var("a"))->print_xml_data(&writer, true);
-
-	    DBG2(cerr << writer.get_doc() << endl);
-
-	    CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_a.xml") == 0);
+public:
+	XDOutputTest() {
 	}
-	catch (InternalErr &e) {
-	    cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
-	    CPPUNIT_FAIL("Caught an InternalErr");
+	~XDOutputTest() {
 	}
-    }
 
-    void test_print_xml_data_structure()
-    {
-	try {
-	    dds->var("e")->set_send_p(true);
-	    XMLWriter writer;
-	    //dynamic_cast<XDOutput*> (dds->var("e"))->set_redirect(dds->var("e"));
-	    dynamic_cast<XDOutput*> (dds->var("e"))->print_xml_data(&writer, true);
+	void setUp() {
+		aof = new XDOutputFactory;
+		dds = new DDS(aof, "xml_data_output_test");
+		string parsefile = (string) TEST_SRC_DIR
+				+ "/testsuite/XDOutputTest1.dds";
+		dds->parse(parsefile);
 
-	    DBG(cerr << writer.get_doc() << endl);
+		// Load various arrays with data
+		// g.xy[12][12], g.x[12], g.y[12]
+		XDGrid *g = dynamic_cast<XDGrid*> (dds->var("g"));
+		XDArray *xy = dynamic_cast<XDArray*> (g->array_var());
+		// See XDArrayTest for a note about this trick.
+		//xy->set_redirect(xy);
+		Grid::Map_iter m = g->map_begin();
+		XDArray *x = dynamic_cast<XDArray*> (*m++);
+		//x->set_redirect(x);
+		XDArray *y = dynamic_cast<XDArray*> (*m);
+		//y->set_redirect(y);
 
-	    CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_e.xml") == 0);
+		vector<dods_float64> f64x;
+		for (int i = 0; i < 12; i++)
+			f64x.push_back(i * (-51.2));
+		x->set_value(f64x, f64x.size());
+		y->set_value(f64x, f64x.size());
+
+		vector<dods_byte> bxy;
+		for (int i = 0; i < 12; i++)
+			for (int j = 0; j < 12; j++)
+				bxy.push_back(i * j * (2));
+		xy->set_value(bxy, bxy.size());
+
+		XDInt32 *i = dynamic_cast<XDInt32*>(dds->var("a"));
+		i->set_value(17);
+
+		XDStructure *s = dynamic_cast<XDStructure*>(dds->var("e"));
+		dynamic_cast<XDInt32*>(s->var("b"))->set_value(51);
+		dynamic_cast<XDStr*>(s->var("d"))->set_value("String in a Structure");
 	}
-	catch (InternalErr &e) {
-	    cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
-	    CPPUNIT_FAIL("Caught an InternalErr");
-	}
-    }
 
-    void test_print_xml_data_grid()
-    {
-	try {
-	    dds->var("g")->set_send_p(true);
-	    XMLWriter writer;
-	    //dynamic_cast<XDOutput*> (dds->var("g"))->set_redirect(dds->var("g"));
-	    dynamic_cast<XDOutput*> (dds->var("g"))->print_xml_data(&writer, true);
-
-	    DBG2(cerr << writer.get_doc() << endl);
-
-	    CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_g.xml") == 0);
+	void tearDown() {
+		delete aof;
+		aof = 0;
+		delete dds;
+		dds = 0;
 	}
-	catch (InternalErr &e) {
-	    cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
-	    CPPUNIT_FAIL("Caught an InternalErr");
+
+	CPPUNIT_TEST_SUITE(XDOutputTest);
+
+	CPPUNIT_TEST(test_print_xml_data);
+	CPPUNIT_TEST(test_print_xml_data_structure);
+	CPPUNIT_TEST(test_print_xml_data_grid);
+
+	CPPUNIT_TEST_SUITE_END();
+
+	void test_print_xml_data() {
+		try {
+			dds->var("a")->set_send_p(true);
+			XMLWriter writer;
+			// See note in XDArrayTest about this trick.
+			//dynamic_cast<XDOutput*> (dds->var("a"))->set_redirect(dds->var("a"));
+			dynamic_cast<XDOutput*> (dds->var("a"))->print_xml_data(&writer,
+					true);
+
+			DBG(cerr << writer.get_doc() << endl);
+
+			CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_a.xml") == 0);
+		} catch (InternalErr &e) {
+			cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
+			CPPUNIT_FAIL("Caught an InternalErr");
+		}
 	}
-    }
+
+	void test_print_xml_data_structure() {
+		try {
+			dds->var("e")->set_send_p(true);
+			XMLWriter writer;
+			//dynamic_cast<XDOutput*> (dds->var("e"))->set_redirect(dds->var("e"));
+			dynamic_cast<XDOutput*> (dds->var("e"))->print_xml_data(&writer, true);
+
+			DBG(cerr << writer.get_doc() << endl);
+
+			CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_e.xml") == 0);
+		} catch (InternalErr &e) {
+			cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
+			CPPUNIT_FAIL("Caught an InternalErr");
+		}
+	}
+
+	void test_print_xml_data_grid() {
+		try {
+			dds->var("g")->set_send_p(true);
+			XMLWriter writer;
+			//dynamic_cast<XDOutput*> (dds->var("g"))->set_redirect(dds->var("g"));
+			dynamic_cast<XDOutput*> (dds->var("g"))->print_xml_data(&writer,
+					true);
+
+			DBG2(cerr << writer.get_doc() << endl);
+
+			CPPUNIT_ASSERT(str_to_file_cmp(writer.get_doc(), (string)TEST_SRC_DIR + "/testsuite/xdoutputtest_g.xml") == 0);
+		} catch (InternalErr &e) {
+			cerr << "Caught an InternalErr: " << e.get_error_message() << endl;
+			CPPUNIT_FAIL("Caught an InternalErr");
+		}
+	}
 
 };
-
 CPPUNIT_TEST_SUITE_REGISTRATION(XDOutputTest);
 
-int 
-main( int /*argc*/, char* /*argv*/[] )
-{
-    CppUnit::TextTestRunner runner;
-    runner.addTest( CppUnit::TestFactoryRegistry::getRegistry().makeTest() );
+int main(int /*argc*/, char* /*argv*/[]) {
+	CppUnit::TextTestRunner runner;
+	runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
 
-    bool wasSuccessful = runner.run( "", false ) ;
+	bool wasSuccessful = runner.run("", false);
 
-    return wasSuccessful ? 0 : 1;
+	return wasSuccessful ? 0 : 1;
 }
 
