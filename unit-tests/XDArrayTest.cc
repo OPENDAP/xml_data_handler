@@ -34,7 +34,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-//#define DODS_DEBUG
+//#define DODS_DEBUG2
 
 #include <DDS.h>
 #include <Int32.h>
@@ -183,13 +183,13 @@ public:
     CPPUNIT_TEST(test_get_nth_dim_size);
     CPPUNIT_TEST(test_get_shape_vector);
     CPPUNIT_TEST(test_get_index);
+#endif
 
     CPPUNIT_TEST(test_print_xml_data_a);
+#if 1
     CPPUNIT_TEST(test_print_xml_data_b);
     CPPUNIT_TEST(test_print_xml_data_c);
     CPPUNIT_TEST(test_print_xml_data_d);
-#endif
-#if 1
     CPPUNIT_TEST(test_print_xml_data_e);
 #endif
 

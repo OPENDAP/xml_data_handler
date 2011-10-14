@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<Dataset xmlns="http://xml.opendap.org/ns/dap/3.3#">
-    <Int32 name="a">
-        <value>17</value>
-    </Int32>
-</Dataset>
+<Int32 name="a">
+    <value>17</value>
+</Int32>

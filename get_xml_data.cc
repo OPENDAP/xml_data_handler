@@ -54,6 +54,8 @@ using std::endl ;
 #include "XDSequence.h"
 #include "XDGrid.h"
 
+const char *DAP_SCHEMA = "http://xml.opendap.org/ns/dap/3.3#";
+
 namespace xml_data {
 
 /** Using the XDOutput::print_ascii(), write the data values to an
@@ -63,25 +65,33 @@ namespace xml_data {
     et c., type classes. Use the function datadds_to_ascii_datadds() to
     build such a DataDDS from one whose types are, say NCByte, et cetera.
     @param strm Write ASCII to stream. */
-void
-get_data_values_as_xml(DataDDS *dds, XMLWriter *writer)
-{
+void get_data_values_as_xml(DataDDS *dds, XMLWriter *writer) {
     try {
-	DDS::Vars_iter i = dds->var_begin();
-	while (i != dds->var_end()) {
-	    if ((*i)->send_p()) {
-		BESDEBUG("xd","Printing the values for " << (*i)->name() << " (" << (*i)->type_name() << ")" << endl);
-		dynamic_cast<XDOutput &> (**i).print_xml_data(writer, true);
-	    }
-	    ++i;
-	}
+
+        /* Start an element named "Dataset". Since this is the first element,
+         * this will be the root element of the document */
+        if (xmlTextWriterStartElementNS(writer->get_writer(), NULL, (const xmlChar*)"Dataset", (const xmlChar*)DAP_SCHEMA) < 0)
+            throw InternalErr(__FILE__, __LINE__,  "Error starting the response element for response ");
+
+        DDS::Vars_iter i = dds->var_begin();
+        while (i != dds->var_end()) {
+            if ((*i)->send_p()) {
+                BESDEBUG("xd", "Printing the values for " << (*i)->name() << " (" << (*i)->type_name() << ")" << endl);
+                dynamic_cast<XDOutput &> (**i).print_xml_data(writer, true);
+            }
+            ++i;
+        }
+
+        // this should end the response element
+        if (xmlTextWriterEndElement(writer->get_writer()) < 0)
+            throw InternalErr(__FILE__, __LINE__, "Error ending Dataset element.");
     }
     catch (InternalErr &e) {
-	xmlErrorPtr error = xmlGetLastError();
-	if (error && error->message)
-	    throw InternalErr(e.get_error_message() + "; libxml: " + error->message);
-	else
-	    throw InternalErr(e.get_error_message() + "; libxml: no message");
+        xmlErrorPtr error = xmlGetLastError();
+        if (error && error->message)
+            throw InternalErr(e.get_error_message() + "; libxml: " + error->message);
+        else
+            throw InternalErr(e.get_error_message() + "; libxml: no message");
     }
 }
 

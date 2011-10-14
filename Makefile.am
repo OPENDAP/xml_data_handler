@@ -23,6 +23,7 @@ libxml_data_module_la_CPPFLAGS = $(BES_CPPFLAGS)
 libxml_data_module_la_LDFLAGS = -avoid-version -module 
 libxml_data_module_la_LIBADD = $(BES_DAP_LIBS)
 
+# Update this in unit-tests/Makefile.am too
 XD_SOURCES = XDArray.cc XDInt16.cc XDStructure.cc		   \
 		XDInt32.cc XDUInt16.cc XDByte.cc XDOutput.cc   \
 		XDUInt32.cc XDFloat32.cc XDUrl.cc XDFloat64.cc \
@@ -31,7 +32,9 @@ XD_SOURCES = XDArray.cc XDInt16.cc XDStructure.cc		   \
 		XDUrl.h XDFloat32.h XDSequence.h XDFloat64.h   \
 		XDStr.h XDGrid.h XDStructure.h XDInt16.h	   \
 		XDUInt16.h XDOutputFactory.cc XDOutputFactory.h   \
-		get_xml_data.cc get_xml_data.h XMLWriter.cc XMLWriter.h
+		get_xml_data.cc get_xml_data.h 
+		
+#		XMLWriter.cc XMLWriter.h
 
 BES_SOURCES = BESXDModule.cc BESXDResponseHandler.cc		   \
 	      BESXDTransmit.cc BESXDRequestHandler.cc		   \
