@@ -41,7 +41,7 @@ BES_SOURCES = BESXDModule.cc BESXDResponseHandler.cc		   \
 	      BESXDModule.h BESXDResponseHandler.h		   \
 	      BESXDTransmit.h BESXDRequestHandler.h BESXDNames.h
 
-EXTRA_DIST = COPYING COPYRIGHT_URI xml_data_hanlder.spec README \
+EXTRA_DIST = COPYING INSTALL NEWS README xml_data_handler.spec \
 	xml_data_handler.conf.in OSX_Resources
 
 CLEANFILES = *~ *.log *.sum

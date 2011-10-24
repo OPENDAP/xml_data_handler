@@ -25,6 +25,8 @@ EXTRA_DIST = testsuite.at $(srcdir)/package.m4 $(TESTSUITE) atlocal.in \
 noinst_DATA = bes.conf
 DISTCLEANFILES = bes.conf
 
+dist_check_SCRIPTS = $(TESTSUITE) atconfig atlocal
+
 check-local: atconfig atlocal $(TESTSUITE) bes.conf
 	$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
 
