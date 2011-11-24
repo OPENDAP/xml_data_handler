@@ -40,7 +40,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %dir %{_sysconfdir}/bes
 %dir %{_sysconfdir}/bes/modules
-%config(noreplace) %{_sysconfdir}/bes/modules/xml_datga_handler.conf
+%config(noreplace) %{_sysconfdir}/bes/modules/xml_data_handler.conf
 %{_datadir}/bes/
 %{_libdir}/bes/libxml_data_module.so
 %doc COPYING NEWS README
