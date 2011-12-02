@@ -37,8 +37,7 @@
 
 #include <InternalErr.h>
 #include <BaseType.h>
-
-#include "XMLWriter.h"
+#include <XMLWriter.h>
 
 using namespace std;
 using namespace libdap;

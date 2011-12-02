@@ -1,3 +1,105 @@
+2011-10-23  James Gallagher <jgallagher@opendap.org>
+
+	Modified configure so that this code builds only the so version of
+	the library by default. Changed the copyrights so they are
+	correct. Fixed tests.
+
+2011-10-14  James Gallagher <jgallagher@opendap.org>
+
+	Removed XMLWriter in favor of the copy now in libdap; fixed unit
+	tests accordingly.
+
+2011-10-03  James Gallagher <jgallagher@opendap.org>
+
+	Fixed a regression test that was using old options for the netcdf
+	handler
+
+	M    tests/baselines/coads_climatology.nc.xml_data
+
+2011-09-26  James Gallagher <jgallagher@opendap.org>
+
+	Minor updates to the Makefile and libtool.m4
+
+2011-09-26  James Gallagher <jgallagher@opendap.org>
+
+	Tried to banish the warning about linking against a loadable so,
+	but without luck.
+
+2011-09-26  James Gallagher <jgallagher@opendap.org>
+
+	Fixed the unit tests - they were using some uninitialized
+	variables that, therefore, had random values.
+
+2011-09-21  James Gallagher <jgallagher@opendap.org>
+
+	Hyrax 1.8
+
+2011-03-07  Nathan Potter <ndp@coas.oregonstate.edu>
+
+2010-09-15  James Gallagher <jgallagher@opendap.org>
+
+	Version 1.0.0
+
+	M    configure.ac
+	M    INSTALL
+	M    NEWS
+	M    xml_data_handler.spec
+	A    ChangeLog
+	M    README
+
+2010-08-10  James Gallagher <jgallagher@opendap.org>
+
+	Ignore Makefile, ..., files in here
+
+2010-08-10  James Gallagher <jgallagher@opendap.org>
+
+	Ignore .bescmd files in here
+
+2010-08-10  James Gallagher <jgallagher@opendap.org>
+
+	more test baselines...
+
+2010-08-10  James Gallagher <jgallagher@opendap.org>
+
+	Fixed lingering issues with xmlWriter API. Two problems: In some cases, start_xml_element() was called with element == "" and the xmlWriter function will not create an element like that! Odd that xmlGetLastError() did not return an error object... Second issue: One call to xmlWriterStartElement did not include the test < 0 so if the function returned 0 it was treated as an error. Oddly, it seems that the function often was returning a positive value often, so this condition didn't trigger an exception until several calls into making the document.
+
+2010-08-10  Patrick West <pwest@ucar.edu>
+
+	Made sure xml_data response added to dap service and description
+	correct.
+	M    BESXDModule.cc
+
+2010-08-10  Patrick West <pwest@ucar.edu>
+
+	Changed from 'get ascii' go get xml_data' found in the code and comments
+	the use of ascii instead of xd or xml_data_handler.
+	M    XDOutput.h
+	M    conf/libtool.m4
+	M    XDByte.h
+	M    XDFloat32.h
+	M    XDArray.h
+	M    BESXDResponseHandler.cc
+	M    XDUInt32.h
+	M    XDUInt16.h
+	M    XDOutputFactory.h
+	M    BESXDTransmit.h
+	M    get_xml_data.h
+	M    BESXDNames.h
+	M    XDInt32.h
+	M    XDStructure.h
+	M    XDInt16.h
+	M    XDUrl.h
+	M    XDSequence.h
+	M    XDStr.h
+	M    BESXDModule.cc
+	M    BESXDRequestHandler.cc
+	M    XDFloat64.h
+	M    XDGrid.h
+	M    BESXDResponseHandler.h
+
+;; Local Variables:
+;; coding: utf-8
+;; End:
 2010-08-10  Patrick West <pwest@ucar.edu>
 
 	Made sure xml_data response added to dap service and description

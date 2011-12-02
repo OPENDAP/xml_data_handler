@@ -35,6 +35,7 @@
 #include <InternalErr.h>
 #include <util.h>
 #include <mime_util.h>
+#include <XMLWriter.h>
 
 #include <BESDapTransmit.h>
 #include <BESContainer.h>
@@ -44,7 +45,7 @@
 #include <BESInternalFatalError.h>
 #include <BESDebug.h>
 
-#include "XMLWriter.h"
+
 #include "BESXDTransmit.h"
 #include "get_xml_data.h"
 

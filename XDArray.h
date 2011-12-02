@@ -35,7 +35,6 @@
 
 #include <Array.h>
 
-#include "XMLWriter.h"
 #include "XDOutput.h"
 
 using namespace libdap ;

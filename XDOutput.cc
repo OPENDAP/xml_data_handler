@@ -45,7 +45,6 @@
 
 #include <BESDebug.h>
 
-#include "XMLWriter.h"
 #include "XDOutput.h"
 #include "get_xml_data.h"
 
