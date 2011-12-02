@@ -15,10 +15,11 @@ BuildRequires:   libdap-devel >= 3.11.0
 BuildRequires:   bes-devel >= 3.9.0
 
 %description
-This package contains a general purpose handler for use with the new
-Hyrax data server. This handler takes input from a 'data handler' and returns 
-XML document that encodes both dataset metadata and values. It is intended to
-be used for small data requests.
+This package contains a general purpose handler for use with the Hyrax
+data server. This handler takes input from a 'data handler' and
+returns XML document that encodes both dataset metadata and values. It
+is intended to be used for small data requests and web systems that 
+need data in XML documents..
 
 %prep 
 %setup -q
@@ -41,7 +42,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/bes
 %dir %{_sysconfdir}/bes/modules
 %config(noreplace) %{_sysconfdir}/bes/modules/xml_data_handler.conf
-%{_datadir}/bes/
 %{_libdir}/bes/libxml_data_module.so
 %doc COPYING NEWS README
 
