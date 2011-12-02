@@ -5,12 +5,13 @@ m4_define([bescmd_template],[$abs_srcdir/template.bescmd.in])
 m4_define([bes_conf_path],[$abs_builddir/bes.conf])
 m4_define([datadir], [/data])
 m4_define([baselines_path],[$abs_srcdir/baselines])
-m4_define([full_data_path],[$abs_srcdir/../data])
+
+dnl m4_define([full_data_path],[$abs_topsrcdir/data])
 
 AT_INIT([xml data handler autotest testsuite])
 
 dnl $1 == filename
-dnl $2 == {ascii | xd}
+dnl $2 == The response type; used in "<get type="%response_type%" definition="d" />"
 m4_define([AT_MAKE_BESCMD_FILE_NO_CONSTRAINT],
 [
 sed -e "s:%filename%:datadir/$1:" -e "s:%response_type%:$2:" -e "s|%constraint_expr%||" < bescmd_template > test.bescmd
@@ -25,7 +26,7 @@ sed -e "s:%filename%:datadir/$1:" -e "s:%response_type%:$2:" -e "s|%constraint_e
 ])
 
 dnl $1 == filename
-dnl $2 == {ascii | xd}
+dnl $2 == The response type
 dnl $3 == "constraint_expr" (can be [] if none)
 m4_define([AT_MAKE_BESCMD_FILE],
 [
@@ -37,7 +38,7 @@ dnl Run the besstandlone on the filename for the response type
 dnl and compare stdout to the baseline for the response.
 dnl filename is expected to be the basename as the datadir is added.
 dnl $1 == filename
-dnl $2 == {ascii | xd}
+dnl $2 == The response type
 dnl $3 == baseline_filename (with path prefix but not response suffix!)
 dnl $4 == (optional) constraint_expression
 m4_define([AT_RUN_BES_AND_COMPARE],
@@ -45,7 +46,7 @@ m4_define([AT_RUN_BES_AND_COMPARE],
 AT_SETUP([Comparing $2 response for $1 to baseline baselines_path/$3])
 AT_KEYWORDS([$2])
 AT_MAKE_BESCMD_FILE([$1], [$2], [$4])
-AT_CHECK([besstandalone -c bes_conf_path -i ./test.bescmd], [], [stdout], [ignore])
+AT_CHECK([besstandalone -c bes_conf_path -i test.bescmd], [], [stdout], [ignore])
 AT_CHECK([diff -w -b -B baselines_path/$3.$2 stdout], [], [ignore], [], [])
 AT_CLEANUP
 ])
