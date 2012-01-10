@@ -101,7 +101,7 @@ XDStructure::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr
 
     for (Vars_iter p = var_begin(); p != var_end(); ++p) {
         if ((*p)->send_p()) {
-            dynamic_cast<XDOutput*> ((*p))->print_xml_data(writer, show_type);
+            dynamic_cast<XDOutput&> (*(*p)).print_xml_data(writer, show_type);
         }
     }
 
