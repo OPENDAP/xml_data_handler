@@ -1,6 +1,6 @@
 Summary:         Basic request handling for OPeNDAP servers 
 Name:            xml_data_handler
-Version:         1.0.0
+Version:         1.0.1
 Release:         1
 License:         LGPL
 Group:           System Environment/Daemons 

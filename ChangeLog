@@ -1,3 +1,39 @@
+2012-01-09  James Gallagher <jgallagher@opendap.org>
+
+	One missing null test addressed.
+
+	M    XDStructure.cc
+
+2011-12-02  James Gallagher <jgallagher@opendap.org>
+
+	Fixed the rpm target - the .spec file had an extra directory listed in it.
+
+	M    conf/libtool.m4
+	M    xml_data_handler.spec
+
+2011-12-02  James Gallagher <jgallagher@opendap.org>
+
+	rationalized the XMLWriter.h includes give its move into libdap.
+
+2011-12-02  James Gallagher <jgallagher@opendap.org>
+
+	Fixes for the distcheck target. Variables like $abs_top_srcdir
+	work fine for 'check' but not for 'distcheck' because with
+	distcheck they have a '../' in them and when a path like that is
+	passed to the BES, it reports an error. The way around this is to
+	use readlink -f on the value of that variable and substitute the
+	result. One wrinkle on this is that OSX lacks a working version of
+	readlink. See configure.ac for the work-around.
+
+2011-11-23  Nathan Potter <ndp@coas.oregonstate.edu>
+
+	xml_data_handler: Fixed type in spec file
+
+2011-11-22  Nathan Potter <ndp@coas.oregonstate.edu>
+
+	xml_data_handler: Created an (empty) OSX_Resources dir so that
+	make distcheck wouldn't barf on the fact it wasn't there.
+
 2011-10-23  James Gallagher <jgallagher@opendap.org>
 
 	Modified configure so that this code builds only the so version of

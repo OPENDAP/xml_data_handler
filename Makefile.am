@@ -80,7 +80,7 @@ cccc:
 .PHONY: fortify
 fortify:
 	sourceanalyzer -b @PACKAGE@ $(MAKE) libxml_data_module.la
-	sourceanalyzer -b @PACKAGE@ -scan -f ../@PACKAGE@-@PACKAGE_VERSION@.fpr
+	sourceanalyzer -b @PACKAGE@ -scan -f @PACKAGE@-@PACKAGE_VERSION@.fpr
 
 # Use this to clean the fortify project.
 .PHONY: fortifyclean
