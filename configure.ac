@@ -48,7 +48,8 @@ AC_CHECK_FUNCS([putenv strtol])
 dnl Checks for specific libraries
 AC_CHECK_LIBDAP([3.11.0],
  [
-  LIBS="$LIBS $DAP_CLIENT_LIBS $DAP_SERVER_LIBS"
+  LIBS="$LIBS $DAP_SERVER_LIBS"
+dnl $DAP_CLIENT_LIBS 
   CPPFLAGS="$CPPFLAGS $DAP_CFLAGS"
  ],
  [ AC_MSG_ERROR([Cannot find libdap])
