@@ -1,3 +1,19 @@
+2012-02-07  James Gallagher <jgallagher@opendap.org>
+
+	Build fixes for CentOS 6; no longer links with libdapclient
+
+2012-01-11  James Gallagher <jgallagher@opendap.org>
+
+	Updated for Hyrax 1.8
+
+	M    configure.ac
+	M    INSTALL
+	M    NEWS
+	M    xml_data_handler.spec
+	M    ChangeLog
+	M    README
+	M    Makefile.am
+
 2012-01-09  James Gallagher <jgallagher@opendap.org>
 
 	One missing null test addressed.
@@ -6,7 +22,8 @@
 
 2011-12-02  James Gallagher <jgallagher@opendap.org>
 
-	Fixed the rpm target - the .spec file had an extra directory listed in it.
+	Fixed the rpm target - the .spec file had an extra directory
+	listed in it.
 
 	M    conf/libtool.m4
 	M    xml_data_handler.spec
