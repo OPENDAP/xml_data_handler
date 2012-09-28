@@ -31,7 +31,9 @@ XD_SOURCES = XDArray.cc XDInt16.cc XDStructure.cc		   \
 		XDUrl.h XDFloat32.h XDSequence.h XDFloat64.h   \
 		XDStr.h XDGrid.h XDStructure.h XDInt16.h	   \
 		XDUInt16.h XDOutputFactory.cc XDOutputFactory.h   \
-		get_xml_data.cc get_xml_data.h XMLWriter.cc XMLWriter.h
+		get_xml_data.cc get_xml_data.h 
+		
+# Moved to libdap. jhrg. 9/28/12 XMLWriter.cc XMLWriter.h
 
 BES_SOURCES = BESXDModule.cc BESXDResponseHandler.cc		   \
 	      BESXDTransmit.cc BESXDRequestHandler.cc		   \

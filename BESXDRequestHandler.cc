@@ -22,7 +22,7 @@
 //
 // You can contact University Corporation for Atmospheric Research at
 // 3080 Center Green Drive, Boulder, CO 80301
- 
+
 // (c) COPYRIGHT University Corporation for Atmospheric Research 2004-2005
 // Please read the full copyright statement in the file COPYRIGHT_UCAR.
 //
@@ -39,45 +39,43 @@
 
 #include "BESXDRequestHandler.h"
 
-BESXDRequestHandler::BESXDRequestHandler( const string &name )
-    : BESRequestHandler( name )
+BESXDRequestHandler::BESXDRequestHandler(const string &name) :
+        BESRequestHandler(name)
 {
-    add_handler( HELP_RESPONSE, BESXDRequestHandler::dap_build_help ) ;
-    add_handler( VERS_RESPONSE, BESXDRequestHandler::dap_build_version ) ;
+    add_handler(HELP_RESPONSE, BESXDRequestHandler::dap_build_help);
+    add_handler(VERS_RESPONSE, BESXDRequestHandler::dap_build_version);
 }
 
 BESXDRequestHandler::~BESXDRequestHandler()
 {
 }
 
-bool
-BESXDRequestHandler::dap_build_help( BESDataHandlerInterface &dhi )
+bool BESXDRequestHandler::dap_build_help(BESDataHandlerInterface &dhi)
 {
-    BESResponseObject *response = dhi.response_handler->get_response_object() ;
-    BESInfo *info = dynamic_cast < BESInfo * >(response) ;
-    if( !info )
-	throw BESInternalError( "cast error", __FILE__, __LINE__ ) ;
+    BESResponseObject *response = dhi.response_handler->get_response_object();
+    BESInfo *info = dynamic_cast<BESInfo *>(response);
+    if (!info)
+        throw BESInternalError("cast error", __FILE__, __LINE__);
 
-    map<string,string> attrs ;
-    attrs["name"] = PACKAGE_NAME ;
-    attrs["version"] = PACKAGE_VERSION ;
-    info->begin_tag( "module", &attrs ) ;
-    info->end_tag( "module" ) ;
+    map < string, string > attrs;
+    attrs["name"] = PACKAGE_NAME;
+    attrs["version"] = PACKAGE_VERSION;
+    info->begin_tag("module", &attrs);
+    info->end_tag("module");
 
-    return true ;
+    return true;
 }
 
-bool
-BESXDRequestHandler::dap_build_version( BESDataHandlerInterface &dhi )
+bool BESXDRequestHandler::dap_build_version(BESDataHandlerInterface &dhi)
 {
-    BESResponseObject *response = dhi.response_handler->get_response_object() ;
-    BESVersionInfo *info = dynamic_cast < BESVersionInfo * >(response) ;
-    if( !info )
-	throw BESInternalError( "cast error", __FILE__, __LINE__ ) ;
+    BESResponseObject *response = dhi.response_handler->get_response_object();
+    BESVersionInfo *info = dynamic_cast<BESVersionInfo *>(response);
+    if (!info)
+        throw BESInternalError("cast error", __FILE__, __LINE__);
 
-    info->add_module( PACKAGE_NAME, PACKAGE_VERSION ) ;
+    info->add_module(PACKAGE_NAME, PACKAGE_VERSION);
 
-    return true ;
+    return true;
 }
 
 /** @brief dumps information about this object
@@ -86,13 +84,11 @@ BESXDRequestHandler::dap_build_version( BESDataHandlerInterface &dhi )
  *
  * @param strm C++ i/o stream to dump the information to
  */
-void
-BESXDRequestHandler::dump( ostream &strm ) const
+void BESXDRequestHandler::dump(ostream &strm) const
 {
-    strm << BESIndent::LMarg << "BESXDRequestHandler::dump - ("
-			     << (void *)this << ")" << endl ;
-    BESIndent::Indent() ;
-    BESRequestHandler::dump( strm ) ;
-    BESIndent::UnIndent() ;
+    strm << BESIndent::LMarg << "BESXDRequestHandler::dump - (" << (void *) this << ")" << endl;
+    BESIndent::Indent();
+    BESRequestHandler::dump(strm);
+    BESIndent::UnIndent();
 }
 

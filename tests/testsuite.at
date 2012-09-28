@@ -9,6 +9,26 @@ m4_define([full_data_path],[${abs_srcdir}/../data])
 
 AT_INIT([xml data handler autotest testsuite])
 
+AT_TESTED([besstandalone])
+
+AT_ARG_OPTION_ARG([generate g],
+    [  -g arg, --generate=arg   Build the baseline file for test 'arg'],
+    [if ./generate_metadata_baseline.sh $at_arg_generate; then
+         echo "Built baseline for $at_arg_generate"
+     else
+         echo "Could not generate baseline for $at_arg_generate"
+     fi     
+     exit],[])
+
+AT_ARG_OPTION_ARG([generate-data a],
+    [  -a arg, --generate-data=arg   Build the baseline file for test 'arg'],
+    [if ./generate_data_baseline.sh $at_arg_generate_data; then
+         echo "Built baseline for $at_arg_generate_data"
+     else
+         echo "Could not generate baseline for $at_arg_generate_data"
+     fi     
+     exit],[])
+
 dnl $1 == filename
 dnl $2 == {ascii | xd}
 m4_define([AT_MAKE_BESCMD_FILE_NO_CONSTRAINT],

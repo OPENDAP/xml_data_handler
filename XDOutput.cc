@@ -1,4 +1,3 @@
-
 // -*- mode: c++; c-basic-offset:4 -*-
 
 // This file is part of asciival, software which can return an XML data
@@ -55,50 +54,53 @@
 //using namespace xml_data;
 using namespace std;
 
-void XDOutput::start_xml_declaration(XMLWriter *writer, const char *element)  throw(InternalErr)
+void XDOutput::start_xml_declaration(XMLWriter *writer, const char *element) throw (InternalErr)
 {
-    BaseType *btp = dynamic_cast < BaseType * >(this);
+    BaseType *btp = dynamic_cast<BaseType *>(this);
 
-    if (xmlTextWriterStartElement(writer->get_writer(), (element != 0) ? (const xmlChar*)element : (const xmlChar*)btp->type_name().c_str()) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write element for " + btp->name());
+    if (xmlTextWriterStartElement(writer->get_writer(),
+            (element != 0) ? (const xmlChar*) element : (const xmlChar*) btp->type_name().c_str()) < 0)
+        throw InternalErr(__FILE__, __LINE__, "Could not write element for " + btp->name());
 
-    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", (const xmlChar*)(btp->name().c_str())) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write attribute 'name' for " + btp->name());
+    if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name",
+            (const xmlChar*) (btp->name().c_str())) < 0)
+        throw InternalErr(__FILE__, __LINE__, "Could not write attribute 'name' for " + btp->name());
 }
 
-void XDOutput::end_xml_declaration(XMLWriter *writer)  throw(InternalErr)
+void XDOutput::end_xml_declaration(XMLWriter *writer) throw (InternalErr)
 {
-    BaseType *btp = dynamic_cast < BaseType * >(this);
+    BaseType *btp = dynamic_cast<BaseType *>(this);
 
     if (xmlTextWriterEndElement(writer->get_writer()) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not end element for " + btp->name());
+        throw InternalErr(__FILE__, __LINE__, "Could not end element for " + btp->name());
 }
 
-void XDOutput::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
+void XDOutput::print_xml_data(XMLWriter *writer, bool show_type) throw (InternalErr)
 {
     BESDEBUG("xd", "Entering XDOutput::print_xml_data" << endl);
 
     BaseType *btp = d_redirect;
 #if ENABLE_UNIT_TESTS
     if (!btp)
-        btp = dynamic_cast < BaseType * >(this);
+        btp = dynamic_cast<BaseType *>(this);
 #else
     if (!btp)
-        throw InternalErr(__FILE__, __LINE__, "d_redirect is null.");
+    throw InternalErr(__FILE__, __LINE__, "d_redirect is null.");
 #endif
 
     if (show_type)
-	start_xml_declaration(writer);
+        start_xml_declaration(writer);
 
     // Write the element for the value, then the value
     ostringstream oss;
     btp->print_val(oss, "", false);
     BESDEBUG("xd", "XDOutput::print_xml_data, value = '" << oss.str() << "'." << endl);
-    if (!xmlTextWriterWriteElement(writer->get_writer(), (const xmlChar*)"value", (const xmlChar*)oss.str().c_str()) < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write value element for " + btp->name());
+    if (!xmlTextWriterWriteElement(writer->get_writer(), (const xmlChar*) "value", (const xmlChar*) oss.str().c_str())
+            < 0)
+        throw InternalErr(__FILE__, __LINE__, "Could not write value element for " + btp->name());
 
     if (show_type)
-	end_xml_declaration(writer);
+        end_xml_declaration(writer);
 }
 
 /** Increment #state# to the next value given #shape#. This method
@@ -122,26 +124,25 @@ void XDOutput::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalE
  @param share A reference to a vector of the dimension sizes.
 
  @return True if there are more states, false if not. */
-bool XDOutput::increment_state(vector < int >*state,
-                                  const vector < int >&shape)
+bool XDOutput::increment_state(vector<int>*state, const vector<int>&shape)
 {
 
     DBG(cerr << "Entering increment_state" << endl);
 
-    vector < int >::reverse_iterator state_riter;
-    vector < int >::const_reverse_iterator shape_riter;
-    for (state_riter = state->rbegin(), shape_riter = shape.rbegin();
-         state_riter < state->rend(); state_riter++, shape_riter++) {
+    vector<int>::reverse_iterator state_riter;
+    vector<int>::const_reverse_iterator shape_riter;
+    for (state_riter = state->rbegin(), shape_riter = shape.rbegin(); state_riter < state->rend();
+            state_riter++, shape_riter++) {
         if (*state_riter == *shape_riter - 1) {
             *state_riter = 0;
         }
         else {
             *state_riter = *state_riter + 1;
 #if 0
-	    cerr << "New value of state: ";
-	    copy(state->begin(), state->end(),
-		 ostream_iterator<int>(cerr, ", "));
-	    cerr << endl;
+            cerr << "New value of state: ";
+            copy(state->begin(), state->end(),
+                    ostream_iterator<int>(cerr, ", "));
+            cerr << endl;
 #endif
             return true;
         }

@@ -38,12 +38,12 @@
 #include "BESXDTransmit.h"
 #include "BESXDResponseHandler.h"
 
-BESXDResponseHandler::BESXDResponseHandler( const string &name )
-    : BESResponseHandler( name )
+BESXDResponseHandler::BESXDResponseHandler(const string &name) :
+        BESResponseHandler(name)
 {
 }
 
-BESXDResponseHandler::~BESXDResponseHandler( )
+BESXDResponseHandler::~BESXDResponseHandler()
 {
 }
 
@@ -60,22 +60,21 @@ BESXDResponseHandler::~BESXDResponseHandler( )
  * @see DAS
  * @see BESRequestHandlerList
  */
-void
-BESXDResponseHandler::execute( BESDataHandlerInterface &dhi )
+void BESXDResponseHandler::execute(BESDataHandlerInterface &dhi)
 {
-    dhi.action_name = XD_RESPONSE_STR ;
+    dhi.action_name = XD_RESPONSE_STR;
     // Create the DDS.
     // NOTE: It is the responsibility of the specific request handler to set
     // the BaseTypeFactory. It is set to NULL here
-    DataDDS *dds = new DataDDS( NULL, "virtual" ) ;
-    BESDataDDSResponse *bdds = new BESDataDDSResponse( dds ) ;
-    _response = bdds ;
-    _response_name = DATA_RESPONSE ;
-    dhi.action = DATA_RESPONSE ;
-    BESRequestHandlerList::TheList()->execute_each( dhi ) ;
+    DataDDS *dds = new DataDDS(NULL, "virtual");
+    BESDataDDSResponse *bdds = new BESDataDDSResponse(dds);
+    _response = bdds;
+    _response_name = DATA_RESPONSE;
+    dhi.action = DATA_RESPONSE;
+    BESRequestHandlerList::TheList()->execute_each(dhi);
 
-    dhi.action = XD_RESPONSE ;
-    _response = bdds ;
+    dhi.action = XD_RESPONSE;
+    _response = bdds;
 }
 
 /** @brief transmit the response object built by the execute command
@@ -93,13 +92,13 @@ BESXDResponseHandler::execute( BESDataHandlerInterface &dhi )
 void BESXDResponseHandler::transmit(BESTransmitter *transmitter, BESDataHandlerInterface &dhi)
 {
     if (_response) {
-	transmitter->send_response(XD_TRANSMITTER, _response, dhi);
+        transmitter->send_response(XD_TRANSMITTER, _response, dhi);
     }
 }
 
 BESResponseHandler *
-BESXDResponseHandler::XDResponseBuilder( const string &handler_name )
+BESXDResponseHandler::XDResponseBuilder(const string &handler_name)
 {
-    return new BESXDResponseHandler( handler_name ) ;
+    return new BESXDResponseHandler(handler_name);
 }
 
