@@ -22,9 +22,6 @@
 //
 // You can contact OPeNDAP, Inc. at PO Box 112, Saunderstown, RI. 02874-0112.
 
-// (c) COPYRIGHT URI/MIT 1998,2000
-// Please read the full copyright statement in the file COPYRIGHT_URI.
-//
 // Authors:
 //      jhrg,jimg       James Gallagher <jgallagher@gso.uri.edu>
 
@@ -47,7 +44,6 @@
 
 #include <BESDebug.h>
 
-#include "XMLWriter.h"
 #include "XDOutput.h"
 #include "get_xml_data.h"
 

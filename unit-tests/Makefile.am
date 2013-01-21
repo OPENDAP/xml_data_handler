@@ -36,15 +36,8 @@ DISTCLEANFILES = *.Po test_config.h
 # Unit Tests
 #
 
-test_config.h: test_config.h.in Makefile
-	sed -e "s%[@]srcdir[@]%${srcdir}%" $< > test_config.h
-
-# The object files from asciival are needed to link the unit tests
-XDOBJS = ../XDByte.o ../XDInt32.o ../XDFloat64.o ../XDStr.o   \
-	../XDUrl.o ../XDArray.o ../XDStructure.o ../XDSequence.o \
-	../XDGrid.o ../XDUInt32.o ../XDInt16.o ../XDUInt16.o     \
-	../XDFloat32.o ../XDOutput.o ../XDOutputFactory.o	     \
-	../get_xml_data.o ../XMLWriter.o
+#test_config.h: test_config.h.in Makefile
+#	sed -e "s%[@]abs_srcdir[@]%${abs_srcdir}%" $< > test_config.h
 
 if CPPUNIT
 UNIT_TESTS = XDArrayTest XDOutputTest
@@ -60,10 +53,20 @@ check-local:
 	@echo ""
 endif
 
-XDArrayTest_SOURCES = XDArrayTest.cc
-XDOutputTest_SOURCES = XDOutputTest.cc
+XD_SOURCES = ../XDArray.cc ../XDInt16.cc ../XDStructure.cc          \
+        ../XDInt32.cc ../XDUInt16.cc ../XDByte.cc ../XDOutput.cc   \
+        ../XDUInt32.cc ../XDFloat32.cc ../XDUrl.cc ../XDFloat64.cc \
+        ../XDSequence.cc  ../XDGrid.cc ../XDStr.cc ../XDArray.h    \
+        ../XDInt32.h ../XDUInt32.h ../XDByte.h ../XDOutput.h       \
+        ../XDUrl.h ../XDFloat32.h ../XDSequence.h ../XDFloat64.h   \
+        ../XDStr.h ../XDGrid.h ../XDStructure.h ../XDInt16.h       \
+        ../XDUInt16.h ../XDOutputFactory.cc ../XDOutputFactory.h   \
+        ../get_xml_data.cc ../get_xml_data.h 
+
+XDArrayTest_SOURCES = XDArrayTest.cc $(XD_SOURCES)
+XDOutputTest_SOURCES = XDOutputTest.cc $(XD_SOURCES)
 
 # if not linking with the module, use $(XDOBJS) below
-XDArrayTest_LDADD = ../libxml_data_module.la $(BES_DAP_LIBS) $(AM_LDADD)
-XDOutputTest_LDADD = ../libxml_data_module.la $(BES_DAP_LIBS) $(AM_LDADD)
+XDArrayTest_LDADD = $(BES_DAP_LIBS) $(AM_LDADD)
+XDOutputTest_LDADD = $(BES_DAP_LIBS) $(AM_LDADD)
 

@@ -25,7 +25,7 @@
 
 #include <DataDDS.h>
 
-#include "XMLWriter.h"
+#include <XMLWriter.h>
 
 using namespace libdap ;
 

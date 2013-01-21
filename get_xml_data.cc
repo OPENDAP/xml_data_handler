@@ -67,6 +67,8 @@ namespace xml_data {
 void get_data_values_as_xml(DataDDS *dds, XMLWriter *writer)
 {
     try {
+        /* Start an element named "Dataset". Since this is the first element,
+         * this will be the root element of the document */
         if (xmlTextWriterStartElementNS(writer->get_writer(), NULL, (const xmlChar*)"Dataset", (const xmlChar*)DAP_SCHEMA) < 0)
             throw InternalErr(__FILE__, __LINE__,  "Error starting the Dataset element for response ");
 
@@ -81,6 +83,7 @@ void get_data_values_as_xml(DataDDS *dds, XMLWriter *writer)
 
         if (xmlTextWriterEndElement(writer->get_writer()) < 0)
             throw InternalErr(__FILE__, __LINE__, "Error ending Dataset element.");
+
     }
     catch (InternalErr &e) {
         xmlErrorPtr error = xmlGetLastError();

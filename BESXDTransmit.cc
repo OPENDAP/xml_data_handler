@@ -23,9 +23,6 @@
 // You can contact University Corporation for Atmospheric Research at
 // 3080 Center Green Drive, Boulder, CO 80301
 
-// (c) COPYRIGHT University Corporation for Atmospheric Research 2004-2005
-// Please read the full copyright statement in the file COPYRIGHT_UCAR.
-//
 // Authors:
 //      pwest       Patrick West <pwest@ucar.edu>
 //      jgarcia     Jose Garcia <jgarcia@ucar.edu>
@@ -39,6 +36,7 @@
 #include <InternalErr.h>
 #include <util.h>
 #include <mime_util.h>
+#include <XMLWriter.h>
 
 #include <BESDapTransmit.h>
 #include <BESContainer.h>
@@ -48,7 +46,6 @@
 #include <BESInternalFatalError.h>
 #include <BESDebug.h>
 
-//#include "XMLWriter.h"
 #include "BESXDTransmit.h"
 #include "get_xml_data.h"
 

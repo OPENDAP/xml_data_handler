@@ -3,11 +3,17 @@ dnl -*- autoconf -*-
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.62)
-AC_INIT(xml_data_handler, 1.0.0, opendap-tech@opendap.org)
+AC_INIT(xml_data_handler, 1.0.2, opendap-tech@opendap.org)
 AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_MACRO_DIR([conf])
 
 AM_INIT_AUTOMAKE(1.10)
+
+# The handler is a shared object library, so we don't normally need
+# the static lib. Override this default by specifying `--enable-static',
+# which can make running unit tests with valgrind far more pleasant. 
+AM_DISABLE_STATIC
+
 AC_CONFIG_SRCDIR([BESXDModule.cc])
 AM_CONFIG_HEADER([config.h])
 
@@ -42,7 +48,8 @@ AC_CHECK_FUNCS([putenv strtol])
 dnl Checks for specific libraries
 AC_CHECK_LIBDAP([3.11.0],
  [
-  LIBS="$LIBS $DAP_CLIENT_LIBS $DAP_SERVER_LIBS"
+  LIBS="$LIBS $DAP_SERVER_LIBS"
+dnl $DAP_CLIENT_LIBS 
   CPPFLAGS="$CPPFLAGS $DAP_CFLAGS"
  ],
  [ AC_MSG_ERROR([Cannot find libdap])
@@ -83,7 +90,7 @@ AC_ARG_ENABLE(unit-tests,
      [UNIT_TESTS_VAL=1
      AC_MSG_NOTICE(Unit tests enabled)])
 
-AC_DEFINE_UNQUOTED([ENABLE_UNIT_TESTS], $UNIT_TESTS_VAL, [Should the code be compiled to suport unit tests?])
+AC_DEFINE_UNQUOTED([ENABLE_UNIT_TESTS], $UNIT_TESTS_VAL, [Should the code be compiled to support unit tests?])
     
 dnl autoheader macros; tack some text at the top and bottom of config.h.in
 AH_TOP([#ifndef _config_h
@@ -98,8 +105,40 @@ AH_BOTTOM([/* Shorthand for gccs unused attribute feature */
 
 #endif /* _config_h */])
 
+# Test for a readlink bug, see
+# <http://lists.gnu.org/archive/html/bug-coreutils/2008-02/msg00126.html>.
+# We use perl to replace 'readlink -f' if it doesn't exist...
+AC_CHECK_PROG(PERL, perl, perl)
+AC_MSG_CHECKING([for a suitable ``readlink -f'' program])
+[mkdir readlink-test &&
+mkdir readlink-test/a-long &&
+: > readlink-test/a-long/f &&
+ln -s a-long readlink-test/a &&
+for READLINK_F in \
+  'readlink -f' \
+  realpath \
+  false
+do
+  if
+    $READLINK_F > /dev/null 2>&1 \
+      readlink-test/a/../a/f 
+  then
+    break
+  fi
+done &&
+rm -rf readlink-test &&
+if [ "$READLINK_F" = false ]
+then]
+  AC_MSG_RESULT([none found, using own replacement])
+  [READLINK_F='perl -e '\''use Cwd qw(abs_path); print abs_path $$ARGV[0];'\'
+else]
+  AC_MSG_RESULT([$READLINK_F])
+[fi]
+AC_SUBST([READLINK_F])
+
 AC_CONFIG_FILES([Makefile
                  unit-tests/Makefile
+		         unit-tests/test_config.h
                  tests/Makefile
                  tests/atlocal])
 

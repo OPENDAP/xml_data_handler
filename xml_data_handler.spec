@@ -1,6 +1,6 @@
 Summary:         Basic request handling for OPeNDAP servers 
 Name:            xml_data_handler
-Version:         1.0.0
+Version:         1.0.2
 Release:         1
 License:         LGPL
 Group:           System Environment/Daemons 
@@ -15,10 +15,11 @@ BuildRequires:   libdap-devel >= 3.11.0
 BuildRequires:   bes-devel >= 3.9.0
 
 %description
-This package contains a general purpose handler for use with the new
-Hyrax data server. This handler takes input from a 'data handler' and returns 
-XML document that encodes both dataset metadata and values. It is intended to
-be used for small data requests.
+This package contains a general purpose handler for use with the Hyrax
+data server. This handler takes input from a 'data handler' and
+returns XML document that encodes both dataset metadata and values. It
+is intended to be used for small data requests and web systems that 
+need data in XML documents..
 
 %prep 
 %setup -q
@@ -40,8 +41,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %dir %{_sysconfdir}/bes
 %dir %{_sysconfdir}/bes/modules
-%config(noreplace) %{_sysconfdir}/bes/modules/xml_datga_handler.conf
-%{_datadir}/bes/
+%config(noreplace) %{_sysconfdir}/bes/modules/xml_data_handler.conf
 %{_libdir}/bes/libxml_data_module.so
 %doc COPYING NEWS README
 

@@ -33,7 +33,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-//#define DODS_DEBUG
+//#define DODS_DEBUG2
 //#define DODS_DEBUG2
 
 #include <DDS.h>
@@ -191,13 +191,14 @@ CPPUNIT_TEST_SUITE( XDArrayTest );
         CPPUNIT_TEST(test_get_shape_vector);
         CPPUNIT_TEST(test_get_index);
 #endif
+#endif
 
-        CPPUNIT_TEST(test_print_xml_data_a);
-#if 0
-        CPPUNIT_TEST(test_print_xml_data_b);
-        CPPUNIT_TEST(test_print_xml_data_c);
-        CPPUNIT_TEST(test_print_xml_data_d);
-        CPPUNIT_TEST(test_print_xml_data_e);
+    CPPUNIT_TEST(test_print_xml_data_a);
+#if 1
+    CPPUNIT_TEST(test_print_xml_data_b);
+    CPPUNIT_TEST(test_print_xml_data_c);
+    CPPUNIT_TEST(test_print_xml_data_d);
+    CPPUNIT_TEST(test_print_xml_data_e);
 #endif
 
     CPPUNIT_TEST_SUITE_END();

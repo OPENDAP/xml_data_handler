@@ -23,9 +23,6 @@
 //
 // You can contact OPeNDAP, Inc. at PO Box 112, Saunderstown, RI. 02874-0112.
 
-// (c) COPYRIGHT URI/MIT 1998,2000
-// Please read the full copyright statement in the file COPYRIGHT_URI.
-//
 // Authors:
 //      jhrg,jimg       James Gallagher <jgallagher@gso.uri.edu>
 
@@ -104,7 +101,7 @@ XDStructure::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr
 
     for (Vars_iter p = var_begin(); p != var_end(); ++p) {
         if ((*p)->send_p()) {
-            dynamic_cast<XDOutput*> ((*p))->print_xml_data(writer, show_type);
+            dynamic_cast<XDOutput&> (*(*p)).print_xml_data(writer, show_type);
         }
     }
 

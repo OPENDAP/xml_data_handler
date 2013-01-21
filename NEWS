@@ -1,4 +1,12 @@
- Version 1.0.0 (14 Spet 2010)
+Versin 1.0.2
+
+Buld fixes for CentOS 6
+
+Version 1.0.1
+
+Build and test fixes.
+
+Version 1.0.0 (14 Spet 2010)
 
 Initial version. This is really beta-level software and we might well
 change how the formatting is done, especially for arrays. Comments are

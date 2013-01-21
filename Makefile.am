@@ -23,6 +23,7 @@ libxml_data_module_la_CPPFLAGS = $(BES_CPPFLAGS)
 libxml_data_module_la_LDFLAGS = -avoid-version -module 
 libxml_data_module_la_LIBADD = $(BES_DAP_LIBS)
 
+# Update this in unit-tests/Makefile.am too
 XD_SOURCES = XDArray.cc XDInt16.cc XDStructure.cc		   \
 		XDInt32.cc XDUInt16.cc XDByte.cc XDOutput.cc   \
 		XDUInt32.cc XDFloat32.cc XDUrl.cc XDFloat64.cc \
@@ -32,19 +33,20 @@ XD_SOURCES = XDArray.cc XDInt16.cc XDStructure.cc		   \
 		XDStr.h XDGrid.h XDStructure.h XDInt16.h	   \
 		XDUInt16.h XDOutputFactory.cc XDOutputFactory.h   \
 		get_xml_data.cc get_xml_data.h 
-		
-# Moved to libdap. jhrg. 9/28/12 XMLWriter.cc XMLWriter.h
+
+# XMLWriter is now part of libdap. jhrg 11/21/2011
+#		XMLWriter.cc XMLWriter.h
 
 BES_SOURCES = BESXDModule.cc BESXDResponseHandler.cc		   \
 	      BESXDTransmit.cc BESXDRequestHandler.cc		   \
 	      BESXDModule.h BESXDResponseHandler.h		   \
 	      BESXDTransmit.h BESXDRequestHandler.h BESXDNames.h
 
-EXTRA_DIST = OPYING COPYRIGHT_URI xml_data_hanlder.spec README \
-	xml_data_handler.conf.in OSX_Resources
+EXTRA_DIST = COPYING INSTALL NEWS README xml_data_handler.spec \
+	xml_data_handler.conf.in OSX_Resources data
 
 CLEANFILES = *~ *.log *.sum
-DISTCLEANFILES = dap-server.conf
+DISTCLEANFILES = xml_data_handler.conf
 
 # Not nearly as clean as it could be, but this removes .svn directories
 # in subdirs.
@@ -78,7 +80,7 @@ cccc:
 .PHONY: fortify
 fortify:
 	sourceanalyzer -b @PACKAGE@ $(MAKE) libxml_data_module.la
-	sourceanalyzer -b @PACKAGE@ -scan -f ../@PACKAGE@-@PACKAGE_VERSION@.fpr
+	sourceanalyzer -b @PACKAGE@ -scan -f @PACKAGE@-@PACKAGE_VERSION@.fpr
 
 # Use this to clean the fortify project.
 .PHONY: fortifyclean

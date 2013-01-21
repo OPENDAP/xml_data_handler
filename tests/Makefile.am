@@ -25,6 +25,8 @@ EXTRA_DIST = testsuite.at $(srcdir)/package.m4 $(TESTSUITE) atlocal.in \
 noinst_DATA = bes.conf
 DISTCLEANFILES = bes.conf
 
+dist_check_SCRIPTS = $(TESTSUITE) atconfig atlocal
+
 check-local: atconfig atlocal $(TESTSUITE) bes.conf
 	$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
 
@@ -53,8 +55,9 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 bes.conf $(TEST_FILES)
 	$(AUTOTEST) -I '$(srcdir)' -o ${srcdir}/$@.tmp $@.at
 	mv ${srcdir}/$@.tmp ${srcdir}/$@
 
-# Resolve the ../ in the path so the BES doesn't complain about them
-# canonical_abs_top_srcdir =  `${READLINK_F} ${abs_top_srcdir}`
+# Resolve the ../ in the path so the BES doesn't complain about them. See also
+# below; this value is used for $abs_top_srcdir
+canonical_abs_top_srcdir =  `${READLINK_F} ${abs_top_srcdir}`
 
 # this fails on distcheck...
 #		-e "s%[@]libdir[@]%${libdir}%" 
@@ -63,7 +66,7 @@ bes.conf: bes.conf.in ../config.status
 		-e "s%[@]sysconfdir[@]%${sysconfdir}%" \
 		-e "s%[@]beslibdir[@]%${BES_MODULE_DIR}%" \
 		-e "s%[@]datadir[@]%${datadir}%" \
-		-e "s%[@]abs_top_srcdir[@]%${abs_top_srcdir}%" \
+		-e "s%[@]abs_top_srcdir[@]%${canonical_abs_top_srcdir}%" \
 		-e "s%[@]abs_top_builddir[@]%${abs_top_builddir}%" \
 		-e "s%[@]bindir[@]%${bindir}%" $< > bes.conf
 

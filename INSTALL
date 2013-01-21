@@ -1,7 +1,5 @@
 
-	$Id: INSTALL 22716 2010-05-12 16:23:29Z jimg $
-
-Updated for version 1.0.0 (14 Spet 2010)
+Updated for version 1.0.1
 
 Building and Installing the OPeNDAP XML/Data handler. See README for information
 about server configuration.
