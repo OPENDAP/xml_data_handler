@@ -35,8 +35,9 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 subdir = tests
-DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/atlocal.in $(srcdir)/generate_data_baseline.sh.in \
+DIST_COMMON = README $(dist_check_SCRIPTS) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(srcdir)/atlocal.in \
+	$(srcdir)/generate_data_baseline.sh.in \
 	$(srcdir)/generate_metadata_baseline.sh.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/conf/acinclude.m4 \
@@ -142,8 +143,10 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PERL = @PERL@
 PKG_CONFIG = @PKG_CONFIG@
 RANLIB = @RANLIB@
+READLINK_F = @READLINK_F@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -209,11 +212,16 @@ EXTRA_DIST = testsuite.at $(srcdir)/package.m4 $(TESTSUITE) atlocal.in \
 
 noinst_DATA = bes.conf
 DISTCLEANFILES = bes.conf
+dist_check_SCRIPTS = $(TESTSUITE) atconfig atlocal
 
 # Use the missing script for better error checking on autom4te run.
 AUTOM4TE = $(SHELL) $(top_srcdir)/conf/missing --run autom4te
 #AUTOM4TE = autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
+
+# Resolve the ../ in the path so the BES doesn't complain about them. See also
+# below; this value is used for $abs_top_srcdir
+canonical_abs_top_srcdir = `${READLINK_F} ${abs_top_srcdir}`
 all: all-am
 
 .SUFFIXES:
@@ -297,6 +305,7 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
+	$(MAKE) $(AM_MAKEFLAGS) $(dist_check_SCRIPTS)
 	$(MAKE) $(AM_MAKEFLAGS) check-local
 check: check-am
 all-am: Makefile $(DATA)
@@ -449,9 +458,6 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 bes.conf $(TEST_FILES)
 	$(AUTOTEST) -I '$(srcdir)' -o ${srcdir}/$@.tmp $@.at
 	mv ${srcdir}/$@.tmp ${srcdir}/$@
 
-# Resolve the ../ in the path so the BES doesn't complain about them
-# canonical_abs_top_srcdir =  `${READLINK_F} ${abs_top_srcdir}`
-
 # this fails on distcheck...
 #		-e "s%[@]libdir[@]%${libdir}%" 
 bes.conf: bes.conf.in ../config.status
@@ -459,7 +465,7 @@ bes.conf: bes.conf.in ../config.status
 		-e "s%[@]sysconfdir[@]%${sysconfdir}%" \
 		-e "s%[@]beslibdir[@]%${BES_MODULE_DIR}%" \
 		-e "s%[@]datadir[@]%${datadir}%" \
-		-e "s%[@]abs_top_srcdir[@]%${abs_top_srcdir}%" \
+		-e "s%[@]abs_top_srcdir[@]%${canonical_abs_top_srcdir}%" \
 		-e "s%[@]abs_top_builddir[@]%${abs_top_builddir}%" \
 		-e "s%[@]bindir[@]%${bindir}%" $< > bes.conf
 

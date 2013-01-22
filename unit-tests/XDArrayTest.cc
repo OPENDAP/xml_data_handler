@@ -191,7 +191,6 @@ CPPUNIT_TEST_SUITE( XDArrayTest );
         CPPUNIT_TEST(test_get_shape_vector);
         CPPUNIT_TEST(test_get_index);
 #endif
-#endif
 
     CPPUNIT_TEST(test_print_xml_data_a);
 #if 1

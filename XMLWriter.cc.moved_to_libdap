@@ -20,7 +20,7 @@ using namespace libdap;
 
 XMLWriter::XMLWriter()
 {
-    LIBXML_TEST_VERSION;
+    // LIBXML_TEST_VERSION;
 
     /* Create a new XML buffer, to which the XML document will be
      * written */
