@@ -1,3 +1,121 @@
+2013-05-20  James Gallagher <jgallagher@opendap.org>
+
+	Added an explicit encoding type so that the set_mime_*() functions could differentiate between the new code moved to mime_util.cc/.h from ResponseBuilder and the old, deprecated, code already in mime_util.
+
+2013-01-26  Nathan Potter <ndp@coas.oregonstate.edu>
+
+2013-01-22  James Gallagher <jgallagher@opendap.org>
+
+	Some tests fail, likely because the hdf4 handler changed out from under them.
+
+	M    tests/Makefile.in
+	M    unit-tests/XDOutputTest.cc
+	M    unit-tests/testsuite/xdoutputtest_e.xml
+	M    unit-tests/testsuite/xdoutputtest_a.xml
+	M    unit-tests/XDArrayTest.cc
+	M    XMLWriter.cc.moved_to_libdap
+
+2013-01-21  James Gallagher <jgallagher@opendap.org>
+
+	Merge of the hyrax 1.8 branch
+
+	_M   .
+	M    XDStructure.cc
+	M    XDOutput.h
+	M    XDUrl.cc
+	M    XDByte.cc
+	M    XDByte.h
+	D    conf/libtool.m4
+	M    XDStr.cc
+	M    XDSequence.cc
+	M    XDFloat32.h
+	M    XDArray.h
+	M    BESXDRequestHandler.h
+	M    tests/Makefile.am
+	M    tests/testsuite.at
+	M    configure.ac
+	M    XDUInt32.h
+	M    INSTALL
+	M    BESXDResponseHandler.cc
+	M    XDUInt16.h
+	M    BESXDTransmit.cc
+	M    NEWS
+	M    BESXDTransmit.h
+	M    get_xml_data.h
+	M    XDInt32.cc
+	M    BESXDNames.h
+	M    xml_data_handler.spec
+	M    unit-tests/test_config.h.in
+	M    unit-tests/Makefile.am
+	M    unit-tests/testsuite/xdoutputtest_e.xml
+	M    unit-tests/testsuite/xdarraytest_a.xml
+	M    unit-tests/testsuite/xdarraytest_b.xml
+	M    unit-tests/testsuite/xdarraytest_c.xml
+	M    unit-tests/testsuite/xdoutputtest_a.xml
+	M    unit-tests/testsuite/xdarraytest_d.xml
+	M    unit-tests/testsuite/xdarraytest_e.xml
+	M    unit-tests/XDArrayTest.cc
+	M    XDOutput.cc
+	M    XDInt16.cc
+	M    XDInt32.h
+	M    XDStructure.h
+	M    XDInt16.h
+	M    XDUrl.h
+	M    ChangeLog
+	M    XDStr.h
+	M    XDSequence.h
+	M    XDFloat32.cc
+	M    README
+	M    XDArray.cc
+	M    XDFloat64.cc
+	M    BESXDModule.cc
+	M    BESXDRequestHandler.cc
+	M    XDFloat64.h
+	M    BESXDModule.h
+	A  + OSX_Resources
+	M    XDUInt32.cc
+	M    XDGrid.cc
+	M    XDUInt16.cc
+	M    XDGrid.h
+	M    BESXDResponseHandler.h
+	M    Makefile.am
+	M    get_xml_data.cc
+
+2012-09-28  James Gallagher <jgallagher@opendap.org>
+
+	Fixed problems with the XML response's root element and made a stab
+	at some imporvements in the tests.
+
+	D    XMLWriter.cc
+	D    XMLWriter.h
+	M    conf/libtool.m4
+	M    XDSequence.cc
+	A    tests/Makefile.in
+	A    tests/generate_data_baseline.sh.in
+	M    tests/baselines/coads_climatology.nc.xml_data
+	A    tests/generate_metadata_baseline.sh.in
+	M    tests/testsuite.at
+	M    configure.ac
+	M    BESXDResponseHandler.cc
+	M    BESXDTransmit.cc
+	M    unit-tests/XDOutputTest.cc
+	M    unit-tests/testsuite/xdoutputtest_e.xml
+	M    unit-tests/testsuite/xdoutputtest_g.xml
+	M    unit-tests/testsuite/xdarraytest_a.xml
+	M    unit-tests/testsuite/xdarraytest_b.xml
+	M    unit-tests/testsuite/xdarraytest_c.xml
+	M    unit-tests/testsuite/xdoutputtest_a.xml
+	M    unit-tests/testsuite/xdarraytest_d.xml
+	M    unit-tests/testsuite/xdarraytest_e.xml
+	M    unit-tests/XDArrayTest.cc
+	M    XDOutput.cc
+	M    BESXDModule.cc
+	M    BESXDRequestHandler.cc
+	A  + XMLWriter.cc.moved_to_libdap
+	M    Makefile.am
+	A  + XMLWriter.h.moved_to_libdap
+	M    get_xml_data.cc
+
 2012-02-07  James Gallagher <jgallagher@opendap.org>
 
 	Build fixes for CentOS 6; no longer links with libdapclient
