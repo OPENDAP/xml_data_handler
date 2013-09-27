@@ -10,7 +10,7 @@ AM_CPPFLAGS = -I$(top_srcdir)
 
 # These are not used by automake but are often useful for certain types of
 # debugging.
-CXXFLAGS_DEBUG = -g3 -O0 -Wall -fno-defer-pop
+CXXFLAGS_DEBUG = -g3 -O0 -Wall 
 TEST_COV_FLAGS = -ftest-coverage -fprofile-arcs
 
 SUBDIRS = unit-tests tests
