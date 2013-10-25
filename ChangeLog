@@ -1,6 +1,23 @@
+2013-10-01  James Gallagher <jgallagher@opendap.org>
+
+	Updated the FSF address in the copyright headers
+
+2013-09-26  James Gallagher <jgallagher@opendap.org>
+
+	removed -fno-defer-pop from all copies of Makefile.am since the
+	new OSX compiler prints warnings about it and it seems to not make
+	a difference with newer g++ versions.
+
+2013-09-10  Nathan Potter <ndp@coas.oregonstate.edu>
+
+	xml_data_handler: Updated ChangeLog, NEWS, INSTALL, etc. for Hyrax 1.9
+
 2013-05-20  James Gallagher <jgallagher@opendap.org>
 
-	Added an explicit encoding type so that the set_mime_*() functions could differentiate between the new code moved to mime_util.cc/.h from ResponseBuilder and the old, deprecated, code already in mime_util.
+	Added an explicit encoding type so that the set_mime_*() functions
+	could differentiate between the new code moved to mime_util.cc/.h
+	from ResponseBuilder and the old, deprecated, code already in
+	mime_util.
 
 2013-01-26  Nathan Potter <ndp@coas.oregonstate.edu>
 
