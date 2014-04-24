@@ -27,18 +27,16 @@
 
 #include <XMLWriter.h>
 
-using namespace libdap ;
+//using namespace libdap ;
 
-class libdap::BaseType ;
+namespace libdap {
+    class BaseType;
+}
 
 namespace xml_data {
-
-void get_data_values_as_xml(DataDDS *dds, XMLWriter *writer);
-
-DataDDS *datadds_to_xd_datadds( DataDDS *dds ) ;
-
-BaseType *basetype_to_xd( BaseType *bt ) ;
-
+    void get_data_values_as_xml(libdap::DataDDS *dds, XMLWriter *writer);
+    libdap::DataDDS *datadds_to_xd_datadds(libdap::DataDDS *dds);
+    libdap::BaseType *basetype_to_xd(libdap::BaseType *bt);
 }
 
 #endif // E_get_xml_data_h

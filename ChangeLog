@@ -1,3 +1,26 @@
+2014-03-26  James Gallagher <jgallagher@opendap.org>
+
+	fixed libdap namespace
+
+	M    get_xml_data.h
+
+2014-03-26  James Gallagher <jgallagher@opendap.org>
+
+	Removed #define DODS_DEBUG
+
+	M    unit-tests/XDOutputTest.cc
+
+2013-10-25  James Gallagher <jgallagher@opendap.org>
+
+	checkpoint
+
+2013-10-01  James Gallagher <jgallagher@opendap.org>
+
+	Updated the FSF address in the copyright headers
+
+;; Local Variables:
+;; coding: utf-8
+;; End:
 2013-10-01  James Gallagher <jgallagher@opendap.org>
 
 	Updated the FSF address in the copyright headers

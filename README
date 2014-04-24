@@ -1,5 +1,5 @@
 
-Updated for version 1.0.3 (10 September 2013)
+Updated for version 1.0.4 (22 April 2014)
 
 The XML data handler is based on the asciival handler included in the
 dap-server package. This handler builds a response that returns data
