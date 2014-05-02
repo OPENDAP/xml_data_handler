@@ -47,6 +47,7 @@
 
 using std::endl ;
 using namespace xml_data;
+using namespace libdap;
 
 BaseType *
 XDSequence::ptr_duplicate()
@@ -102,7 +103,7 @@ XDSequence::element_count(bool leaves)
     }
 }
 void
-XDSequence::start_xml_declaration(XMLWriter *writer, const char *element)  throw(InternalErr)
+XDSequence::start_xml_declaration(XMLWriter *writer, const char *element)
 {
     XDOutput::start_xml_declaration(writer);
 
@@ -115,7 +116,7 @@ XDSequence::start_xml_declaration(XMLWriter *writer, const char *element)  throw
 }
 
 void
-XDSequence::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
+XDSequence::print_xml_data(XMLWriter *writer, bool show_type)
 {
     // Forcing the use of the generic version prints just the <Structure>
     // element w/o the type information of the components. That will be printed

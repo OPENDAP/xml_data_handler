@@ -43,6 +43,7 @@
 #include "get_xml_data.h"
 
 using namespace xml_data;
+using namespace libdap;
 
 BaseType *
 XDStructure::ptr_duplicate()
@@ -78,7 +79,7 @@ XDStructure::~XDStructure()
 }
 
 void
-XDStructure::start_xml_declaration(XMLWriter *writer, const char *element)  throw(InternalErr)
+XDStructure::start_xml_declaration(XMLWriter *writer, const char *element)
 {
     XDOutput::start_xml_declaration(writer, element);
 
@@ -91,7 +92,7 @@ XDStructure::start_xml_declaration(XMLWriter *writer, const char *element)  thro
 }
 
 void
-XDStructure::print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr)
+XDStructure::print_xml_data(XMLWriter *writer, bool show_type)
 {
     // Forcing the use of the generic version prints just the <Structure>
     // element w/o the type information of the components. That will be printed

@@ -8,12 +8,12 @@
 // terms of the GNU Lesser General Public License as published by the Free
 // Software Foundation; either version 2.1 of the License, or (at your
 // option) any later version.
-// 
+//
 // This is distributed in the hope that it will be useful, but WITHOUT ANY
 // WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
 // more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -43,26 +43,26 @@ class XDGrid;
 
 /** A factory for the XDByte, ..., XDGrid types.
     @author James Gallagher */
-class XDOutputFactory : public BaseTypeFactory {
+class XDOutputFactory : public libdap::BaseTypeFactory {
 public:
-    XDOutputFactory() {} 
+    XDOutputFactory() {}
     virtual ~XDOutputFactory() {}
 
-    virtual Byte *NewByte(const string &n = "") const;
-    virtual Int16 *NewInt16(const string &n = "") const;
-    virtual UInt16 *NewUInt16(const string &n = "") const;
-    virtual Int32 *NewInt32(const string &n = "") const;
-    virtual UInt32 *NewUInt32(const string &n = "") const;
-    virtual Float32 *NewFloat32(const string &n = "") const;
-    virtual Float64 *NewFloat64(const string &n = "") const;
+    virtual libdap::Byte *NewByte(const string &n = "") const;
+    virtual libdap::Int16 *NewInt16(const string &n = "") const;
+    virtual libdap::UInt16 *NewUInt16(const string &n = "") const;
+    virtual libdap::Int32 *NewInt32(const string &n = "") const;
+    virtual libdap::UInt32 *NewUInt32(const string &n = "") const;
+    virtual libdap::Float32 *NewFloat32(const string &n = "") const;
+    virtual libdap::Float64 *NewFloat64(const string &n = "") const;
 
-    virtual Str *NewStr(const string &n = "") const;
-    virtual Url *NewUrl(const string &n = "") const;
+    virtual libdap::Str *NewStr(const string &n = "") const;
+    virtual libdap::Url *NewUrl(const string &n = "") const;
 
-    virtual Array *NewArray(const string &n = "", BaseType *v = 0) const;
-    virtual Structure *NewStructure(const string &n = "") const;
-    virtual Sequence *NewSequence(const string &n = "") const;
-    virtual Grid *NewGrid(const string &n = "") const;
+    virtual libdap::Array *NewArray(const string &n = "", libdap::BaseType *v = 0) const;
+    virtual libdap::Structure *NewStructure(const string &n = "") const;
+    virtual libdap::Sequence *NewSequence(const string &n = "") const;
+    virtual libdap::Grid *NewGrid(const string &n = "") const;
 };
 
 #endif // xd_output_factory_h

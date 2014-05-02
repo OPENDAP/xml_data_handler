@@ -55,6 +55,8 @@ using std::endl;
 
 const char *DAP_SCHEMA = "http://xml.opendap.org/ns/dap/3.3#";
 
+using namespace libdap;
+
 namespace xml_data {
 
 /** Using the XDOutput::print_ascii(), write the data values to an

@@ -86,7 +86,7 @@ XDGrid::~XDGrid()
 {
 }
 
-void XDGrid::print_xml_data(XMLWriter *writer, bool show_type) throw (InternalErr)
+void XDGrid::print_xml_data(XMLWriter *writer, bool show_type)
 {
     // General rule: If everything in the Grid (all maps plus the array)
     // is projected, then print as a Grid, else print as if the Gird is a

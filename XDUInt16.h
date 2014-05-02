@@ -36,7 +36,7 @@
 #include "UInt16.h"
 #include "XDOutput.h"
 
-class XDUInt16: public UInt16, public XDOutput {
+class XDUInt16: public libdap::UInt16, public XDOutput {
 public:
     XDUInt16(const string &n) : UInt16( n ) {}
     XDUInt16( UInt16 *bt ) : UInt16( bt->name() ), XDOutput( bt ) {
