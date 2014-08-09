@@ -2,12 +2,12 @@
 dnl -*- autoconf -*-
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.62)
-AC_INIT(xml_data_handler, 1.0.4, opendap-tech@opendap.org)
+AC_PREREQ(2.69)
+AC_INIT(xml_data_handler, 1.0.5, opendap-tech@opendap.org)
 AC_CONFIG_AUX_DIR([conf])
 AC_CONFIG_MACRO_DIR([conf])
 
-AM_INIT_AUTOMAKE(1.10)
+AM_INIT_AUTOMAKE([check-news foreign])
 
 # The handler is a shared object library, so we don't normally need
 # the static lib. Override this default by specifying `--enable-static',
