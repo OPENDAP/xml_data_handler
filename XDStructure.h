@@ -36,7 +36,7 @@
 #include "Structure.h"
 #include "XDOutput.h"
 
-class XDStructure: public Structure, public XDOutput {
+class XDStructure: public libdap::Structure, public XDOutput {
 
 public:
     XDStructure(const string &n);
@@ -45,9 +45,9 @@ public:
 
     virtual BaseType *ptr_duplicate();
 
-    virtual void start_xml_declaration(XMLWriter *writer, const char *element = 0)  throw(InternalErr);
+    virtual void start_xml_declaration(libdap::XMLWriter *writer, const char *element = 0);
 
-    virtual void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
+    virtual void print_xml_data(libdap::XMLWriter *writer, bool show_type);
 };
 
 #endif

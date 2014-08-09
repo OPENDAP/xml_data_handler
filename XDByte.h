@@ -32,7 +32,7 @@
 #include <Byte.h>
 #include "XDOutput.h"
 
-class XDByte: public Byte, public XDOutput {
+class XDByte: public libdap::Byte, public XDOutput {
 public:
     XDByte(const string &n) : Byte( n ) {}
     XDByte( Byte *bt ) : Byte( bt->name() ), XDOutput( bt ) {

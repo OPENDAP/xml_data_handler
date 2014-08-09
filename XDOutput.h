@@ -32,29 +32,26 @@
 #ifndef _xdoutput_h
 #define _xdoutput_h 1
 
-#include <stdio.h>
 #include <vector>
 
-#include <InternalErr.h>
-#include <BaseType.h>
-#include <XMLWriter.h>
-
-using namespace std;
-using namespace libdap;
+namespace libdap {
+	class BaseType;
+	class XMLWriter;
+}
 
 class XDOutput {
 
     friend class XDOutputTest;
 
 protected:
-    BaseType *d_redirect;
+    libdap::BaseType *d_redirect;
 
 public:
     /**
      * Build an instance of XDOutput and set the redirect field to 'bt'
      * @param bt
      */
-    XDOutput( BaseType *bt ) : d_redirect( bt ) { }
+    XDOutput( libdap::BaseType *bt ) : d_redirect( bt ) { }
 
     /**
      * Build an instance of XDOutput. The redirect field is null.
@@ -66,10 +63,10 @@ public:
 
     virtual bool increment_state(vector<int> *state, const vector<int> &shape);
 
-    virtual void start_xml_declaration(XMLWriter *writer, const char *element = 0)  throw(InternalErr);
-    virtual void end_xml_declaration(XMLWriter *writer)  throw(InternalErr);
+    virtual void start_xml_declaration(libdap::XMLWriter *writer, const char *element = 0);
+    virtual void end_xml_declaration(libdap::XMLWriter *writer);
 
-    virtual void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
+    virtual void print_xml_data(libdap::XMLWriter *writer, bool show_type);
 };
 
 #endif

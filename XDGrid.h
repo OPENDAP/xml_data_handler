@@ -36,7 +36,7 @@
 #include <Grid.h>
 #include "XDOutput.h"
 
-class XDGrid: public Grid, public XDOutput {
+class XDGrid: public libdap::Grid, public XDOutput {
 public:
     XDGrid(const string &n);
     XDGrid( Grid *grid ) ;
@@ -44,7 +44,7 @@ public:
 
     virtual BaseType *ptr_duplicate();
 
-    virtual void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
+    virtual void print_xml_data(libdap::XMLWriter *writer, bool show_type);
 };
 
 #endif

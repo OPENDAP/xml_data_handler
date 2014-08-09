@@ -23,18 +23,14 @@
 #ifndef E_get_xml_data_h
 #define E_get_xml_data_h 1
 
-#include <DataDDS.h>
-
-#include <XMLWriter.h>
-
-//using namespace libdap ;
-
 namespace libdap {
     class BaseType;
+    class DataDDS;
+    class XMLWriter;
 }
 
 namespace xml_data {
-    void get_data_values_as_xml(libdap::DataDDS *dds, XMLWriter *writer);
+    void get_data_values_as_xml(libdap::DataDDS *dds, libdap::XMLWriter *writer);
     libdap::DataDDS *datadds_to_xd_datadds(libdap::DataDDS *dds);
     libdap::BaseType *basetype_to_xd(libdap::BaseType *bt);
 }

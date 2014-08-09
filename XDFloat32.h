@@ -36,7 +36,7 @@
 #include <Float32.h>
 #include "XDOutput.h"
 
-class XDFloat32: public Float32, public XDOutput {
+class XDFloat32: public libdap::Float32, public XDOutput {
 public:
     XDFloat32(const string &n) : Float32( n ) {}
     XDFloat32( Float32 *bt ) : Float32( bt->name() ), XDOutput( bt ) {

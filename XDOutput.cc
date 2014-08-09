@@ -49,8 +49,9 @@
 
 //using namespace xml_data;
 using namespace std;
+using namespace libdap;
 
-void XDOutput::start_xml_declaration(XMLWriter *writer, const char *element) throw (InternalErr)
+void XDOutput::start_xml_declaration(XMLWriter *writer, const char *element)
 {
     BaseType *btp = dynamic_cast<BaseType *>(this);
 
@@ -63,7 +64,7 @@ void XDOutput::start_xml_declaration(XMLWriter *writer, const char *element) thr
         throw InternalErr(__FILE__, __LINE__, "Could not write attribute 'name' for " + btp->name());
 }
 
-void XDOutput::end_xml_declaration(XMLWriter *writer) throw (InternalErr)
+void XDOutput::end_xml_declaration(XMLWriter *writer)
 {
     BaseType *btp = dynamic_cast<BaseType *>(this);
 
@@ -71,7 +72,7 @@ void XDOutput::end_xml_declaration(XMLWriter *writer) throw (InternalErr)
         throw InternalErr(__FILE__, __LINE__, "Could not end element for " + btp->name());
 }
 
-void XDOutput::print_xml_data(XMLWriter *writer, bool show_type) throw (InternalErr)
+void XDOutput::print_xml_data(XMLWriter *writer, bool show_type)
 {
     BESDEBUG("xd", "Entering XDOutput::print_xml_data" << endl);
 
@@ -91,7 +92,7 @@ void XDOutput::print_xml_data(XMLWriter *writer, bool show_type) throw (Internal
     ostringstream oss;
     btp->print_val(oss, "", false);
     BESDEBUG("xd", "XDOutput::print_xml_data, value = '" << oss.str() << "'." << endl);
-    if (!xmlTextWriterWriteElement(writer->get_writer(), (const xmlChar*) "value", (const xmlChar*) oss.str().c_str())
+    if (xmlTextWriterWriteElement(writer->get_writer(), (const xmlChar*) "value", (const xmlChar*) oss.str().c_str())
             < 0)
         throw InternalErr(__FILE__, __LINE__, "Could not write value element for " + btp->name());
 

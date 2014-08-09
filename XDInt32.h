@@ -36,7 +36,7 @@
 #include <Int32.h>
 #include "XDOutput.h"
 
-class XDInt32 : public Int32, public XDOutput {
+class XDInt32 : public libdap::Int32, public XDOutput {
 public:
     XDInt32(const string &n) : Int32( n ) {}
     XDInt32( Int32 *bt ) : Int32( bt->name() ), XDOutput( bt ) {

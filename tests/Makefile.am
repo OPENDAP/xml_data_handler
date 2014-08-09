@@ -1,4 +1,5 @@
-AUTOMAKE_OPTIONS = foreign
+
+# AUTOMAKE_OPTIONS = foreign
 
 # Generate the m4 defines from top level configure.ac
 # The `:;' works around a Bash 3.2 bug when the output is not writeable.

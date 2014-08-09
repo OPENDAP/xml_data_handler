@@ -1,3 +1,59 @@
+2014-05-02  James Gallagher <jgallagher@opendap.org>
+
+	svn ignores
+
+2014-05-02  James Gallagher <jgallagher@opendap.org>
+
+	Changes made after merging the trunk (Hyrax 1.9.3) to
+	code on the dap4 branch.
+
+	M    XDByte.cc
+	M    XDByte.h
+	M    XDFloat32.cc
+	M    XDFloat32.h
+	M    XDFloat64.cc
+	M    XDFloat64.h
+	M    XDGrid.cc
+	M    XDGrid.h
+	M    XDInt16.cc
+	M    XDInt16.h
+	M    XDInt32.cc
+	M    XDInt32.h
+	M    XDOutput.cc
+	M    XDOutput.h
+	M    XDOutputFactory.h
+	M    XDSequence.cc
+	M    XDSequence.h
+	M    XDStr.cc
+	M    XDStr.h
+	M    XDStructure.cc
+	M    XDStructure.h
+	M    XDUInt16.cc
+	M    XDUInt16.h
+	M    XDUInt32.cc
+	M    XDUInt32.h
+	M    XDUrl.cc
+	M    XDUrl.h
+	M    get_xml_data.cc
+	M    get_xml_data.h
+
+2014-04-23  Nathan Potter <ndp@coas.oregonstate.edu>
+
+	xml_data_handler: Checking software version update and associated
+	release changes.
+
+2014-03-26  James Gallagher <jgallagher@opendap.org>
+
+	fixed libdap namespace
+
+	M    get_xml_data.h
+
+2014-03-26  James Gallagher <jgallagher@opendap.org>
+
+	Removed #define DODS_DEBUG
+
+	M    unit-tests/XDOutputTest.cc
+
 2014-03-26  James Gallagher <jgallagher@opendap.org>
 
 	fixed libdap namespace

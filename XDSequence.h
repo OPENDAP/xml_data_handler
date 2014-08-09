@@ -36,7 +36,7 @@
 #include "Sequence.h"
 #include "XDOutput.h"
 
-class XDSequence: public Sequence, public XDOutput {
+class XDSequence: public libdap::Sequence, public XDOutput {
 public:
     XDSequence(const string &n);
     XDSequence( Sequence *bt ) ;
@@ -47,9 +47,9 @@ public:
     virtual int length();
     virtual int element_count(bool leaves = false);
 
-    virtual void start_xml_declaration(XMLWriter *writer, const char *element = 0)  throw(InternalErr);
+    virtual void start_xml_declaration(libdap::XMLWriter *writer, const char *element = 0);
 
-    virtual void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
+    virtual void print_xml_data(libdap::XMLWriter *writer, bool show_type);
 
 #if 0
     virtual void print_ascii(ostream &strm, bool print_name) throw(InternalErr);

@@ -36,7 +36,7 @@
 #include <Float64.h>
 #include "XDOutput.h"
 
-class XDFloat64: public Float64, public XDOutput {
+class XDFloat64: public libdap::Float64, public XDOutput {
 public:
     XDFloat64(const string &n) : Float64( n ) {}
     XDFloat64( Float64 *bt ) : Float64( bt->name() ), XDOutput( bt ) {

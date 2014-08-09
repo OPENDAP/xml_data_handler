@@ -36,7 +36,7 @@
 #include <Int16.h>
 #include "XDOutput.h"
 
-class XDInt16: public Int16, public XDOutput {
+class XDInt16: public libdap::Int16, public XDOutput {
 public:
     XDInt16(const string &n) : Int16( n ) {}
     XDInt16( Int16 *bt ) : Int16( bt->name() ), XDOutput( bt ) {

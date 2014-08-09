@@ -52,7 +52,7 @@ public:
 };
 #endif
 
-class XDUrl: public Url, public XDOutput {
+class XDUrl: public libdap::Url, public XDOutput {
 public:
     XDUrl(const string &n) : Url( n ) {}
     XDUrl( Url *bt ) : Url( bt->name() ), XDOutput( bt ) {
@@ -62,7 +62,7 @@ public:
 
     virtual BaseType *ptr_duplicate();
 
-    void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
+    void print_xml_data(libdap::XMLWriter *writer, bool show_type);
 };
 
 #endif

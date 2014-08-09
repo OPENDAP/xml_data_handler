@@ -36,7 +36,7 @@
 #include "Str.h"
 #include "XDOutput.h"
 
-class XDStr: public Str, public XDOutput {
+class XDStr: public libdap::Str, public XDOutput {
 public:
     XDStr(const string &n) : Str( n ) {}
     XDStr( Str *bt ) : Str( bt->name() ), XDOutput( bt ) {
@@ -46,7 +46,7 @@ public:
 
     virtual BaseType *ptr_duplicate();
 
-    void print_xml_data(XMLWriter *writer, bool show_type) throw(InternalErr);
+    void print_xml_data(libdap::XMLWriter *writer, bool show_type);
 };
 
 #endif

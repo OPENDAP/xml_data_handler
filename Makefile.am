@@ -3,7 +3,7 @@
 #
 # 7/27/2010 jhrg
 
-AUTOMAKE_OPTIONS = foreign
+# AUTOMAKE_OPTIONS = foreign
 ACLOCAL_AMFLAGS = -I conf
 
 AM_CPPFLAGS = -I$(top_srcdir)
