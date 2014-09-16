@@ -12,7 +12,7 @@ AM_INIT_AUTOMAKE([check-news foreign])
 # The handler is a shared object library, so we don't normally need
 # the static lib. Override this default by specifying `--enable-static',
 # which can make running unit tests with valgrind far more pleasant. 
-AM_DISABLE_STATIC
+# AM_DISABLE_STATIC
 
 AC_CONFIG_SRCDIR([BESXDModule.cc])
 AM_CONFIG_HEADER([config.h])
@@ -69,8 +69,6 @@ dnl I wrote these checks because we need the *-config scripts to build, so
 dnl the AC_CHECK_LIB macro is not needed.
 
 AC_PATH_PROG([CURL], [curl], [*** Where is curl? ***], [/bin:/usr/bin])
-
-OPENDAP_DEBUG_OPTION
 
 AC_ARG_ENABLE(unit-tests, 
     [  --enable-unit-tests     On by default (yes|no)],

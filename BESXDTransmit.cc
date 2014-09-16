@@ -176,9 +176,4 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
         delete dds;
 }
 
-void BESXDTransmit::send_http_ascii(BESResponseObject * obj, BESDataHandlerInterface & dhi)
-{
-    set_mime_text(dhi.get_output_stream(), dods_data, x_plain);
-    BESXDTransmit::send_basic_ascii(obj, dhi);
-}
 

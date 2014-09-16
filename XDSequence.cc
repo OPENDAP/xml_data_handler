@@ -80,7 +80,7 @@ XDSequence::~XDSequence()
 }
 
 int
-XDSequence::length()
+XDSequence::length() const
 {
     return -1;
 }
