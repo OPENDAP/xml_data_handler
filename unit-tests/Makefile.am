@@ -6,7 +6,7 @@
 # Arrange to build with the backward compatibility mode enabled.
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/asciival $(BES_CPPFLAGS)
 
-AM_LDADD = $(top_builddir)/libxml_data_module.la
+AM_LDADD = 
 AM_CXXFLAGS = 
 
 if CPPUNIT
@@ -53,8 +53,15 @@ check-local:
 	@echo ""
 endif
 
+XD_OBJS = ../XDArray.o ../XDInt16.o ../XDStructure.o ../XDInt32.o	\
+        ../XDUInt16.o ../XDByte.o ../XDOutput.o ../XDUInt32.o		\
+        ../XDFloat32.o ../XDUrl.o ../XDFloat64.o ../XDSequence.o	\
+        ../XDGrid.o ../XDStr.o ../XDOutputFactory.o ../get_xml_data.o
+
 XDArrayTest_SOURCES = XDArrayTest.cc 
 XDOutputTest_SOURCES = XDOutputTest.cc 
 
-XDArrayTest_LDADD = $(BES_DAP_LIBS) $(AM_LDADD)
-XDOutputTest_LDADD = $(BES_DAP_LIBS) $(AM_LDADD)
+# if not linking with the module, use $(XDOBJS) below
+XDArrayTest_LDADD = $(XD_OBJS) $(BES_DAP_LIBS) $(AM_LDADD)
+XDOutputTest_LDADD = $(XD_OBJS) $(BES_DAP_LIBS) $(AM_LDADD)
+
