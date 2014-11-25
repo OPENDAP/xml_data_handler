@@ -4,9 +4,15 @@
 # AUTOMAKE_OPTIONS = foreign
 
 # Arrange to build with the backward compatibility mode enabled.
-AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/asciival $(BES_CPPFLAGS)
+if DAP_MODULES
+AM_CPPFLAGS = -I$(top_srcdir)/modules/xml_data_handler -I$(top_srcdir)/dispatch -I$(top_srcdir)/dap $(DAP_CFLAGS)
+LIBADD = $(BES_DISPATCH_LIB) $(BES_EXTRA_LIBS) $(DAP_SERVER_LIBS)
+else
+AM_CPPFLAGS = $(BES_CPPFLAGS) # or wahtever was set here or in ..._CPPFLAGS
+LIBADD = $(BES_DAP_LIBS)
+endif
 
-AM_LDADD = 
+AM_LDADD = $(LIBADD)
 AM_CXXFLAGS = 
 
 if CPPUNIT
@@ -62,6 +68,6 @@ XDArrayTest_SOURCES = XDArrayTest.cc
 XDOutputTest_SOURCES = XDOutputTest.cc 
 
 # if not linking with the module, use $(XDOBJS) below
-XDArrayTest_LDADD = $(XD_OBJS) $(BES_DAP_LIBS) $(AM_LDADD)
-XDOutputTest_LDADD = $(XD_OBJS) $(BES_DAP_LIBS) $(AM_LDADD)
+XDArrayTest_LDADD = $(XD_OBJS) $(AM_LDADD)
+XDOutputTest_LDADD = $(XD_OBJS) $(AM_LDADD)
 
