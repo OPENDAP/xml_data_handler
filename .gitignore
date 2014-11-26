@@ -46,6 +46,8 @@ atlocal
 
 ## xml data handler specific files
 
+xml_data_handler.conf
+
 tests/bes.conf
 tests/generate_data_baseline.sh
 tests/generate_metadata_baseline.sh
