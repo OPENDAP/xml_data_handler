@@ -1,27 +1,10 @@
 
 # AUTOMAKE_OPTIONS = foreign
 
-# Generate the m4 defines from top level configure.ac
-# The `:;' works around a Bash 3.2 bug when the output is not writeable.
-$(srcdir)/package.m4: $(top_srcdir)/configure.ac
-	:;{ \
-	echo '# Signature of the current package.' && \
-	echo 'm4_define([AT_PACKAGE_NAME],' && \
-	echo '  [@PACKAGE_NAME@])' && \
-	echo 'm4_define([AT_PACKAGE_TARNAME],' && \
-	echo '  [@PACKAGE_TARNAME@])' && \
-	echo 'm4_define([AT_PACKAGE_VERSION],' && \
-	echo '  [@PACKAGE_VERSION@])' && \
-	echo 'm4_define([AT_PACKAGE_STRING],' && \
-	echo '  [@PACKAGE_STRING@])' && \
-	echo 'm4_define([AT_PACKAGE_BUGREPORT],' && \
-	echo '  [@PACKAGE_BUGREPORT@])'; \
-	} >'$(srcdir)/package.m4'
-
 TESTSUITE = $(srcdir)/testsuite
 
 EXTRA_DIST = testsuite.at $(srcdir)/package.m4 $(TESTSUITE) atlocal.in \
-	template.bescmd.in bes.conf.in baselines
+	template.bescmd.in bes.conf.in bes.conf.modules.in baselines
 
 noinst_DATA = bes.conf
 DISTCLEANFILES = bes.conf
@@ -56,19 +39,21 @@ $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 bes.conf $(TEST_FILES)
 	$(AUTOTEST) -I '$(srcdir)' -o ${srcdir}/$@.tmp $@.at
 	mv ${srcdir}/$@.tmp ${srcdir}/$@
 
-# Resolve the ../ in the path so the BES doesn't complain about them. See also
-# below; this value is used for $abs_top_srcdir
-canonical_abs_top_srcdir =  `${READLINK_F} ${abs_top_srcdir}`
-
-# this fails on distcheck...
-#		-e "s%[@]libdir[@]%${libdir}%" 
-bes.conf: bes.conf.in ../config.status
-	sed -e "s%[@]pkgdatadir[@]%${pkgdatadir}%" \
-		-e "s%[@]sysconfdir[@]%${sysconfdir}%" \
-		-e "s%[@]beslibdir[@]%${BES_MODULE_DIR}%" \
-		-e "s%[@]datadir[@]%${datadir}%" \
-		-e "s%[@]abs_top_srcdir[@]%${canonical_abs_top_srcdir}%" \
-		-e "s%[@]abs_top_builddir[@]%${abs_top_builddir}%" \
-		-e "s%[@]bindir[@]%${bindir}%" $< > bes.conf
+# Generate the m4 defines from top level configure.ac
+# The `:;' works around a Bash 3.2 bug when the output is not writeable.
+$(srcdir)/package.m4: $(top_srcdir)/configure.ac
+	:;{ \
+	echo '# Signature of the current package.' && \
+	echo 'm4_define([AT_PACKAGE_NAME],' && \
+	echo '  [@PACKAGE_NAME@])' && \
+	echo 'm4_define([AT_PACKAGE_TARNAME],' && \
+	echo '  [@PACKAGE_TARNAME@])' && \
+	echo 'm4_define([AT_PACKAGE_VERSION],' && \
+	echo '  [@PACKAGE_VERSION@])' && \
+	echo 'm4_define([AT_PACKAGE_STRING],' && \
+	echo '  [@PACKAGE_STRING@])' && \
+	echo 'm4_define([AT_PACKAGE_BUGREPORT],' && \
+	echo '  [@PACKAGE_BUGREPORT@])'; \
+	} >'$(srcdir)/package.m4'
 
 

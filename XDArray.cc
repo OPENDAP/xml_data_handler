@@ -257,7 +257,7 @@ void XDArray::m_print_xml_array(XMLWriter *writer, const char *element)
     this method or the XDOutput version. But see XDSequence for an exception...
 
     @note That in testing instances of the various XDtypes are made directly,
-    without any sibling BaseType. In those cases the XDtype variables are hold
+    without any sibling BaseType. In those cases the XDtype variables are holding
     the data so we fool the code here.
 
     @param writer Write to this xml sink.

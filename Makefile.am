@@ -6,7 +6,19 @@
 # AUTOMAKE_OPTIONS = foreign
 ACLOCAL_AMFLAGS = -I conf
 
+# Set the module version here, in the spec file and in configure.ac
+M_NAME=xml_data_handler
+M_VER=1.0.5
+
+if DAP_MODULES
+AM_CPPFLAGS = -I$(top_srcdir)/modules/xml_data_handler -I$(top_srcdir)/dispatch -I$(top_srcdir)/dap $(DAP_CFLAGS)
+LIBADD = $(DAP_SERVER_LIBS) $(DAP_CLIENT_LIBS)
+else
 AM_CPPFLAGS = -I$(top_srcdir)
+LIBADD = $(BES_DAP_LIBS)      # and ..._LIBADD
+endif
+
+AM_CPPFLAGS += -DMODULE_NAME=\"$(M_NAME)\" -DMODULE_VERSION=\"$(M_VER)\"
 
 # These are not used by automake but are often useful for certain types of
 # debugging.
@@ -19,9 +31,9 @@ lib_besdir=$(libdir)/bes
 lib_bes_LTLIBRARIES = libxml_data_module.la
 
 libxml_data_module_la_SOURCES = $(XD_SOURCES) $(BES_SOURCES)
-libxml_data_module_la_CPPFLAGS = $(BES_CPPFLAGS)
+# libxml_data_module_la_CPPFLAGS = $(BES_CPPFLAGS)
 libxml_data_module_la_LDFLAGS = -avoid-version -module 
-libxml_data_module_la_LIBADD = $(BES_DAP_LIBS)
+libxml_data_module_la_LIBADD = $(LIBADD)
 
 # Update this in unit-tests/Makefile.am too
 XD_SOURCES = XDArray.cc XDInt16.cc XDStructure.cc		   \
@@ -33,9 +45,6 @@ XD_SOURCES = XDArray.cc XDInt16.cc XDStructure.cc		   \
 		XDStr.h XDGrid.h XDStructure.h XDInt16.h	   \
 		XDUInt16.h XDOutputFactory.cc XDOutputFactory.h   \
 		get_xml_data.cc get_xml_data.h 
-
-# XMLWriter is now part of libdap. jhrg 11/21/2011
-#		XMLWriter.cc XMLWriter.h
 
 BES_SOURCES = BESXDModule.cc BESXDResponseHandler.cc		   \
 	      BESXDTransmit.cc BESXDRequestHandler.cc		   \
@@ -63,7 +72,7 @@ install-data-local: xml_data_handler.conf
 uninstall-local:
 	rm -f $(DESTDIR)$(sysconfdir)/bes/modules/xml_data_handler.conf
 
-xml_data_handler.conf: xml_data_handler.conf.in config.status
+xml_data_handler.conf: xml_data_handler.conf.in $(top_srcdir)/config.status
 	sed -e "s%[@]bes_modules_dir[@]%${lib_besdir}%" $< > xml_data_handler.conf
 
 C4_DIR=./cccc
