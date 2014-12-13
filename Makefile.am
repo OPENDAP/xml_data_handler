@@ -14,7 +14,7 @@ if DAP_MODULES
 AM_CPPFLAGS = -I$(top_srcdir)/modules/xml_data_handler -I$(top_srcdir)/dispatch -I$(top_srcdir)/dap $(DAP_CFLAGS)
 LIBADD = $(DAP_SERVER_LIBS) $(DAP_CLIENT_LIBS)
 else
-AM_CPPFLAGS = -I$(top_srcdir)
+AM_CPPFLAGS = $(BES_CPPFLAGS)
 LIBADD = $(BES_DAP_LIBS)      # and ..._LIBADD
 endif
 
