@@ -57,11 +57,6 @@ EXTRA_DIST = COPYING INSTALL NEWS README xml_data_handler.spec \
 CLEANFILES = *~ *.log *.sum
 DISTCLEANFILES = xml_data_handler.conf
 
-# Not nearly as clean as it could be, but this removes .svn directories
-# in subdirs.
-dist-hook:
-	rm -rf `find $(distdir) -name .svn`
-
 install-data-local: xml_data_handler.conf
 	@currdate=`date +"%y%m%d%H%M"`; \
 	test -d $(DESTDIR)$(sysconfdir)/bes || $(MKDIR_P) $(DESTDIR)$(sysconfdir)/bes; \
