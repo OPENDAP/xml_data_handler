@@ -3,8 +3,8 @@
 
 TESTSUITE = $(srcdir)/testsuite
 
-EXTRA_DIST = testsuite.at $(srcdir)/package.m4 $(TESTSUITE) atlocal.in \
-	template.bescmd.in bes.conf.in bes.conf.modules.in baselines
+EXTRA_DIST = baselines $(TESTSUITE).at $(TESTSUITE) package.m4 atlocal.in \
+	template.bescmd.in bes.conf.in bes.conf.modules.in 
 
 noinst_DATA = bes.conf
 DISTCLEANFILES = bes.conf
@@ -13,6 +13,20 @@ dist_check_SCRIPTS = $(TESTSUITE) atconfig atlocal
 
 check-local: atconfig atlocal $(TESTSUITE) bes.conf
 	$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
+
+if DAP_MODULES
+BES_CONF_IN = bes.conf.modules.in
+else
+BES_CONF_IN = bes.conf.in
+endif
+
+# Build the bes.conf used for testing so that the value substituted for
+# @abs_top_srcdir@ does not contain '../'. This happens when using 
+# configure's value for the parameter when running the distcheck target.
+bes.conf: $(BES_CONF_IN) $(top_srcdir)/configure.ac
+	@clean_abs_top_srcdir=`echo ${abs_top_srcdir} | sed 's/\(.*\)\/\(.[^\/]*\)\/\.\./\1/g'`; \
+	sed -e "s%[@]abs_top_srcdir[@]%$$clean_abs_top_srcdir%" \
+		-e "s%[@]abs_top_builddir[@]%${abs_top_builddir}%" $< > bes.conf
 
 # Technically, we don't need this target now, but it might be useful
 # to add it later to be complete.  It would only need to run
@@ -33,27 +47,22 @@ distclean-local:
 
 # Use the missing script for better error checking on autom4te run.
 AUTOM4TE = $(SHELL) $(top_srcdir)/conf/missing --run autom4te
-#AUTOM4TE = autom4te
+
 AUTOTEST = $(AUTOM4TE) --language=autotest
+
 $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 bes.conf $(TEST_FILES)
 	$(AUTOTEST) -I '$(srcdir)' -o ${srcdir}/$@.tmp $@.at
 	mv ${srcdir}/$@.tmp ${srcdir}/$@
 
-# Generate the m4 defines from top level configure.ac
 # The `:;' works around a Bash 3.2 bug when the output is not writeable.
 $(srcdir)/package.m4: $(top_srcdir)/configure.ac
 	:;{ \
 	echo '# Signature of the current package.' && \
-	echo 'm4_define([AT_PACKAGE_NAME],' && \
-	echo '  [@PACKAGE_NAME@])' && \
-	echo 'm4_define([AT_PACKAGE_TARNAME],' && \
-	echo '  [@PACKAGE_TARNAME@])' && \
-	echo 'm4_define([AT_PACKAGE_VERSION],' && \
-	echo '  [@PACKAGE_VERSION@])' && \
-	echo 'm4_define([AT_PACKAGE_STRING],' && \
-	echo '  [@PACKAGE_STRING@])' && \
-	echo 'm4_define([AT_PACKAGE_BUGREPORT],' && \
-	echo '  [@PACKAGE_BUGREPORT@])'; \
+	echo 'm4_define([AT_PACKAGE_NAME],      [@PACKAGE_NAME@])' && \
+	echo 'm4_define([AT_PACKAGE_TARNAME],   [@PACKAGE_TARNAME@])' && \
+	echo 'm4_define([AT_PACKAGE_VERSION],   [@PACKAGE_VERSION@])' && \
+	echo 'm4_define([AT_PACKAGE_STRING],    [@PACKAGE_STRING@])' && \
+	echo 'm4_define([AT_PACKAGE_BUGREPORT], [@PACKAGE_BUGREPORT@])'; \
 	} >'$(srcdir)/package.m4'
 
 
