@@ -1,3 +1,79 @@
+2015-03-25  James Gallagher  <jgallagher@opendap.org>
+
+	Accommodate autoconf 2.63
+	Changed the AT_ARG_OPTION_ARG macro so that it uses _ instead of - for
+	the word separator in multi-word options.
+
+2015-03-19  James Gallagher  <jgallagher@opendap.org>
+
+	Fix for	distclean and the modules build.
+
+2015-01-16  James Gallagher  <jgallagher@opendap.org>
+
+	Removed dist-hook which as a hack for SVN
+
+2014-12-12  James Gallagher  <jgallagher@opendap.org>
+
+	Fixed configure.ac, Makefile.am and bes.conf.in after merging with 'modules'
+
+	Merge remote-tracking branch 'origin/modules'
+
+2014-12-07  James Gallagher  <jgallagher@opendap.org>
+
+	Added module name and version info to Makefile.am
+	This change was made to support the modules build where the autoconf
+	symbols PACKAGE_NAME and _MODULE are defined by the bes configure
+	script. This meant that the version response from the bes was useless
+	since it listed every module as 'bes' and gave the bes' version
+	number.
+
+2014-12-04  James Gallagher  <jgallagher@opendap.org>
+
+	Updates for the hyrax-1.10 release
+	I updated the spec file dependencies and removed the OSX_Resources
+	dir from the EXTRA_DIST Makefile variable since that dir is empty
+	and git does not make empty dirs. If/When we start supporting those
+	builds again, we can revisit this decision.
+
+2014-12-01  James Gallagher  <jgallagher@opendap.org>
+
+	Fixed the modules branch bes.conf file.
+	The bes.conf file used with the bes modules branch now uses
+	the hdf 4 and 5 handlers, so all of the tests work.
+
+2014-11-26  James Gallagher  <jgallagher@opendap.org>
+
+	Removed hdf4 and hdf5 from the bes.conf build with from the bes modules branch build until those are working. Added the handler's conf file to gitignore.
+
+2014-11-24  James Gallagher  <jgallagher@opendap.org>
+
+	Changes for the modules build.
+	Modified the Makefile.am files, configure.ac and tweaked the
+	bes tests so that they use a bes.conf file built using either the
+	local configure (standard build) or the bes configure (modules
+	build).
+
+2014-10-20  James Gallagher  <jgallagher@opendap.org>
+
+	Fixed the unit tests.
+	M    unit-tests/Makefile.am
+
+2014-09-16  James Gallagher  <jgallagher@opendap.org>
+
+	Removed the old OPENDAP_DEBUG_OPTIONS macro from many configure.ac files. Fixed some param initializations; method overloads (virtual methods that lacked 'const'). Other warnings.
+
+2014-08-08  James Gallagher  <jgallagher@opendap.org>
+
+	Version 1.0.5
+	M    ChangeLog
+	M    INSTALL
+	M    Makefile.am
+	M    NEWS
+	M    README
+	M    configure.ac
+	M    tests/Makefile.am
+	M    unit-tests/Makefile.am
+	M    xml_data_handler.spec
 2014-05-02  James Gallagher <jgallagher@opendap.org>
 
 	svn ignores
