@@ -40,7 +40,8 @@ installcheck-local: atconfig atlocal
 
 clean-local:
 	test ! -f '$(TESTSUITE)' || $(SHELL) '$(TESTSUITE)' --clean
-
+	-rm $(srcdir)/package.m4 
+	
 distclean-local:
 	-rm atconfig
 	-rm bes.conf
@@ -50,7 +51,7 @@ AUTOM4TE = $(SHELL) $(top_srcdir)/conf/missing --run autom4te
 
 AUTOTEST = $(AUTOM4TE) --language=autotest
 
-$(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4 bes.conf $(TEST_FILES)
+$(TESTSUITE): $(srcdir)/package.m4  $(srcdir)/testsuite.at bes.conf $(TEST_FILES)
 	$(AUTOTEST) -I '$(srcdir)' -o ${srcdir}/$@.tmp $@.at
 	mv ${srcdir}/$@.tmp ${srcdir}/$@
 
