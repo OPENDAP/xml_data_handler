@@ -3,11 +3,15 @@
 
 TESTSUITE = $(srcdir)/testsuite
 
-EXTRA_DIST = baselines $(TESTSUITE).at $(TESTSUITE) package.m4 atlocal.in \
-	template.bescmd.in bes.conf.in bes.conf.modules.in 
+CLEANFILES = $(TESTSUITE) $(srcdir)/package.m4
+
+EXTRA_DIST = baselines $(TESTSUITE).at $(TESTSUITE)		\
+	$(srcdir)/package.m4 atlocal.in template.bescmd.in	\
+	bes.conf.in bes.conf.modules.in
 
 noinst_DATA = bes.conf
-DISTCLEANFILES = bes.conf
+
+DISTCLEANFILES = bes.conf atconfig
 
 dist_check_SCRIPTS = $(TESTSUITE) atconfig atlocal
 
@@ -34,17 +38,12 @@ bes.conf: $(BES_CONF_IN) $(top_srcdir)/configure.ac
 # with 'make bes-conf' to add the NCML module.  We'd have to figure
 # out a way to let the testsuite script know whether to use the local
 # bes.conf or the installed one.  
-installcheck-local: atconfig atlocal
+# installcheck-local: atconfig atlocal
 # $(TESTSUITE) $(SHELL) '$(TESTSUITE)' AUTOTEST_PATH='$(bindir)' \
 # $(TESTSUITEFLAGS)
 
 clean-local:
 	test ! -f '$(TESTSUITE)' || $(SHELL) '$(TESTSUITE)' --clean
-	-rm $(srcdir)/package.m4 
-	
-distclean-local:
-	-rm atconfig
-	-rm bes.conf
 
 # Use the missing script for better error checking on autom4te run.
 AUTOM4TE = $(SHELL) $(top_srcdir)/conf/missing --run autom4te
