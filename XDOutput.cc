@@ -42,6 +42,7 @@
 #include <BaseType.h>
 #include <debug.h>
 
+#include <BESInternalFatalError.h>
 #include <BESDebug.h>
 
 #include "XDOutput.h"
@@ -54,6 +55,8 @@ using namespace libdap;
 void XDOutput::start_xml_declaration(XMLWriter *writer, const char *element)
 {
     BaseType *btp = dynamic_cast<BaseType *>(this);
+    if (!btp)
+        throw InternalErr(__FILE__, __LINE__, "Expected a BaseType instance");
 
     if (xmlTextWriterStartElement(writer->get_writer(),
             (element != 0) ? (const xmlChar*) element : (const xmlChar*) btp->type_name().c_str()) < 0)
@@ -67,6 +70,8 @@ void XDOutput::start_xml_declaration(XMLWriter *writer, const char *element)
 void XDOutput::end_xml_declaration(XMLWriter *writer)
 {
     BaseType *btp = dynamic_cast<BaseType *>(this);
+    if (!btp)
+        throw InternalErr(__FILE__, __LINE__, "Expected a BaseType instance");
 
     if (xmlTextWriterEndElement(writer->get_writer()) < 0)
         throw InternalErr(__FILE__, __LINE__, "Could not end element for " + btp->name());
@@ -77,13 +82,8 @@ void XDOutput::print_xml_data(XMLWriter *writer, bool show_type)
     BESDEBUG("xd", "Entering XDOutput::print_xml_data" << endl);
 
     BaseType *btp = d_redirect;
-#if ENABLE_UNIT_TESTS
-    if (!btp)
-        btp = dynamic_cast<BaseType *>(this);
-#else
-    if (!btp)
-    throw InternalErr(__FILE__, __LINE__, "d_redirect is null.");
-#endif
+    if (!btp) btp = dynamic_cast<BaseType *>(this);
+    if (!btp) throw BESInternalFatalError("Expected a valid BaseType instance", __FILE__, __LINE__);
 
     if (show_type)
         start_xml_declaration(writer);

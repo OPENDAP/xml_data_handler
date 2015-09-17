@@ -55,6 +55,9 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
 {
     BESDEBUG("xd", "BESXDTransmit::send_base_ascii" << endl);
     BESDataDDSResponse *bdds = dynamic_cast<BESDataDDSResponse *>(obj);
+    if (!bdds)
+        throw BESInternalFatalError("Expected a BESDataDDSResponse instance.", __FILE__, __LINE__);
+
     DataDDS *dds = bdds->get_dds();
     ConstraintEvaluator & ce = bdds->get_ce();
 

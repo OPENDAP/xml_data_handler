@@ -167,7 +167,7 @@ void XDArray::start_xml_declaration(XMLWriter *writer, const char *element)  thr
 {
     // Start the Array element (includes the name)
     if (xmlTextWriterStartElement(writer->get_writer(), (element != 0) ? (const xmlChar*)element : (const xmlChar*)"Array") < 0)
-	throw InternalErr(__FILE__, __LINE__, "Could not write Array element '" + (string)element + "' for " + name());
+	throw InternalErr(__FILE__, __LINE__, "Could not write Array element '" + ((element != 0) ? string(element): string("Array")) + "' for " + name());
     if (xmlTextWriterWriteAttribute(writer->get_writer(), (const xmlChar*) "name", (const xmlChar*)name().c_str()) < 0)
 	throw InternalErr(__FILE__, __LINE__, "Could not write attribute for " + name());
 
