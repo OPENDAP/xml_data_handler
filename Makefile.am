@@ -8,7 +8,7 @@ ACLOCAL_AMFLAGS = -I conf
 
 # Set the module version here, in the spec file and in configure.ac
 M_NAME=xml_data_handler
-M_VER=1.0.6
+M_VER=1.0.7
 
 if DAP_MODULES
 AM_CPPFLAGS = -I$(top_srcdir)/modules/xml_data_handler -I$(top_srcdir)/dispatch -I$(top_srcdir)/dap $(DAP_CFLAGS)
@@ -18,7 +18,7 @@ AM_CPPFLAGS = $(BES_CPPFLAGS)
 LIBADD = $(BES_DAP_LIBS)      # and ..._LIBADD
 endif
 
-AM_CPPFLAGS += -DMODULE_NAME=\"$(M_NAME)\" -DMODULE_VERSION=\"$(M_VER)\"
+AM_CPPFLAGS += -DMODULE_NAME=\"$(M_NAME)\" -DMODULE_VERSION=\"$(M_VER=1.0.7
 
 # These are not used by automake but are often useful for certain types of
 # debugging.
