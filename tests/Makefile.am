@@ -3,7 +3,7 @@
 
 TESTSUITE = $(srcdir)/testsuite
 
-CLEANFILES = $(TESTSUITE) $(srcdir)/package.m4
+CLEANFILES = bes.conf
 
 EXTRA_DIST = baselines $(TESTSUITE).at $(TESTSUITE)		\
 	$(srcdir)/package.m4 atlocal.in template.bescmd.in	\
@@ -11,7 +11,7 @@ EXTRA_DIST = baselines $(TESTSUITE).at $(TESTSUITE)		\
 
 noinst_DATA = bes.conf
 
-DISTCLEANFILES = bes.conf atconfig
+DISTCLEANFILES = atconfig
 
 dist_check_SCRIPTS = $(TESTSUITE) atconfig atlocal
 
@@ -44,6 +44,7 @@ bes.conf: $(BES_CONF_IN) $(top_srcdir)/configure.ac
 
 clean-local:
 	test ! -f '$(TESTSUITE)' || $(SHELL) '$(TESTSUITE)' --clean
+	-rm -f $(TESTSUITE) $(srcdir)/package.m4 
 
 # Use the missing script for better error checking on autom4te run.
 AUTOM4TE = $(SHELL) $(top_srcdir)/conf/missing --run autom4te
