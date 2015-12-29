@@ -132,6 +132,9 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
         string err = "Failed to read data: " + e.get_error_message();
         throw BESDapError(err, false, e.get_error_code(), __FILE__, __LINE__);
     }
+    catch (BESError &e) {
+        throw;
+    }
     catch (...) {
         if (functional_constraint)
             delete dds;
@@ -167,6 +170,9 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
             delete dds;
         string err = "Failed to get values as ascii: " + e.get_error_message();
         throw BESDapError(err, false, e.get_error_code(), __FILE__, __LINE__);
+    }
+    catch (BESError &e) {
+        throw;
     }
     catch (...) {
         if (functional_constraint)
