@@ -64,7 +64,7 @@ XDGrid::XDGrid(Grid *grid) :
     Grid(grid->name()), XDOutput(grid)
 {
     BaseType *bt = basetype_to_xd(grid->array_var());
-    add_var(bt, array);
+    add_var(bt, libdap::array);
     // add_var makes a copy of the base type passed to it, so delete it here
     delete bt;
     bt = 0;
