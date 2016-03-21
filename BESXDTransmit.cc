@@ -53,7 +53,7 @@ using namespace xml_data;
 
 void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInterface & dhi)
 {
-    BESDEBUG("xd", "BESXDTransmit::send_base_ascii" << endl);
+    BESDEBUG("xd", "BESXDTransmit::send_base_ascii() - BEGIN" << endl);
     BESDataDDSResponse *bdds = dynamic_cast<BESDataDDSResponse *>(obj);
     if (!bdds)
         throw BESInternalFatalError("Expected a BESDataDDSResponse instance.", __FILE__, __LINE__);
@@ -66,7 +66,7 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
     string constraint = www2id(dhi.data[POST_CONSTRAINT], "%", "%20%26");
 
     try {
-        BESDEBUG("xd", "BESXDTransmit::send_base_ascii - " "parsing constraint: " << constraint << endl);
+        BESDEBUG("xd", "BESXDTransmit::send_base_ascii() - " "parsing constraint: " << constraint << endl);
         ce.parse_constraint(constraint, *dds);
     }
     catch (InternalErr &e) {
@@ -82,16 +82,51 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
         throw BESInternalFatalError(err, __FILE__, __LINE__);
     }
 
-    BESDEBUG("xd", "BESXDTransmit::send_base_ascii - " "tagging sequences" << endl);
+    BESDEBUG("xd", "BESXDTransmit::send_base_ascii() - " "tagging sequences" << endl);
     dds->tag_nested_sequences(); // Tag Sequences as Parent or Leaf node.
 
-    BESDEBUG("xd", "BESXDTransmit::send_base_ascii - " "accessing container" << endl);
+    BESDEBUG("xd", "BESXDTransmit::send_base_ascii() - " "accessing container" << endl);
     string dataset_name = dhi.container->access();
 
-    BESDEBUG("xd", "BESXDTransmit::send_base_ascii - dataset_name = " << dataset_name << endl);
+    BESDEBUG("xd", "BESXDTransmit::send_base_ascii() - dataset_name = " << dataset_name << endl);
 
     bool functional_constraint = false;
     try {
+
+        // Handle *functional* constraint expressions specially
+        if (ce.function_clauses()) {
+            BESDEBUG("xd", "BESXDTransmit::send_base_ascii() Processing functional constraint clause(s)." << endl);
+            DataDDS *tmp_dds = ce.eval_function_clauses(*dds);
+            // This next step utilizes a well known function, promote_function_output_structures()
+            // to look for one or more top level Structures whose name indicates (by way of ending
+            // with "_uwrap") that their contents should be promoted (aka moved) to the top level.
+            // This is in support of a hack around the current API where server side functions
+            // may only return a single DAP object and not a collection of objects. The name suffix
+            // "_unwrap" is used as a signal from the function to the the various response
+            // builders and transmitters that the representation needs to be altered before
+            // transmission, and that in fact is what happens in our friend
+            // promote_function_output_structures()
+            tmp_dds = promote_function_output_structures(tmp_dds);
+
+            delete dds;
+            dds = tmp_dds;
+            bdds->set_dds(dds);
+
+        }
+        else {
+            // Iterate through the variables in the DataDDS and read
+            // in the data if the variable has the send flag set.
+            for (DDS::Vars_iter i = dds->var_begin(); i != dds->var_end(); i++) {
+                if ((*i)->send_p()) {
+                    (*i)->intern_data(ce, *dds);
+                }
+            }
+        }
+
+#if 0
+        //###################################################################
+        // OLD WAY
+        //###################################################################
         // Handle *functional* constraint expressions specially
         if (ce.functional_expression()) {
             BESDEBUG("xd", "processing a functional constraint." << endl);
@@ -119,6 +154,10 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
                 }
             }
         }
+#endif
+
+
+
     }
     catch (InternalErr &e) {
         if (functional_constraint)
