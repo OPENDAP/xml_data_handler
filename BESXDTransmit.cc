@@ -45,6 +45,7 @@
 #include <BESDapError.h>
 #include <BESInternalFatalError.h>
 #include <BESDebug.h>
+#include <DapFunctionUtils.h>
 
 #include "BESXDTransmit.h"
 #include "get_xml_data.h"
@@ -97,6 +98,10 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
         if (ce.function_clauses()) {
             BESDEBUG("xd", "BESXDTransmit::send_base_ascii() Processing functional constraint clause(s)." << endl);
             DataDDS *tmp_dds = ce.eval_function_clauses(*dds);
+            delete dds;
+            dds = tmp_dds;
+            bdds->set_dds(dds);
+
             // This next step utilizes a well known function, promote_function_output_structures()
             // to look for one or more top level Structures whose name indicates (by way of ending
             // with "_uwrap") that their contents should be promoted (aka moved) to the top level.
@@ -106,12 +111,7 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
             // builders and transmitters that the representation needs to be altered before
             // transmission, and that in fact is what happens in our friend
             // promote_function_output_structures()
-            tmp_dds = promote_function_output_structures(tmp_dds);
-
-            delete dds;
-            dds = tmp_dds;
-            bdds->set_dds(dds);
-
+            promote_function_output_structures(dds);
         }
         else {
             // Iterate through the variables in the DataDDS and read
