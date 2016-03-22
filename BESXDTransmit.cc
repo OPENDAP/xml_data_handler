@@ -93,7 +93,6 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
 
     bool functional_constraint = false;
     try {
-
         // Handle *functional* constraint expressions specially
         if (ce.function_clauses()) {
             BESDEBUG("xd", "BESXDTransmit::send_base_ascii() Processing functional constraint clause(s)." << endl);
@@ -101,7 +100,6 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
             delete dds;
             dds = tmp_dds;
             bdds->set_dds(dds);
-
             // This next step utilizes a well known function, promote_function_output_structures()
             // to look for one or more top level Structures whose name indicates (by way of ending
             // with "_uwrap") that their contents should be promoted (aka moved) to the top level.
@@ -122,42 +120,6 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
                 }
             }
         }
-
-#if 0
-        //###################################################################
-        // OLD WAY
-        //###################################################################
-        // Handle *functional* constraint expressions specially
-        if (ce.functional_expression()) {
-            BESDEBUG("xd", "processing a functional constraint." << endl);
-            // This returns a new BaseType, not a pointer to one in the DataDDS
-            // So once the data has been read using this var create a new
-            // DataDDS and add this new var to the it.
-            BaseType *var = ce.eval_function(*dds, dataset_name);
-            if (!var)
-                throw Error(unknown_error, "Error calling the CE function.");
-
-            var->read();
-
-            dds = new DataDDS(NULL, "virtual");
-            functional_constraint = true;
-            dds->add_var(var);
-        }
-        else {
-            // Iterate through the variables in the DataDDS and read in the data
-            // if the variable has the send flag set.
-            for (DDS::Vars_iter i = dds->var_begin(); i != dds->var_end(); i++) {
-                BESDEBUG("xd", "processing var: " << (*i)->name() << endl);
-                if ((*i)->send_p()) {
-                    BESDEBUG("xd", "reading some data for: " << (*i)->name() << endl);
-                    (**i).intern_data(ce, *dds);
-                }
-            }
-        }
-#endif
-
-
-
     }
     catch (InternalErr &e) {
         if (functional_constraint)
