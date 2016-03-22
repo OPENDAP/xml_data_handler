@@ -108,3 +108,5 @@ AT_RUN_BES_AND_COMPARE([S2000415.HDF], [xml_data], [S2000415.HDF.SwathIndex], [N
 
 AT_RUN_BES_AND_COMPARE([S2000415.HDF], [xml_data], [S2000415.HDF.NSCAT_L2_0_10], [NSCAT%20Rev%2020.NSCAT%20L2[[0:10]]])
 
+AT_RUN_BES_AND_COMPARE([fnoc1.nc], [xml_data], [function_result_unwrap], [wrapitup()])
+
