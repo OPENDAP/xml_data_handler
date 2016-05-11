@@ -32,7 +32,7 @@
 using std::cerr;
 using std::endl;
 
-#include <DataDDS.h>
+#include <DDS.h>
 
 #include <BESDebug.h>
 
@@ -62,11 +62,11 @@ namespace xml_data {
 /** Using the XDOutput::print_ascii(), write the data values to an
  output file/stream as ASCII.
 
- @param dds A DataDDS loaded with data. The variables must use the XDByte,
+ @param dds A DDS loaded with data. The variables must use the XDByte,
  et c., type classes. Use the function datadds_to_ascii_datadds() to
  build such a DataDDS from one whose types are, say NCByte, et cetera.
  @param strm Write ASCII to stream. */
-void get_data_values_as_xml(DataDDS *dds, XMLWriter *writer)
+void get_data_values_as_xml(DDS *dds, XMLWriter *writer)
 {
     try {
         /* Start an element named "Dataset". Since this is the first element,
@@ -96,14 +96,14 @@ void get_data_values_as_xml(DataDDS *dds, XMLWriter *writer)
     }
 }
 
-DataDDS *datadds_to_xd_datadds(DataDDS * dds)
+DDS *dds_to_xd_dds(DDS * dds)
 {
     BESDEBUG("xd", "In datadds_to_xd_datadds" << endl);
     // Should the following use XDOutputFactory instead of the source DDS'
     // factory class? It doesn't matter for the following since the function
     // basetype_to_asciitype() doesn't use the factory. So long as no other
     // code uses the DDS' factory, this is fine. jhrg 9/5/06
-    DataDDS *xd_dds = new DataDDS(dds->get_factory(), dds->get_dataset_name(), dds->get_version(), dds->get_protocol());
+    DDS *xd_dds = new DDS(dds->get_factory(), dds->get_dataset_name());
 
     DDS::Vars_iter i = dds->var_begin();
     while (i != dds->var_end()) {
