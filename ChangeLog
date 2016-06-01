@@ -1,7 +1,29 @@
+2016-03-22  Nathan Potter  <ndp@opendap.org>
+
+	Cleaning up code for merge.
+
+2016-03-21  Nathan Potter  <ndp@opendap.org>
+
+	Tests for function result promotion in transmitters. Test function wrapitup() added.
+
+	Added call to function output promoter to xml_data_handler
+
+2016-02-12  James Gallagher  <jgallagher@opendap.org>
+
+	Patch for gcc-6 from Orion Poplawski
+
+2016-01-26  James Gallagher  <jgallagher@opendap.org>
+
+	Updated ChangeLog, etc., for the bes 3.17 release
+
 2015-12-28  Nathan Potter  <ndp@opendap.org>
 
-	Patched error handling problems in Transmitter implmentations. In particular: 1) Ensured that libdap::Error objects are converted to BESDapError objects when caught. and 2) Catch and rethrow BESError objects whenever they could be thrown so they don't get swept up as unidentified errors in a catch(...) clause.
-
+	Patched error handling problems in Transmitter implmentations. In particular:
+	1) Ensured that libdap::Error objects are converted to BESDapError objects 
+	when caught. and 2) Catch and rethrow BESError objects whenever they could 
+	be thrown so they don't get swept up as unidentified errors in a catch(...) 
+	clause.
+	
 2015-10-27  James Gallagher  <jgallagher@opendap.org>
 
 	Update for bes 3.16.0 release
