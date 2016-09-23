@@ -30,8 +30,8 @@
 #include <BaseType.h>
 #include <Sequence.h>
 #include <ConstraintEvaluator.h>
-#include <XMLWriter.h>
-#include <DODSFilter.h>
+#include <DataDDS.h>
+
 #include <escaping.h>
 #include <InternalErr.h>
 #include <util.h>
@@ -51,6 +51,7 @@
 #include "get_xml_data.h"
 
 using namespace xml_data;
+using namespace libdap;
 
 void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInterface & dhi)
 {

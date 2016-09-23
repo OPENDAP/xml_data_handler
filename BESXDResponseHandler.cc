@@ -27,6 +27,8 @@
 //      pwest       Patrick West <pwest@ucar.edu>
 //      jgarcia     Jose Garcia <jgarcia@ucar.edu>
 
+#include <DataDDS.h>
+
 #include <BESRequestHandlerList.h>
 #include <BESDapNames.h>
 #include <BESDataDDSResponse.h>
@@ -34,6 +36,8 @@
 #include "BESXDNames.h"
 #include "BESXDTransmit.h"
 #include "BESXDResponseHandler.h"
+
+using namespace libdap;
 
 BESXDResponseHandler::BESXDResponseHandler(const string &name) :
         BESResponseHandler(name)
