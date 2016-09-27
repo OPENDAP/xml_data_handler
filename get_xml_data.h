@@ -25,13 +25,13 @@
 
 namespace libdap {
     class BaseType;
-    class DataDDS;
+    class DDS;
     class XMLWriter;
 }
 
 namespace xml_data {
-    void get_data_values_as_xml(libdap::DataDDS *dds, libdap::XMLWriter *writer);
-    libdap::DataDDS *datadds_to_xd_datadds(libdap::DataDDS *dds);
+    void get_data_values_as_xml(libdap::DDS *dds, libdap::XMLWriter *writer);
+    libdap::DDS *dds_to_xd_dds(libdap::DDS *dds);
     libdap::BaseType *basetype_to_xd(libdap::BaseType *bt);
 }
 

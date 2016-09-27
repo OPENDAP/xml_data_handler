@@ -60,7 +60,7 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
     if (!bdds)
         throw BESInternalFatalError("Expected a BESDataDDSResponse instance.", __FILE__, __LINE__);
 
-    DataDDS *dds = bdds->get_dds();
+    DDS *dds = bdds->get_dds();
     ConstraintEvaluator & ce = bdds->get_ce();
 
     dhi.first_container();
@@ -97,7 +97,7 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
         // Handle *functional* constraint expressions specially
         if (ce.function_clauses()) {
             BESDEBUG("xd", "BESXDTransmit::send_base_ascii() Processing functional constraint clause(s)." << endl);
-            DataDDS *tmp_dds = ce.eval_function_clauses(*dds);
+            DDS *tmp_dds = ce.eval_function_clauses(*dds);
             delete dds;
             dds = tmp_dds;
             bdds->set_dds(dds);
@@ -148,7 +148,7 @@ void BESXDTransmit::send_basic_ascii(BESResponseObject * obj, BESDataHandlerInte
         // Now that we have constrained the DataDDS and read in the data,
         // send it as ascii
         BESDEBUG("xd", "converting to xd datadds" << endl);
-        DataDDS *xd_dds = datadds_to_xd_datadds(dds);
+        DDS *xd_dds = dds_to_xd_dds(dds);
 
         BESDEBUG("xd", "getting xd values" << endl);
         XMLWriter writer;
